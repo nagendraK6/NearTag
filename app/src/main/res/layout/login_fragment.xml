@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/wallpaper"
+    android:theme="@style/DialogTheme"
+    tools:context="com.relylabs.around.MainActivity">
+
+  <TextView
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="100dp"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textSize="20dp"
+      android:textStyle="bold"
+      android:textColor="@color/colorWhite"
+      android:id="@+id/phone_no_title"
+      android:text="Enter your phone number"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textColor="@color/colorWhite"
+        android:id="@+id/phone_no_desc"
+        android:layout_below="@id/phone_no_title"
+        android:text="@string/phn_msg"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="bottom"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/phone_no_desc">
+      <ImageView
+          android:layout_width="32dp"
+          android:layout_height="32dp"
+          android:src="@drawable/in"
+          android:layout_marginBottom="5dp"
+          android:layout_marginRight="20dp"
+          />
+
+      <EditText
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/edit_txt_phone"
+          android:textSize="20dp"
+          android:maxLength="10"
+          android:focusable="true"
+          android:inputType="number"
+          android:textColor="@color/colorWhite"
+          android:textColorHint="@color/colorWhite"
+          android:backgroundTint="@color/colorWhite"
+          android:hint="Ten digits phone no"/>
+    </LinearLayout>
+</RelativeLayout>

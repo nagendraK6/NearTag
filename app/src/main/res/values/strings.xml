@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Around</string>
+    <string name="phn_msg">We’ll send a sms code to\n verify your phone number</string>
+</resources>
