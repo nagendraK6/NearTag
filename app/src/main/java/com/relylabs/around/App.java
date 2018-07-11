@@ -28,14 +28,10 @@ public class App extends Application {
         }
 
         LeakCanary.install(this);
-        // Normal app init code...
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,"users-db"); //The users-db here is the name of our database.
-        Database db = helper.getWritableDb();
-        daoSession = new DaoMaster(db).newSession();
         Stetho.initializeWithDefaults(this);
     }
 
-    public DaoSession getDaoSession() {
-        return daoSession;
+    public static String getBaseURL() {
+        return "https://www.rely.ai/";
     }
 }

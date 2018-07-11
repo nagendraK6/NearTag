@@ -19,9 +19,11 @@ public class User {
     private String FirstName;
     private String LastName;
     private String Email;
+    private String CountryCode;
     private String PhoneNo;
     private String Location;
     private String ProfilePicURL;
+    private String UserToken;
     private Boolean IsOTPVerified;
 
     // KEEP FIELDS - put your custom fields here
@@ -36,15 +38,17 @@ public class User {
     }
 
     @Generated
-    public User(Long id, int UserId, String FirstName, String LastName, String Email, String PhoneNo, String Location, String ProfilePicURL, Boolean IsOTPVerified) {
+    public User(Long id, int UserId, String FirstName, String LastName, String Email, String CountryCode, String PhoneNo, String Location, String ProfilePicURL, String UserToken, Boolean IsOTPVerified) {
         this.id = id;
         this.UserId = UserId;
         this.FirstName = FirstName;
         this.LastName = LastName;
         this.Email = Email;
+        this.CountryCode = CountryCode;
         this.PhoneNo = PhoneNo;
         this.Location = Location;
         this.ProfilePicURL = ProfilePicURL;
+        this.UserToken = UserToken;
         this.IsOTPVerified = IsOTPVerified;
     }
 
@@ -88,6 +92,14 @@ public class User {
         this.Email = Email;
     }
 
+    public String getCountryCode() {
+        return CountryCode;
+    }
+
+    public void setCountryCode(String CountryCode) {
+        this.CountryCode = CountryCode;
+    }
+
     public String getPhoneNo() {
         return PhoneNo;
     }
@@ -112,6 +124,14 @@ public class User {
         this.ProfilePicURL = ProfilePicURL;
     }
 
+    public String getUserToken() {
+        return UserToken;
+    }
+
+    public void setUserToken(String UserToken) {
+        this.UserToken = UserToken;
+    }
+
     public Boolean getIsOTPVerified() {
         return IsOTPVerified;
     }
@@ -121,6 +141,9 @@ public class User {
     }
 
     // KEEP METHODS - put your custom methods here
+    public String getFormattedNo() {
+        return this.CountryCode + "-" + this.PhoneNo;
+    }
     // KEEP METHODS END
 
 }

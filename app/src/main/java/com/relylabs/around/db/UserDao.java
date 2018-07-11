@@ -27,10 +27,12 @@ public class UserDao extends AbstractDao<User, Long> {
         public final static Property FirstName = new Property(2, String.class, "FirstName", false, "FIRST_NAME");
         public final static Property LastName = new Property(3, String.class, "LastName", false, "LAST_NAME");
         public final static Property Email = new Property(4, String.class, "Email", false, "EMAIL");
-        public final static Property PhoneNo = new Property(5, String.class, "PhoneNo", false, "PHONE_NO");
-        public final static Property Location = new Property(6, String.class, "Location", false, "LOCATION");
-        public final static Property ProfilePicURL = new Property(7, String.class, "ProfilePicURL", false, "PROFILE_PIC_URL");
-        public final static Property IsOTPVerified = new Property(8, Boolean.class, "IsOTPVerified", false, "IS_OTPVERIFIED");
+        public final static Property CountryCode = new Property(5, String.class, "CountryCode", false, "COUNTRY_CODE");
+        public final static Property PhoneNo = new Property(6, String.class, "PhoneNo", false, "PHONE_NO");
+        public final static Property Location = new Property(7, String.class, "Location", false, "LOCATION");
+        public final static Property ProfilePicURL = new Property(8, String.class, "ProfilePicURL", false, "PROFILE_PIC_URL");
+        public final static Property UserToken = new Property(9, String.class, "UserToken", false, "USER_TOKEN");
+        public final static Property IsOTPVerified = new Property(10, Boolean.class, "IsOTPVerified", false, "IS_OTPVERIFIED");
     }
 
 
@@ -51,10 +53,12 @@ public class UserDao extends AbstractDao<User, Long> {
                 "\"FIRST_NAME\" TEXT," + // 2: FirstName
                 "\"LAST_NAME\" TEXT," + // 3: LastName
                 "\"EMAIL\" TEXT," + // 4: Email
-                "\"PHONE_NO\" TEXT," + // 5: PhoneNo
-                "\"LOCATION\" TEXT," + // 6: Location
-                "\"PROFILE_PIC_URL\" TEXT," + // 7: ProfilePicURL
-                "\"IS_OTPVERIFIED\" INTEGER);"); // 8: IsOTPVerified
+                "\"COUNTRY_CODE\" TEXT," + // 5: CountryCode
+                "\"PHONE_NO\" TEXT," + // 6: PhoneNo
+                "\"LOCATION\" TEXT," + // 7: Location
+                "\"PROFILE_PIC_URL\" TEXT," + // 8: ProfilePicURL
+                "\"USER_TOKEN\" TEXT," + // 9: UserToken
+                "\"IS_OTPVERIFIED\" INTEGER);"); // 10: IsOTPVerified
     }
 
     /** Drops the underlying database table. */
@@ -88,24 +92,34 @@ public class UserDao extends AbstractDao<User, Long> {
             stmt.bindString(5, Email);
         }
  
+        String CountryCode = entity.getCountryCode();
+        if (CountryCode != null) {
+            stmt.bindString(6, CountryCode);
+        }
+ 
         String PhoneNo = entity.getPhoneNo();
         if (PhoneNo != null) {
-            stmt.bindString(6, PhoneNo);
+            stmt.bindString(7, PhoneNo);
         }
  
         String Location = entity.getLocation();
         if (Location != null) {
-            stmt.bindString(7, Location);
+            stmt.bindString(8, Location);
         }
  
         String ProfilePicURL = entity.getProfilePicURL();
         if (ProfilePicURL != null) {
-            stmt.bindString(8, ProfilePicURL);
+            stmt.bindString(9, ProfilePicURL);
+        }
+ 
+        String UserToken = entity.getUserToken();
+        if (UserToken != null) {
+            stmt.bindString(10, UserToken);
         }
  
         Boolean IsOTPVerified = entity.getIsOTPVerified();
         if (IsOTPVerified != null) {
-            stmt.bindLong(9, IsOTPVerified ? 1L: 0L);
+            stmt.bindLong(11, IsOTPVerified ? 1L: 0L);
         }
     }
 
@@ -134,24 +148,34 @@ public class UserDao extends AbstractDao<User, Long> {
             stmt.bindString(5, Email);
         }
  
+        String CountryCode = entity.getCountryCode();
+        if (CountryCode != null) {
+            stmt.bindString(6, CountryCode);
+        }
+ 
         String PhoneNo = entity.getPhoneNo();
         if (PhoneNo != null) {
-            stmt.bindString(6, PhoneNo);
+            stmt.bindString(7, PhoneNo);
         }
  
         String Location = entity.getLocation();
         if (Location != null) {
-            stmt.bindString(7, Location);
+            stmt.bindString(8, Location);
         }
  
         String ProfilePicURL = entity.getProfilePicURL();
         if (ProfilePicURL != null) {
-            stmt.bindString(8, ProfilePicURL);
+            stmt.bindString(9, ProfilePicURL);
+        }
+ 
+        String UserToken = entity.getUserToken();
+        if (UserToken != null) {
+            stmt.bindString(10, UserToken);
         }
  
         Boolean IsOTPVerified = entity.getIsOTPVerified();
         if (IsOTPVerified != null) {
-            stmt.bindLong(9, IsOTPVerified ? 1L: 0L);
+            stmt.bindLong(11, IsOTPVerified ? 1L: 0L);
         }
     }
 
@@ -168,10 +192,12 @@ public class UserDao extends AbstractDao<User, Long> {
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // FirstName
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // LastName
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // Email
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // PhoneNo
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // Location
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // ProfilePicURL
-            cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0 // IsOTPVerified
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // CountryCode
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // PhoneNo
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // Location
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // ProfilePicURL
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // UserToken
+            cursor.isNull(offset + 10) ? null : cursor.getShort(offset + 10) != 0 // IsOTPVerified
         );
         return entity;
     }
@@ -183,10 +209,12 @@ public class UserDao extends AbstractDao<User, Long> {
         entity.setFirstName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setLastName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setEmail(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setPhoneNo(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setLocation(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setProfilePicURL(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setIsOTPVerified(cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0);
+        entity.setCountryCode(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setPhoneNo(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setLocation(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setProfilePicURL(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setUserToken(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setIsOTPVerified(cursor.isNull(offset + 10) ? null : cursor.getShort(offset + 10) != 0);
      }
     
     @Override

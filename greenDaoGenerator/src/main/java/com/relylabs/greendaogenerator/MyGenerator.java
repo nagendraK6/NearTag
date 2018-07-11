@@ -31,9 +31,11 @@ public class MyGenerator {
         user.addStringProperty("FirstName");
         user.addStringProperty("LastName");
         user.addStringProperty("Email");
+        user.addStringProperty("CountryCode");
         user.addStringProperty("PhoneNo");
         user.addStringProperty("Location");
         user.addStringProperty("ProfilePicURL");
+        user.addStringProperty("UserToken");
         user.addBooleanProperty("IsOTPVerified");
         return user;
     }

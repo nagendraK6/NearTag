@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/wallpaper"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/user_name"
+        android:textColor="#ffffff"
+        android:fontFamily="Helvetica-Bold"
+        android:layout_marginTop="30dp"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="What's your name?"/>
+    <EditText
+        android:id="@+id/edit_user_name"
+        android:layout_marginTop="110dp"
+        android:focusable="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/textboxrectangle"
+        android:layout_gravity="center"
+        android:textColorHint="#979797"
+        android:layout_centerHorizontal="true"
+        android:hint="e.g. Ram Kumar" />
+    <TextView
+        android:id="@+id/send_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/getstartedoval"
+        android:text="Next"
+        android:textColor="#ffffff"
+        android:fontFamily="Helvetica-Bold"
+        android:gravity="center_horizontal"
+        android:paddingLeft="50dp"
+        android:textSize="24sp" />
+
+    <ProgressBar
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/busy_send_user_name"/>
+</RelativeLayout>
