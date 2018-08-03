@@ -7,9 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.relylabs.around.db.DaoMaster;
-
-import org.greenrobot.greendao.database.Database;
 
 /**
  * Created by nagendra on 7/10/18.

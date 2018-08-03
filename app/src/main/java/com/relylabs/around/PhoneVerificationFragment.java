@@ -19,21 +19,14 @@ import android.widget.TextView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.relylabs.around.db.DaoMaster;
-import com.relylabs.around.db.DaoSession;
-import com.relylabs.around.db.User;
-import com.relylabs.around.db.UserDao;
 
 import android.content.Context;
 import android.widget.Toast;
 
-import org.greenrobot.greendao.database.Database;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
-
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -41,7 +34,6 @@ import cz.msebera.android.httpclient.Header;
  */
 
 public class PhoneVerificationFragment extends Fragment {
-    DaoSession daoSession;
 
     String otp1_text;
     String otp2_text = "";
@@ -57,9 +49,6 @@ public class PhoneVerificationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), "users-db"); //The users-db here is the name of our database.
-        Database db = helper.getWritableDb();
-        daoSession = new DaoMaster(db).newSession();
         View view = inflater.inflate(R.layout.phone_verification_fragment, container, false);
         phone_no_label = view.findViewById(R.id.toverify);
         running = true;
@@ -68,9 +57,8 @@ public class PhoneVerificationFragment extends Fragment {
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-        final UserDao userDao = daoSession.getUserDao();
-        List<User> users = userDao.queryBuilder().list();
-        final User user = users.get(0);
+        final User user = User.getLoggedInUser();
+
         phone_no_label.setText("Enter the 4-digit code we sent to\n" + user.getFormattedNo());
         otp1 = view.findViewById(R.id.otp1);
         otp2 = view.findViewById(R.id.otp2);
@@ -159,8 +147,8 @@ public class PhoneVerificationFragment extends Fragment {
 
                     AsyncHttpClient client = new AsyncHttpClient();
                     client.addHeader("Accept", "application/json");
-                    client.addHeader("Authorization", "Bearer " + user.getUserToken());
-                    Log.d("debug_data", user.getUserToken());
+                    client.addHeader("Authorization", "Bearer " + user.AccessToken);
+                    Log.d("debug_data", user.AccessToken);
                     RequestParams params = new RequestParams();
                     params.add("otp", otp);
                     Log.d("debug_data", "otp is " + otp);
@@ -191,15 +179,12 @@ public class PhoneVerificationFragment extends Fragment {
 
                                 String user_token = (String) response.getString("user_token");
 
-                                UserDao userDao = daoSession.getUserDao();
-                                List<User> users = userDao.queryBuilder().list();
+                                User user = User.getLoggedInUser();
+                                user.AccessToken = user_token;
+                                user.IsOTPVerified = true;
+                                user.save();
 
-                                if (!users.isEmpty()) {    //
-                                    User user = users.get(0);
-                                    user.setUserToken(user_token);
-                                    user.setIsOTPVerified(true);
-                                    userDao.update(user);
-                                }
+
 
                                 loadFragment(new UserNameAskFragment());
                             } catch (JSONException e) {
@@ -219,8 +204,8 @@ public class PhoneVerificationFragment extends Fragment {
                         @Override
                         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject obj) {
                             if (statusCode == 401) {
-                                user.setUserToken("");
-                                userDao.update(user);
+                                user.AccessToken = "";
+                                 user.save();
                                 loadFragment(new LoginFragment());
                             }
                         }
@@ -288,9 +273,7 @@ public class PhoneVerificationFragment extends Fragment {
     }
 
     private void sendNewOTP() {
-        final UserDao userDao = daoSession.getUserDao();
-        List<User> users = userDao.queryBuilder().list();
-        final User user = users.get(0);
+        final User user = User.getLoggedInUser();
 
         otp1_text = "";
         otp2_text = "";
@@ -299,8 +282,8 @@ public class PhoneVerificationFragment extends Fragment {
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader("Accept", "application/json");
-        client.addHeader("Authorization", "Bearer " + user.getUserToken());
-        Log.d("debug_data", user.getUserToken());
+        client.addHeader("Authorization", "Bearer " + user.AccessToken);
+        Log.d("debug_data", user.AccessToken);
         RequestParams params = new RequestParams();
 
         JsonHttpResponseHandler jrep = new JsonHttpResponseHandler() {
@@ -329,8 +312,8 @@ public class PhoneVerificationFragment extends Fragment {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject obj) {
                 if (statusCode == 401) {
-                    user.setUserToken("");
-                    userDao.update(user);
+                    user.AccessToken = "";
+                    user.save();
                     loadFragment(new LoginFragment());
                 }
             }

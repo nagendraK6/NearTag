@@ -24,12 +24,6 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.relylabs.around.db.DaoMaster;
-import com.relylabs.around.db.DaoSession;
-import com.relylabs.around.db.User;
-import com.relylabs.around.db.UserDao;
-
-import org.greenrobot.greendao.database.Database;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,7 +41,6 @@ public class LoginFragment extends Fragment {
     EditText country_code;
     ProgressBar busy;
     Boolean running = false;
-    DaoSession daoSession;
 
     @Nullable
     @Override
@@ -57,11 +50,6 @@ public class LoginFragment extends Fragment {
         phone_no = view.findViewById(R.id.edit_txt_phone);
         country_code = view.findViewById(R.id.country_code);
         busy = view.findViewById(R.id.busy_send);
-
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(),"users-db"); //The users-db here is the name of our database.
-        Database db = helper.getWritableDb();
-        daoSession = new DaoMaster(db).newSession();
-
         return view;
     }
 
@@ -148,23 +136,20 @@ public class LoginFragment extends Fragment {
                                                 String user_name = (String) response.getString("user_name");
                                                 String user_location = (String) response.getString("user_location");
                                                 String user_token = (String) response.getString("user_token");
-                                                UserDao userDao = daoSession.getUserDao();
-                                                List<User> users = userDao.queryBuilder().list();
+                                                User user = User.getLoggedInUser();
 
-                                                if(users.isEmpty()) {
+                                                if(user == null) {
                                                     //
-                                                    User user = new User();
-                                                    user.setFirstName(user_name);
-                                                    user.setLocation(user_location);
-                                                    user.setIsOTPVerified(false);
-                                                    user.setUserToken(user_token);
-                                                    userDao.insert(user);
+                                                    user = new User();
+                                                    user.Name = user_name;
+                                                    user.Location = user_location;
+                                                    user.IsOTPVerified = false;
+                                                    user.AccessToken = user_token;
                                                 } else {
-                                                    User user = users.get(0);
-                                                    user.setUserToken(user_token);
-                                                    userDao.update(user);
+                                                    user.AccessToken = user_token;
                                                 }
 
+                                                user.save();
                                                 loadFragment(new PhoneVerificationFragment());
                                                 // move to code verification
                                             } catch (JSONException e) {

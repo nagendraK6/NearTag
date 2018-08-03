@@ -16,6 +16,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 }
 
 configurations.all {
@@ -23,8 +25,15 @@ configurations.all {
         force 'com.android.support:support-annotations:27.1.1'
     }
 }
+
+repositories {
+    jcenter()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
 dependencies {
     implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
@@ -33,7 +42,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-    compile 'org.greenrobot:greendao:3.2.0'
     compile 'com.facebook.stetho:stetho:1.5.0'
     compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     compile 'com.loopj.android:android-async-http:1.4.9'

@@ -17,7 +17,7 @@
       android:textStyle="bold"
       android:textColor="@color/colorWhite"
       android:id="@+id/phone_no_title"
-      android:text="Enter your phone number"/>
+      android:text="अपना फोन नंबर ब्ताएँ"/>
 
     <TextView
         android:layout_marginTop="10dp"
