@@ -3,6 +3,7 @@ package com.relylabs.around;
 import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -40,6 +42,7 @@ public class LoginFragment extends Fragment {
     EditText phone_no;
     EditText country_code;
     ProgressBar busy;
+    TextView phone_desc;
     Boolean running = false;
 
     @Nullable
@@ -48,6 +51,7 @@ public class LoginFragment extends Fragment {
         running = true;
         final View view = inflater.inflate(R.layout.login_fragment, container, false);
         phone_no = view.findViewById(R.id.edit_txt_phone);
+        phone_desc = view.findViewById(R.id.phone_no_desc);
         country_code = view.findViewById(R.id.country_code);
         busy = view.findViewById(R.id.busy_send);
         return view;
@@ -57,6 +61,10 @@ public class LoginFragment extends Fragment {
     public void onResume() {
         super.onResume();
         running = true;
+
+        Typeface fontHindi = Typeface.createFromAsset(getContext().getAssets(), "mangal.ttf");
+        phone_desc.setTypeface(fontHindi);
+        phone_desc.setText(R.string.phn_msg);
         phone_no.post(new Runnable() {
             @Override
             public void run() {

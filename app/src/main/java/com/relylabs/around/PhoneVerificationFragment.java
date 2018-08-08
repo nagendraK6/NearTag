@@ -59,7 +59,7 @@ public class PhoneVerificationFragment extends Fragment {
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         final User user = User.getLoggedInUser();
 
-        phone_no_label.setText("Enter the 4-digit code we sent to\n" + user.getFormattedNo());
+        //phone_no_label.setText("Enter the 4-digit code we sent to\n" + user.getFormattedNo());
         otp1 = view.findViewById(R.id.otp1);
         otp2 = view.findViewById(R.id.otp2);
         otp3 = view.findViewById(R.id.otp3);

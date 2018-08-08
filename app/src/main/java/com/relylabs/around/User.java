@@ -57,7 +57,7 @@ public class User extends Model {
     }
 
     public static User getLoggedInUser() {
-        User user = new Select().from(User.class).where("IsLoggedInUser = ?", true).executeSingle();
+        User user = new Select().from(User.class).executeSingle();
         if (user != null) {
             Boolean updated = false;
 
