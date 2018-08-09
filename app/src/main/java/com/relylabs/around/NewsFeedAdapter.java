@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by nagendra on 8/6/18.
  */
@@ -47,6 +49,7 @@ public class NewsFeedAdapter extends
         // for any view that will be set as you render a row
         public TextView tag;
         public ImageView banngerImage;
+        public CircleImageView profilePicURL;
 
         public ProgressBar busy;
 
@@ -59,6 +62,7 @@ public class NewsFeedAdapter extends
 
             tag = (TextView) itemView.findViewById(R.id.tag);
             banngerImage = (ImageView) itemView.findViewById(R.id.banner_image);
+            profilePicURL = (CircleImageView) itemView.findViewById(R.id.user_profile_image);
         }
     }
 
@@ -96,8 +100,23 @@ public class NewsFeedAdapter extends
                 new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
-                        tag.setVisibility(View.VISIBLE);
+
                         viewHolder.itemView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        //do smth when there is picture loading error
+                    }
+                }
+        );
+
+        ImageView profile = viewHolder.profilePicURL;
+        Picasso.with(getContext()).load(current_element.getProfileImageURL()).into(
+                profile,
+                new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
                     }
 
                     @Override

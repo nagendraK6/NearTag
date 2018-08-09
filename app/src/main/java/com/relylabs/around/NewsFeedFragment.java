@@ -74,12 +74,13 @@ public class NewsFeedFragment extends Fragment {
 
                         String tag_text = (String) obj.getString("tag_text");
                         String image_url = (String) obj.getString("image_url");
-
+                        String profile_image_url = (String) obj.getString("profile_image_url");
 
 
                         NewsFeedElement current_element = new NewsFeedElement(
                                 tag_text,
-                                image_url
+                                image_url,
+                                profile_image_url
                         );
 
                         feed_elements.add(current_element);
