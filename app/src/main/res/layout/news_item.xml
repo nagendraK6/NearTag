@@ -2,13 +2,27 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
+    android:background="#F2F2F2"
+    android:gravity="center_horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="2dp"
+        android:layout_margin="1dp"
+        android:layout_marginTop="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
-    android:visibility="invisible"
-    android:background="@color/colorWhite"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginBottom="4dp">
+    android:visibility="visible"
+    android:background="@color/colorWhite">
 
     <RelativeLayout
         android:layout_marginTop="10dp"
@@ -63,7 +77,9 @@
         android:layout_marginTop="5dp"
         android:layout_below="@+id/header_row"
         android:paddingLeft="10dp"
+        android:textSize="12dp"
         android:layout_marginEnd="10dp"
+        android:textColor="#33b5e5"
         android:id="@+id/tag"
         android:text="#Tag"
         android:visibility="visible"
@@ -112,4 +128,7 @@
             />
 
     </RelativeLayout>
+</RelativeLayout>
+    </android.support.v7.widget.CardView>
+
 </RelativeLayout>
