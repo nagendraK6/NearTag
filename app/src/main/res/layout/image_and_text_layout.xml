@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_marginTop="10dp"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/user_photo"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+
+    </ImageView>
+
+    <com.relylabs.around.CustomTextView
+        android:paddingTop="20dp"
+        android:textColor="@color/colorWhite"
+        android:textColorHint="@color/colorWhite"
+        android:id="@+id/user_text"
+        android:hint="Hi there"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

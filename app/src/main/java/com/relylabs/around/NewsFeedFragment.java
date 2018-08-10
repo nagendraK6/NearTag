@@ -1,7 +1,10 @@
 package com.relylabs.around;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,15 +31,17 @@ import cz.msebera.android.httpclient.Header;
 public class NewsFeedFragment extends Fragment {
     ArrayList<NewsFeedElement> all_feeds;
     NewsFeedAdapter adapter;
-    View fragment_view;
     RecyclerView news_feed_list;
     ProgressBar busy_show_feed_fetch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragment_view = inflater.inflate(R.layout.news_feed_fragment, container, false);
+        return inflater.inflate(R.layout.news_feed_fragment, container, false);
+    }
 
-
+    @Override
+    public void onViewCreated(View fragment_view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(fragment_view, savedInstanceState);
 
         news_feed_list = (RecyclerView) fragment_view.findViewById(R.id.news_feed_list);
         busy_show_feed_fetch = (ProgressBar) fragment_view.findViewById(R.id.busy_show_feed_fetch);
@@ -52,8 +57,14 @@ public class NewsFeedFragment extends Fragment {
         news_feed_list.setLayoutManager(layoutManager);
         // line inbetween the data rows
 
+        FloatingActionButton fab =  fragment_view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new ImageEditFragment());
+            }
+        });
         getStandardViewList();
-        return fragment_view;
     }
 
     private void getStandardViewList() {
@@ -108,5 +119,11 @@ public class NewsFeedFragment extends Fragment {
         client.addHeader("Accept", "application/json");
         //client.addHeader("Authorization", "Bearer " + user.AccessToken);
         client.get(App.getBaseURL() + "newsfeed/", params, response_json);
+    }
+
+    private void loadFragment(Fragment fragment_to_start) {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_holder, fragment_to_start);
+        ft.commit();
     }
 }
