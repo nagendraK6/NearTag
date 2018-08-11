@@ -49,14 +49,13 @@ public class PhoneVerificationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.phone_verification_fragment, container, false);
-        phone_no_label = view.findViewById(R.id.toverify);
-        running = true;
-        return view;
+        return inflater.inflate(R.layout.phone_verification_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
+        phone_no_label = view.findViewById(R.id.toverify);
+        running = true;
         final User user = User.getLoggedInUser();
 
         //phone_no_label.setText("Enter the 4-digit code we sent to\n" + user.getFormattedNo());
@@ -329,4 +328,12 @@ public class PhoneVerificationFragment extends Fragment {
             ft.commitAllowingStateLoss();
         }
     }
+
+    @Override
+    public void onDestroy() {
+        running = false;
+        super.onDestroy();
+        App.getRefWatcher(getActivity()).watch(this);
+    }
+
 }

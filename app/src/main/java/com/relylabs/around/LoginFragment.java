@@ -93,6 +93,7 @@ public class LoginFragment extends Fragment {
     public void onDestroy() {
         running = false;
         super.onDestroy();
+        App.getRefWatcher(getActivity()).watch(this);
     }
 
     private  void setupPhoneNo() {

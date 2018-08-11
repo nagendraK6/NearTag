@@ -70,4 +70,10 @@ public class ImageEditFragment extends Fragment {
             }
         });
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        App.getRefWatcher(getActivity()).watch(this);
+    }
 }

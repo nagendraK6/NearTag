@@ -126,4 +126,11 @@ public class NewsFeedFragment extends Fragment {
         ft.replace(R.id.fragment_holder, fragment_to_start);
         ft.commit();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        App.getRefWatcher(getActivity()).watch(this);
+    }
+
 }
