@@ -1,30 +1,19 @@
 package com.relylabs.around;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -35,94 +24,61 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
-import okhttp3.internal.cache.DiskLruCache;
 
 /**
- * Created by nagendra on 8/9/18.
+ * Created by nagendra on 8/12/18.
  */
 
-public class ImageEditFragment extends Fragment {
-
+public class ComposerFragment  extends Fragment {
 
     ArrayList<ComposerImageElement> composer_elements;
     ComposerImageAdapter adapter;
     RecyclerView composer_image_list;
     ComposerImageAdapter composer_listener;
     ImageView raw_img;
-
-    View fragment_view;
+    EditText post_editor;
+    TextView select_image;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        fragment_view = inflater.inflate(R.layout.fragment_edit_photo, container, false);
-        raw_img = fragment_view.findViewById(R.id.user_photo);
-        return  fragment_view;
+        return inflater.inflate(R.layout.composer_fragment, container, false);
     }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        raw_img = (ImageView) view.findViewById(R.id.theme_image);
 
-        //File f = new File("storage/emulated/0/WhatsApp/Media/WhatsApp Images/IMG-20180812-WA0000.jpg");
+        Bitmap bitmap =  (Bitmap) getArguments().getParcelable("bitmap");
+        raw_img.setImageBitmap(bitmap);
 
-        //Picasso.with(getContext()).load(f).into(raw_img);
-
-        Picasso.with(getContext()).load("https://www.rely.ai/Image/1503784090.jpg").into(raw_img);
-        Button btn = view.findViewById(R.id.create_img);
-        final ImageView created_one = view.findViewById(R.id.created_one);
-
-        final ImageAndTextView v = view.findViewById(R.id.image_section);
-        Log.d("debug_data", "I am called ");
-        if (v == null) {
-            Log.d("debug_data", "I am null");
-        } else {
-            Log.d("debug_data", "I am NOT null");
-        }
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                v.setDrawingCacheEnabled(true);
-
-// this is the important code :)
-// Without it the view will have a dimension of 0,0 and the bitmap will be null
-                v.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
-
-                v.buildDrawingCache(true);
-
-                Bitmap bitmap = v.getDrawingCache();
-                if (bitmap != null) {
-                    created_one.setImageBitmap(bitmap.copy(bitmap.getConfig(), false));
-                }
-                v.setDrawingCacheEnabled(false);
-            }
-        });
-
-
+        post_editor = (EditText) view.findViewById(R.id.user_post_text);
         composer_image_list = (RecyclerView) view.findViewById(R.id.composer_images_view);
-        // Initialize cont acts
         composer_elements = new ArrayList<ComposerImageElement>();
-        // Create adapter passing in the sample user data
+        select_image = view.findViewById(R.id.image_select);
         adapter = new ComposerImageAdapter(getActivity(), composer_elements, new CallBackFromComposer() {
             @Override
             public void onElementClick(String s) {
                 Log.d("debug_data", "element clicked");
                 Picasso.with(getContext()).load(s).into(raw_img);
+                post_editor.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                post_editor.setGravity(Gravity.CENTER);
             }
         });
 
         // Attach the adapter to the recyclerview to populate items
         composer_image_list.setAdapter(adapter);
-        // Set layout manager to position the items
-
+        select_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new GalaryImageSelectFragment());
+            }
+        });
         getStandardViewList();
     }
 
@@ -181,6 +137,12 @@ public class ImageEditFragment extends Fragment {
         client.addHeader("Accept", "application/json");
         //client.addHeader("Authorization", "Bearer " + user.AccessToken);
         client.get(App.getBaseURL() + "newsfeed/composer", params, response_json);
+    }
+
+    private void loadFragment(Fragment fragment_to_start) {
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fragment_holder, fragment_to_start);
+            ft.commitAllowingStateLoss();
     }
 }
 

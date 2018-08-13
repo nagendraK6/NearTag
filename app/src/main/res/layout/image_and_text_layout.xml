@@ -3,25 +3,48 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:layout_marginTop="10dp"
-        android:layout_alignParentLeft="true"
-        android:id="@+id/user_photo"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+    <TextView
+        android:layout_marginTop="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="100dp"
+        android:textAlignment="center"
+        android:layout_height="30dp"
+        android:background="@color/colorAccent"
+        android:text="OK"
+        android:id="@+id/image_edit_complete"
+        />
+
+     <RelativeLayout
+
+         android:layout_margin="20dp"
+         android:layout_marginTop="20dp"
+         android:layout_below="@+id/image_edit_complete"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
+
+         <ImageView
+             android:layout_marginTop="10dp"
+             android:layout_alignParentLeft="true"
+             android:id="@+id/user_photo"
+             android:adjustViewBounds="true"
+             android:scaleType="fitXY"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content" >
 
 
-    </ImageView>
+         </ImageView>
 
-    <com.relylabs.around.CustomTextView
-        android:paddingTop="20dp"
-        android:textColor="@color/colorWhite"
-        android:textColorHint="@color/colorWhite"
-        android:id="@+id/user_text"
-        android:hint="Hi there"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+         <com.relylabs.around.CustomTextView
+             android:id="@+id/user_text"
+             android:hint="Hi there"
+             android:textSize="25dp"
+             android:textColor="#000000"
+             android:background="@color/colorWhite"
+             android:backgroundTint="@color/colorWhite"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+
+     </RelativeLayout>
+
 
 </RelativeLayout>

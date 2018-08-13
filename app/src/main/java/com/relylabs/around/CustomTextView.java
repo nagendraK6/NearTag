@@ -1,6 +1,7 @@
 package com.relylabs.around;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -12,7 +13,7 @@ import android.widget.Toast;
  * Created by nagendra on 8/9/18.
  */
 
-public class CustomTextView extends AppCompatTextView {
+public class CustomTextView extends AppCompatEditText {
 
     private int _xDelta;
     private int _yDelta;
@@ -38,7 +39,7 @@ public class CustomTextView extends AppCompatTextView {
                 layoutParams.topMargin = Y - _yDelta;
                 layoutParams.rightMargin = -250;
                 layoutParams.bottomMargin = -250;
-                setLayoutParams(layoutParams);
+                //setLayoutParams(layoutParams);
                 Log.d("debug_data", "setting mouse down");
 
                 break;
@@ -49,6 +50,7 @@ public class CustomTextView extends AppCompatTextView {
             case MotionEvent.ACTION_POINTER_UP:
                 break;
             case MotionEvent.ACTION_MOVE:
+                Log.d("debug_data", "mouse moving");
                 layoutParams = (RelativeLayout.LayoutParams) this.getLayoutParams();
                 layoutParams.leftMargin = X - _xDelta;
                 layoutParams.topMargin = Y - _yDelta;

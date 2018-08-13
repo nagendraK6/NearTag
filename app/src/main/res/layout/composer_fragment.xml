@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_marginTop="30dp"
+
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/theme_image"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:src="@drawable/user_profile"
+        android:layout_height="wrap_content" >
+
+    </ImageView>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:textSize="20dp"
+        android:id="@+id/user_post_text"
+        android:inputType="textMultiLine"
+        android:hint="कुछ धाकड़ लिखे"
+        android:background="#00000000"
+        />
+
+
+    <android.support.v7.widget.RecyclerView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/composer_images_view"
+        android:orientation="horizontal"
+        android:layout_below="@+id/theme_image"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <RelativeLayout
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/composer_images_view">
+
+        <TextView
+            android:id="@+id/image_select"
+            android:layout_width="wrap_content"
+            android:text="Photo Choose kren"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/camera_select"
+            android:layout_below="@+id/image_select"
+            android:layout_width="wrap_content"
+            android:text="Camera"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_below="@+id/camera_select"
+            android:id="@+id/gif_select"
+            android:layout_width="wrap_content"
+            android:text="Gif"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
