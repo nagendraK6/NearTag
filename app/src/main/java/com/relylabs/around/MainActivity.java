@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setUpFragment(new GalaryImageSelectFragment());
+        setUpFragment(new ComposerFragment());
     }
 
     private void setUpFragment(Fragment fragment_to_start) {

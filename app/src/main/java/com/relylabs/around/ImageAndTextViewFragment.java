@@ -1,8 +1,11 @@
 package com.relylabs.around;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 /**
@@ -33,7 +37,7 @@ public class ImageAndTextViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         String local_image_url = getArguments().getString("user_selected_image");
 
-        final ImageView img  =  view.findViewById(R.id.user_photo);
+        final ImageView img = view.findViewById(R.id.user_photo);
         Picasso.with(getContext()).load(
                 new File(local_image_url)
         ).into(img);
@@ -52,9 +56,9 @@ public class ImageAndTextViewFragment extends Fragment {
 
                 bitmap = bitmap.copy(bitmap.getConfig(), false);
 
-
+                Uri y = getImageUri(getContext(), bitmap);
                 img.setDrawingCacheEnabled(false);
-                x.putParcelable("bitmap", bitmap);
+                x.putParcelable("image_uri", y);
                 frg.setArguments(x);
                 loadFragment(frg);
             }
@@ -73,5 +77,12 @@ public class ImageAndTextViewFragment extends Fragment {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_holder, fragment_to_start);
         ft.commitAllowingStateLoss();
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 }
