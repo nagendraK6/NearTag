@@ -20,6 +20,9 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created by nagendra on 8/12/18.
@@ -56,9 +59,29 @@ public class ImageAndTextViewFragment extends Fragment {
 
                 bitmap = bitmap.copy(bitmap.getConfig(), false);
 
-                Uri y = getImageUri(getContext(), bitmap);
+
+                String filename = "bitmap.png";
+                FileOutputStream stream = null;
+                try {
+                    stream = getContext().openFileOutput(filename, Context.MODE_PRIVATE);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    bitmap.recycle();
+                }
+
+                //Cleanup
+
                 img.setDrawingCacheEnabled(false);
-                x.putParcelable("image_uri", y);
+                x.putString("image_file_name", filename);
                 frg.setArguments(x);
                 loadFragment(frg);
             }
@@ -72,17 +95,9 @@ public class ImageAndTextViewFragment extends Fragment {
         App.getRefWatcher(getActivity()).watch(this);
     }
 
-
     private void loadFragment(Fragment fragment_to_start) {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_holder, fragment_to_start);
         ft.commitAllowingStateLoss();
-    }
-
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
     }
 }

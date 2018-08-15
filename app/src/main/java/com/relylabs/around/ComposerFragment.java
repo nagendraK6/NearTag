@@ -1,6 +1,7 @@
 package com.relylabs.around;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +31,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
@@ -56,8 +60,21 @@ public class ComposerFragment  extends Fragment {
 
         ImageView user_post_img = (ImageView) view.findViewById(R.id.post_image);
         if (getArguments() != null) {
-            Uri image_uri =   (Uri) getArguments().getParcelable("image_uri");
-            Picasso.with(getContext()).load(image_uri).into(user_post_img);
+            String image_file_name =  getArguments().getString("image_file_name");
+            FileInputStream is = null;
+            try {
+                is = getContext().openFileInput(image_file_name);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            Bitmap bmp = BitmapFactory.decodeStream(is);
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            user_post_img.setImageBitmap(bmp);
             user_post_img.setVisibility(View.VISIBLE);
             LinearLayout lt = view.findViewById(R.id.composer_chooser);
             lt.setVisibility(View.INVISIBLE);

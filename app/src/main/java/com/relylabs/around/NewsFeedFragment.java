@@ -61,7 +61,7 @@ public class NewsFeedFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadFragment(new ImageEditFragment());
+                loadFragment(new ComposerFragment());
             }
         });
         getStandardViewList();
@@ -130,6 +130,7 @@ public class NewsFeedFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        news_feed_list.setAdapter(null);
         App.getRefWatcher(getActivity()).watch(this);
     }
 

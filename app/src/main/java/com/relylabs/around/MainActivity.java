@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setUpFragment(new ComposerFragment());
+        setUpFragment(new NewsFeedFragment());
     }
 
     private void setUpFragment(Fragment fragment_to_start) {

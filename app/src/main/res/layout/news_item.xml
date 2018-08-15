@@ -97,37 +97,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
         android:id="@+id/action_section"
         android:layout_below="@+id/banner_image"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_alignParentLeft="true"
-            android:id="@+id/whatsapp_sharing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_whatsapp" />
-
-        <ImageView
             android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+
+            android:id="@+id/whatsapp_sharing"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/whatsapp_photo" />
+
+        <ImageView
+            android:layout_marginLeft="50dp"
+
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+
             android:id="@+id/like_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_whatsapp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/like_icon_lnch"
             />
 
 
         <ImageView
+            android:layout_marginLeft="50dp"
+            android:layout_centerHorizontal="true"
             android:layout_alignParentRight="true"
-            android:id="@+id/download_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_whatsapp"
+            android:layout_centerVertical="true"
+
+            android:id="@+id/comment_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/comment_icon"
             />
 
-    </RelativeLayout>
+        <ImageView
+            android:layout_marginLeft="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+
+            android:id="@+id/download_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/download_icon"
+            />
+
+    </LinearLayout>
 </RelativeLayout>
     </android.support.v7.widget.CardView>
 
