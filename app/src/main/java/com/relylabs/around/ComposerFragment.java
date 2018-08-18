@@ -46,6 +46,7 @@ public class ComposerFragment  extends Fragment {
 
     ImageView select_image;
     EditText user_text_post;
+    String image_file_name = null;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -60,7 +61,7 @@ public class ComposerFragment  extends Fragment {
 
         ImageView user_post_img = (ImageView) view.findViewById(R.id.post_image);
         if (getArguments() != null) {
-            String image_file_name =  getArguments().getString("image_file_name");
+            image_file_name =  getArguments().getString("image_file_name");
             FileInputStream is = null;
             try {
                 is = getContext().openFileInput(image_file_name);

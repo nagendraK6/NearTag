@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.relylabs.around"
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -61,4 +61,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:11.0.4'
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
     compile 'com.android.support:cardview-v7:26.1.0'
+    compile 'com.flying.xiaopo:sticker:1.6.0'
+
 }

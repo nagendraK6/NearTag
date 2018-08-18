@@ -2,6 +2,8 @@ package com.relylabs.around;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -14,6 +16,9 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -71,8 +76,11 @@ public class ImageAdapter extends BaseAdapter {
             picturesView = (ImageView) convertView;
         }
 
-        Log.d("debug_data", "Pcitures view called");
-        Picasso.with(context).load(new File(images.get(position))).into(picturesView);
+
+        Picasso.with(context).load(new File(images.get(position)))
+                .resize(270, 270)
+                .into(picturesView);
+
         picturesView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -3,12 +3,16 @@ package com.relylabs.around;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +21,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.xiaopo.flying.sticker.BitmapStickerIcon;
+import com.xiaopo.flying.sticker.StickerView;
+import com.xiaopo.flying.sticker.TextSticker;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Created by nagendra on 8/12/18.
@@ -45,8 +53,51 @@ public class ImageAndTextViewFragment extends Fragment {
                 new File(local_image_url)
         ).into(img);
 
+        AlertDialog.Builder dialog = null;
 
-        TextView ok_click = view.findViewById(R.id.image_edit_complete);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+        } else {
+            dialog = new AlertDialog.Builder(getContext());
+        }
+        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+
+        View promptView = layoutInflater.inflate(R.layout.add_image_text_dialog, null);
+        dialog.setView(promptView);
+
+        final AlertDialog alertDialog_ref = dialog.create();
+
+        ImageView text_add_click = view.findViewById(R.id.text_add_option);
+        text_add_click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog_ref.show();
+            }
+        });
+
+        StickerView st_view = view.findViewById(R.id.sticker_view);
+
+
+        final TextSticker sticker = new TextSticker(getContext());
+        sticker.setText("Hello world");
+        sticker.setTextColor(Color.BLACK);
+        sticker.setTextAlign(Layout.Alignment.ALIGN_CENTER);
+        sticker.resizeText();
+
+
+        BitmapStickerIcon heartIcon =
+                new BitmapStickerIcon(getContext().getDrawable(R.drawable.ic_fav_white_24dp),
+                        BitmapStickerIcon.LEFT_BOTTOM);
+       heartIcon.setIconEvent(new HelloIconEvent());
+
+
+        st_view.addSticker(sticker);
+        st_view.configDefaultIcons();
+  //      st_view.setIcons(Arrays.asList( heartIcon));
+
+
+
+        /*TextView ok_click = view.findViewById(R.id.image_edit_complete);
         ok_click.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,7 +136,7 @@ public class ImageAndTextViewFragment extends Fragment {
                 frg.setArguments(x);
                 loadFragment(frg);
             }
-        });
+        });*/
 
     }
 
