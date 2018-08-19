@@ -19,7 +19,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.relylabs.around.composer.CallBackFromComposer;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
