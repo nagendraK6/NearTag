@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import com.relylabs.around.composer.CallBackFromComposer;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by nagendra on 8/12/18.
@@ -97,30 +99,25 @@ public class GalaryImageSelectFragment extends Fragment {
 
     private void galleryIntent() {
         GridView gallery = (GridView) fragment_view.findViewById(R.id.all_images);
-        gallery.setAdapter(new ImageAdapter(getContext(), new CallBackFromComposer() {
-            @Override
-            public void onElementClick(String s) {
-                /*
-                Fragment image_edit_fragment = new ImageAndTextViewFragment();
-                Bundle args = new Bundle();
-                args.putString("user_selected_image", s);
-                image_edit_fragment.setArguments(args);
-                loadFragment(image_edit_fragment);
-                */
 
-                ImageView view_preview = fragment_view.findViewById(R.id.preview_image);
-                Picasso.with(getContext()).load(new File(s))
+
+        ImageAdapter galaryAdapter = new ImageAdapter(getContext(), R.layout.layout_grid_imageview);
+        final ArrayList<String> all_images = galaryAdapter.getItems();
+
+        gallery.setAdapter(galaryAdapter);
+        final ImageView view_preview = fragment_view.findViewById(R.id.preview_image);
+
+        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Picasso.with(getContext()).load(new File(all_images.get(i)))
                         .into(view_preview);
             }
+        });
 
-            @Override
-            public void onImagesLoad(String first_image) {
-                ImageView view_preview = fragment_view.findViewById(R.id.preview_image);
-                /*Picasso.with(getContext()).load(new File(first_image))
-                        .into(view_preview);
-*/
-            }
-        }));
+        Picasso.with(getContext()).load(new File(all_images.get(0)))
+                .into(view_preview);
+
     }
 
     private void loadFragment(Fragment fragment_to_start) {

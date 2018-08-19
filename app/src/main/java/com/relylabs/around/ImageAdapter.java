@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -27,29 +28,27 @@ public class ImageAdapter extends BaseAdapter {
     private Context context;
 
     ArrayList<String> images;
-    CallBackFromComposer callback_on_image_click;
-    /**
-     * Instantiates a new image adapter.
-     *
-     * @param localContext
-     *            the local context
-     */
-    public ImageAdapter(Context localContext,
-                        CallBackFromComposer m
-                        ) {
+    private LayoutInflater mInflater;
+    private int layoutResource;
+
+
+    public ImageAdapter(Context localContext, int layoutResource) {
         context = localContext;
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         images = getAllShownImagesPath();
-        callback_on_image_click = m;
+        this.layoutResource = layoutResource;
     }
 
-    public ImageAdapter(Context localContext) {
-        context = localContext;
-        images = getAllShownImagesPath();
-        callback_on_image_click = null;
+    private static class ViewHolder{
+        ImageView image;
     }
 
     public int getCount() {
         return images.size();
+    }
+
+    public ArrayList<String> getItems() {
+        return images;
     }
 
     public Object getItem(int position) {
@@ -62,36 +61,25 @@ public class ImageAdapter extends BaseAdapter {
 
     public View getView(final int position, View convertView,
                         ViewGroup parent) {
-        ImageView picturesView;
-        Log.d("debug_data", "Pcitures getview called");
+
+        final ViewHolder holder;
+
         if (convertView == null) {
-            picturesView = new ImageView(context);
-            picturesView.setScaleType(ImageView.ScaleType.FIT_XY);
-            picturesView
-                    .setLayoutParams(new GridView.LayoutParams(270, 270));
+            convertView = mInflater.inflate(layoutResource, parent, false);
+            holder = new ViewHolder();
+            holder.image = (ImageView) convertView.findViewById(R.id.gridImageView);
+            convertView.setTag(holder);
+
 
         } else {
-            picturesView = (ImageView) convertView;
+            holder = (ViewHolder) convertView.getTag();
         }
 
-
-        if (position == 0) {
-            callback_on_image_click.onImagesLoad(images.get(0));
-        }
         Picasso.with(context).load(new File(images.get(position)))
                 .resize(270, 270)
-                .into(picturesView);
+                .into(holder.image);
 
-        picturesView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (callback_on_image_click != null) {
-                    callback_on_image_click.onElementClick(images.get(position));
-                }
-            }
-        });
-
-        return picturesView;
+        return convertView;
     }
 
     private ArrayList<String> getAllShownImagesPath() {
