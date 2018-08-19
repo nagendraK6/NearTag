@@ -4,15 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <RelativeLayout
+        android:background="@color/colorLightGreen"
         android:id="@+id/post_description"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="128dp">
         <ImageView
-            android:layout_width="64dp"
+            android:layout_width="128dp"
             android:id="@+id/user_post_image"
-            android:layout_height="64dp" />
-        <TextView
+            android:layout_height="128dp" />
+        <EditText
+            android:background="@null"
             android:layout_toRightOf="@+id/user_post_image"
+            android:hint="yahan kuchh likhe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>

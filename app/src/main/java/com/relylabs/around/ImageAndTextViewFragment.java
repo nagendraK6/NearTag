@@ -75,7 +75,7 @@ public class ImageAndTextViewFragment extends Fragment {
             }
         });
 
-        StickerView st_view = view.findViewById(R.id.sticker_view);
+        final StickerView st_view = view.findViewById(R.id.sticker_view);
 
 
         final TextSticker sticker = new TextSticker(getContext());
@@ -93,20 +93,25 @@ public class ImageAndTextViewFragment extends Fragment {
 
         st_view.addSticker(sticker);
         st_view.configDefaultIcons();
+
+
   //      st_view.setIcons(Arrays.asList( heartIcon));
 
 
 
-        /*TextView ok_click = view.findViewById(R.id.image_edit_complete);
+        ImageView ok_click = view.findViewById(R.id.ok_tick_mark);
         ok_click.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ComposerFragment frg = new ComposerFragment();
+                TagSearchFragment frg = new TagSearchFragment();
                 Bundle x = new Bundle();
-                img.setDrawingCacheEnabled(true);
-                img.buildDrawingCache(true);
 
-                Bitmap bitmap = img.getDrawingCache();
+
+                st_view.setLocked(true);
+                st_view.setDrawingCacheEnabled(true);
+                st_view.buildDrawingCache(true);
+
+                Bitmap bitmap = st_view.getDrawingCache();
 
                 bitmap = bitmap.copy(bitmap.getConfig(), false);
 
@@ -131,12 +136,13 @@ public class ImageAndTextViewFragment extends Fragment {
 
                 //Cleanup
 
-                img.setDrawingCacheEnabled(false);
+                st_view.setDrawingCacheEnabled(false);
+                st_view.setLocked(false);
                 x.putString("image_file_name", filename);
                 frg.setArguments(x);
                 loadFragment(frg);
             }
-        });*/
+        });
 
     }
 

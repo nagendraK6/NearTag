@@ -111,13 +111,13 @@ public class ImageEditFragment extends Fragment {
         // Initialize cont acts
         composer_elements = new ArrayList<ComposerImageElement>();
         // Create adapter passing in the sample user data
-        adapter = new ComposerImageAdapter(getActivity(), composer_elements, new CallBackFromComposer() {
+        /*adapter = new ComposerImageAdapter(getActivity(), composer_elements, new CallBackFromComposer() {
             @Override
             public void onElementClick(String s) {
                 Log.d("debug_data", "element clicked");
                 Picasso.with(getContext()).load(s).into(raw_img);
             }
-        });
+        });*/
 
         // Attach the adapter to the recyclerview to populate items
         composer_image_list.setAdapter(adapter);

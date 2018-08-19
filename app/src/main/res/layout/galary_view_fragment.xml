@@ -2,12 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <GridView
-        android:layout_marginTop="20dp"
+    <ImageView
+        android:id="@+id/preview_image"
         android:layout_width="match_parent"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         android:layout_height="wrap_content"
+        />
+
+    <GridView
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         android:id="@+id/all_images"
-        android:numColumns="3"
+        android:numColumns="4"
+
         android:gravity="center"
         android:layout_marginLeft="1dp"
         android:layout_marginRight="1dp"></GridView>

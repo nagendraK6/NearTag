@@ -38,7 +38,9 @@ public class ImageAdapter extends BaseAdapter {
      * @param localContext
      *            the local context
      */
-    public ImageAdapter(Context localContext, CallBackFromComposer m) {
+    public ImageAdapter(Context localContext,
+                        CallBackFromComposer m
+                        ) {
         context = localContext;
         images = getAllShownImagesPath();
         callback_on_image_click = m;
@@ -77,6 +79,9 @@ public class ImageAdapter extends BaseAdapter {
         }
 
 
+        if (position == 0) {
+            callback_on_image_click.onImagesLoad(images.get(0));
+        }
         Picasso.with(context).load(new File(images.get(position)))
                 .resize(270, 270)
                 .into(picturesView);

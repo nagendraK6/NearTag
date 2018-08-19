@@ -7,4 +7,6 @@ package com.relylabs.around;
 
 interface CallBackFromComposer {
     void onElementClick(String s);
+
+    void onImagesLoad(String first_image);
 }
