@@ -1,4 +1,4 @@
-package com.relylabs.around;
+package com.relylabs.around.composer;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,6 +24,9 @@ import android.widget.TextView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.relylabs.around.App;
+import com.relylabs.around.GalaryImageSelectFragment;
+import com.relylabs.around.R;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;

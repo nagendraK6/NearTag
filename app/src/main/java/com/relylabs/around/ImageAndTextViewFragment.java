@@ -53,27 +53,6 @@ public class ImageAndTextViewFragment extends Fragment {
                 new File(local_image_url)
         ).into(img);
 
-        AlertDialog.Builder dialog = null;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            dialog = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
-        } else {
-            dialog = new AlertDialog.Builder(getContext());
-        }
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-
-        View promptView = layoutInflater.inflate(R.layout.add_image_text_dialog, null);
-        dialog.setView(promptView);
-
-        final AlertDialog alertDialog_ref = dialog.create();
-
-        ImageView text_add_click = view.findViewById(R.id.text_add_option);
-        text_add_click.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog_ref.show();
-            }
-        });
 
         final StickerView st_view = view.findViewById(R.id.sticker_view);
 
@@ -88,7 +67,6 @@ public class ImageAndTextViewFragment extends Fragment {
         BitmapStickerIcon heartIcon =
                 new BitmapStickerIcon(getContext().getDrawable(R.drawable.ic_fav_white_24dp),
                         BitmapStickerIcon.LEFT_BOTTOM);
-       heartIcon.setIconEvent(new HelloIconEvent());
 
 
         st_view.addSticker(sticker);
