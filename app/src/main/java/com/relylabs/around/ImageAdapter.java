@@ -27,6 +27,8 @@ public class ImageAdapter extends BaseAdapter {
     private Context context;
 
     ArrayList<String> images;
+    ArrayList<String> album_names;
+
     private LayoutInflater mInflater;
     private int layoutResource;
 
@@ -48,6 +50,10 @@ public class ImageAdapter extends BaseAdapter {
 
     public ArrayList<String> getItems() {
         return images;
+    }
+
+    public ArrayList<String> getAlbums() {
+        return album_names;
     }
 
     public Object getItem(int position) {
@@ -86,6 +92,8 @@ public class ImageAdapter extends BaseAdapter {
         Cursor cursor;
         int column_index_data, column_index_folder_name;
         ArrayList<String> listOfAllImages = new ArrayList<String>();
+        album_names = new ArrayList<String>();
+
         String absolutePathOfImage = null;
         uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
@@ -96,12 +104,17 @@ public class ImageAdapter extends BaseAdapter {
                 null, null);
 
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        column_index_folder_name = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
         while (cursor.moveToNext()) {
             absolutePathOfImage = cursor.getString(column_index_data);
-
             listOfAllImages.add(absolutePathOfImage);
+            column_index_folder_name = cursor
+                    .getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+            String album_name = cursor.getString(column_index_folder_name);
+            if(!album_names.contains(album_name)) {
+                album_names.add(album_name);
+            }
+            Log.d("debug_data", cursor.getString(column_index_folder_name));
+
         }
         return listOfAllImages;
     }

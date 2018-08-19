@@ -11,12 +11,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -42,6 +45,7 @@ public class GalaryImageSelectFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        directorySpinner = view.findViewById(R.id.spinnerDirectory);
         processImageSelection();
     }
 
@@ -52,13 +56,13 @@ public class GalaryImageSelectFragment extends Fragment {
     }
 
     public void processImageSelection() {
-        if(getActivity() != null) {
+        if (getActivity() != null) {
             findPermissionsAndSelectImage();
         }
     }
 
-    public  void findPermissionsAndSelectImage() {
-        boolean result= checkPermission(getActivity());
+    public void findPermissionsAndSelectImage() {
+        boolean result = checkPermission(getActivity());
         if (result) {
             galleryIntent();
         }
@@ -67,14 +71,13 @@ public class GalaryImageSelectFragment extends Fragment {
 
     public boolean checkPermission(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
-        if(currentAPIVersion>=android.os.Build.VERSION_CODES.M)
-        {
-            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED  ||
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                     ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},  REQUEST_FOR_TAKE_PHOTO);
+                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_FOR_TAKE_PHOTO);
                 } else {
-                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},  REQUEST_FOR_TAKE_PHOTO);
+                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_FOR_TAKE_PHOTO);
                 }
                 return false;
             } else {
@@ -92,18 +95,19 @@ public class GalaryImageSelectFragment extends Fragment {
             galleryIntent();
 
         } else {
-            Toast.makeText(getActivity(),"Permission is needed to capture image for the profile", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Permission is needed to capture image for the profile", Toast.LENGTH_LONG).show();
         }
     }
 
     private void galleryIntent() {
-        GridView gallery = (GridView) fragment_view.findViewById(R.id.all_images);
-
+        GridView gallery = fragment_view.findViewById(R.id.all_images);
 
         ImageAdapter galaryAdapter = new ImageAdapter(getContext(), R.layout.layout_grid_imageview);
         final ArrayList<String> all_images = galaryAdapter.getItems();
 
         gallery.setAdapter(galaryAdapter);
+        init(galaryAdapter.getAlbums());
+
         final ImageView view_preview = fragment_view.findViewById(R.id.preview_image);
 
         gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -124,4 +128,15 @@ public class GalaryImageSelectFragment extends Fragment {
         ft.replace(R.id.fragment_holder, fragment_to_start);
         ft.commit();
     }
+
+    private void init(ArrayList<String> directoryNames) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, directoryNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        directorySpinner.setAdapter(adapter);
+
+        return;
+    }
+
+    private Spinner directorySpinner;
 }
