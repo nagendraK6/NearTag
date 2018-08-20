@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,9 @@ import java.io.IOException;
  */
 
 public class TagSearchFragment extends Fragment {
+
+    Bitmap bmp  = null;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,12 +51,27 @@ public class TagSearchFragment extends Fragment {
             ImageView user_post_image = view.findViewById(R.id.user_post_image);
             user_post_image.setImageBitmap(bmp);
             user_post_image.setVisibility(View.VISIBLE);
+            user_post_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    loadFragment(new NewsFeedFragment());
+                }
+            });
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (bmp != null) {
+            bmp.recycle();
+        }
         App.getRefWatcher(getActivity()).watch(this);
+    }
+
+    private void loadFragment(Fragment fragment_to_start) {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_holder, fragment_to_start);
+        ft.commitAllowingStateLoss();
     }
 }

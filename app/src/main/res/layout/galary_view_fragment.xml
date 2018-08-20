@@ -42,7 +42,7 @@
         android:layout_height="0dp"
         android:layout_weight="40"
         android:id="@+id/all_images"
-        android:numColumns="4"
+        android:numColumns="3"
 
         android:gravity="center"
         android:layout_marginLeft="1dp"

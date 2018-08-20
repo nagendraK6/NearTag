@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -34,6 +35,9 @@ import java.util.ArrayList;
 public class GalaryImageSelectFragment extends Fragment {
     public static final int REQUEST_FOR_TAKE_PHOTO = 9;
     View fragment_view;
+    private String mSelectedImage;
+    GridView gallery = null;
+    TextView tvNext = null;
 
     @Nullable
     @Override
@@ -53,6 +57,16 @@ public class GalaryImageSelectFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         App.getRefWatcher(getActivity()).watch(this);
+        if (gallery != null) {
+            gallery.setOnItemClickListener(null);
+            gallery.setAdapter(null);
+        }
+
+        if (tvNext != null) {
+            tvNext.setOnClickListener(null);
+        }
+
+        System.gc();
     }
 
     public void processImageSelection() {
@@ -100,7 +114,7 @@ public class GalaryImageSelectFragment extends Fragment {
     }
 
     private void galleryIntent() {
-        GridView gallery = fragment_view.findViewById(R.id.all_images);
+         gallery = fragment_view.findViewById(R.id.all_images);
 
         ImageAdapter galaryAdapter = new ImageAdapter(getContext(), R.layout.layout_grid_imageview);
         final ArrayList<String> all_images = galaryAdapter.getItems();
@@ -115,11 +129,28 @@ public class GalaryImageSelectFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Picasso.with(getContext()).load(new File(all_images.get(i)))
                         .into(view_preview);
+
+                mSelectedImage = all_images.get(i);
+
             }
         });
 
         Picasso.with(getContext()).load(new File(all_images.get(0)))
-                .into(view_preview);
+              .into(view_preview);
+
+        mSelectedImage = all_images.get(0);
+
+        TextView tvNext = fragment_view.findViewById(R.id.tvNext);
+        tvNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle data_bundle = new Bundle();
+                data_bundle.putString(getString(R.string.user_selected_image), mSelectedImage);
+                Fragment frg = new ImageAndTextViewFragment();
+                frg.setArguments(data_bundle);
+                loadFragment(frg);
+            }
+        });
 
     }
 
@@ -134,8 +165,6 @@ public class GalaryImageSelectFragment extends Fragment {
                 android.R.layout.simple_spinner_item, directoryNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         directorySpinner.setAdapter(adapter);
-
-        return;
     }
 
     private Spinner directorySpinner;

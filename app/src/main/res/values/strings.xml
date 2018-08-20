@@ -2,4 +2,6 @@
     <string name="app_name">Around</string>
     <string name="phn_msg">आप्के फोन कि पुश्ति के लिये एक मेसेज भेजा जायेगा</string>
     <string name="string_next">ठीक है</string>
+    <string name="selected_image">selected_image</string>
+    <string name="user_selected_image">user_selected_image</string>
 </resources>

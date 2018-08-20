@@ -50,9 +50,9 @@ public class FragmentImageSelection extends Fragment {
 
 
         Adapter adapter = new Adapter(getChildFragmentManager());
-        adapter.addFragment(new GalaryImageSelectFragment(), "आपका फोटो");
-        adapter.addFragment(new GalaryImageSelectFragment(), "लोकप्रिय फोटो");
-        adapter.addFragment(new GalaryImageSelectFragment(), "शायरी");
+          adapter.addFragment(new GalaryImageSelectFragment(), "आपका फोटो");
+          adapter.addFragment(new GalaryImageSelectFragment(), "लोकप्रिय फोटो");
+          adapter.addFragment(new GalaryImageSelectFragment(), "शायरी");
 
         viewPager.setAdapter(adapter);
     }

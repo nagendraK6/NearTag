@@ -40,7 +40,7 @@ public class ImageAndTextViewFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.image_and_text_layout, container, false);
+        return inflater.inflate(R.layout.text_on_image_fragment, container, false);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ImageAndTextViewFragment extends Fragment {
 
                 Bitmap bitmap = st_view.getDrawingCache();
 
-                bitmap = bitmap.copy(bitmap.getConfig(), false);
+                Bitmap bitmap2 = bitmap.copy(bitmap.getConfig(), false);
 
 
                 String filename = "bitmap.png";
@@ -110,6 +110,7 @@ public class ImageAndTextViewFragment extends Fragment {
                         e.printStackTrace();
                     }
                     bitmap.recycle();
+                    bitmap2.recycle();
                 }
 
                 //Cleanup

@@ -20,13 +20,13 @@
             />
 
         <TextView
-           android:layout_centerHorizontal="true"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-           android:layout_width="wrap_content"
+            android:layout_width="wrap_content"
             android:textSize="20dp"
             android:textColor="#000000"
-           android:layout_height="wrap_content"
-           android:text="फोटो सजाएँ"/>
+            android:layout_height="wrap_content"
+            android:text="फोटो सजाएँ"/>
         <ImageView
             android:layout_alignParentRight="true"
             android:id="@+id/ok_tick_mark"
@@ -38,7 +38,7 @@
             />
     </RelativeLayout>
 
-         android:layout_height="wrap_content">
+    android:layout_height="wrap_content">
 
     <com.xiaopo.flying.sticker.StickerView
         android:layout_below="@+id/image_edit_control"
@@ -50,16 +50,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
-    <ImageView
-             android:layout_alignParentLeft="true"
-             android:id="@+id/user_photo"
-             android:adjustViewBounds="true"
-             android:scaleType="fitXY"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content" >
+        <ImageView
+            android:layout_alignParentLeft="true"
+            android:id="@+id/user_photo"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
 
-         </ImageView>
+        </ImageView>
     </com.xiaopo.flying.sticker.StickerView>
 
 
@@ -100,16 +100,16 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-        <ImageView
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:id="@+id/color_filter_option"
-            android:src="@mipmap/color_pallet"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:id="@+id/color_filter_option"
+                android:src="@mipmap/color_pallet"
+                android:layout_width="wrap_content"
 
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorLightGreen"
-            />
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorLightGreen"
+                />
         </RelativeLayout>
     </RelativeLayout>
 
