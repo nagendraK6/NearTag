@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.relylabs.around.composer.RecyclerGalaryFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -34,5 +36,12 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onBackPressed();
         Log.d("debug_data", "Back pressed");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Runtime.getRuntime().gc();
+        finish();
     }
 }

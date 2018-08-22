@@ -17,6 +17,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.relylabs.around.composer.ComposerFragment;
+import com.relylabs.around.composer.RecyclerGalaryFragment;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -62,7 +63,7 @@ public class NewsFeedFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadFragment(new ComposerFragment());
+                loadFragment(new RecyclerGalaryFragment());
             }
         });
         getStandardViewList();

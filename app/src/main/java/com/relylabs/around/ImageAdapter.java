@@ -12,7 +12,11 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,13 +35,14 @@ public class ImageAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private int layoutResource;
+    private final RequestManager glide;
 
-
-    public ImageAdapter(Context localContext, int layoutResource) {
+    public ImageAdapter(RequestManager glide, Context localContext, int layoutResource) {
         context = localContext;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         images = getAllShownImagesPath();
         this.layoutResource = layoutResource;
+        this.glide = glide;
     }
 
     private static class ViewHolder{
@@ -67,7 +72,7 @@ public class ImageAdapter extends BaseAdapter {
     public View getView(final int position, View convertView,
                         ViewGroup parent) {
 
-        final ViewHolder holder;
+        ViewHolder holder;
 
         if (convertView == null) {
             convertView = mInflater.inflate(layoutResource, parent, false);
@@ -80,9 +85,15 @@ public class ImageAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Picasso.with(context).load(new File(images.get(position)))
-                .resize(270, 270)
+        Picasso.with(context).load(new File(images.get(position))).resize(270, 270).into(holder.image);
+
+        /*
+        glide.load(new File(images.get(position)))
+                .override(270, 270)
                 .into(holder.image);
+*/
+        //RequestCreator requestCreator = new RequestCreator();
+        //requestCreator.memoryPolicy(MemoryPolicy.NO_CACHE);
 
         return convertView;
     }

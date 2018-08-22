@@ -23,7 +23,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -66,7 +67,10 @@ public class GalaryImageSelectFragment extends Fragment {
             tvNext.setOnClickListener(null);
         }
 
+        Glide.get(getContext()).clearMemory();
         System.gc();
+
+        Log.d("debug_data", "Fragment destroyed");
     }
 
     public void processImageSelection() {
@@ -116,7 +120,7 @@ public class GalaryImageSelectFragment extends Fragment {
     private void galleryIntent() {
          gallery = fragment_view.findViewById(R.id.all_images);
 
-        ImageAdapter galaryAdapter = new ImageAdapter(getContext(), R.layout.layout_grid_imageview);
+        ImageAdapter galaryAdapter = new ImageAdapter(Glide.with(this), getContext(), R.layout.layout_grid_imageview);
         final ArrayList<String> all_images = galaryAdapter.getItems();
 
         gallery.setAdapter(galaryAdapter);
@@ -127,7 +131,10 @@ public class GalaryImageSelectFragment extends Fragment {
         gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Picasso.with(getContext()).load(new File(all_images.get(i)))
+
+                Glide.with(GalaryImageSelectFragment.this).load(new File(all_images.get(i)))
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(view_preview);
 
                 mSelectedImage = all_images.get(i);
@@ -135,7 +142,9 @@ public class GalaryImageSelectFragment extends Fragment {
             }
         });
 
-        Picasso.with(getContext()).load(new File(all_images.get(0)))
+        Glide.with(this).load(new File(all_images.get(0)))
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
               .into(view_preview);
 
         mSelectedImage = all_images.get(0);
@@ -146,8 +155,9 @@ public class GalaryImageSelectFragment extends Fragment {
             public void onClick(View view) {
                 Bundle data_bundle = new Bundle();
                 data_bundle.putString(getString(R.string.user_selected_image), mSelectedImage);
-                Fragment frg = new ImageAndTextViewFragment();
+                Fragment frg = new TagSearchFragment();
                 frg.setArguments(data_bundle);
+                //getActivity().finish();
                 loadFragment(frg);
             }
         });

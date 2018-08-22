@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,7 +26,6 @@ import java.io.IOException;
 
 public class TagSearchFragment extends Fragment {
 
-    Bitmap bmp  = null;
 
     @Nullable
     @Override
@@ -34,23 +36,13 @@ public class TagSearchFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         if (getArguments() != null) {
-            String image_file_name =  getArguments().getString("image_file_name");
-            FileInputStream is = null;
-            try {
-                is = getContext().openFileInput(image_file_name);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = BitmapFactory.decodeStream(is);
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            String image_file_name =  getArguments()
+                    .getString(getString(R.string.user_selected_image));
 
-            ImageView user_post_image = view.findViewById(R.id.user_post_image);
-            user_post_image.setImageBitmap(bmp);
-            user_post_image.setVisibility(View.VISIBLE);
+            final ImageView user_post_image = view.findViewById(R.id.user_post_image);
+            Picasso.with(getContext()).load(new File(image_file_name))
+                    .into(user_post_image);
+
             user_post_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -58,14 +50,14 @@ public class TagSearchFragment extends Fragment {
                 }
             });
         }
+
+        EditText composer_post_text = view.findViewById(R.id.composer_post_text);
+        composer_post_text.requestFocus();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (bmp != null) {
-            bmp.recycle();
-        }
         App.getRefWatcher(getActivity()).watch(this);
     }
 
