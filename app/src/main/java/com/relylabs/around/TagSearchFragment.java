@@ -2,6 +2,7 @@ package com.relylabs.around;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -36,23 +38,30 @@ public class TagSearchFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         if (getArguments() != null) {
-            String image_file_name =  getArguments()
+            final String image_file_name =  getArguments()
                     .getString(getString(R.string.user_selected_image));
 
             final ImageView user_post_image = view.findViewById(R.id.user_post_image);
             Picasso.with(getContext()).load(new File(image_file_name))
                     .into(user_post_image);
 
-            user_post_image.setOnClickListener(new View.OnClickListener() {
+            TextView post_create_btn = view.findViewById(R.id.create_post);
+            final EditText composer_post_text = view.findViewById(R.id.composer_post_text);
+            composer_post_text.requestFocus();
+
+            post_create_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    loadFragment(new NewsFeedFragment());
+                    Bundle data_bundle = new Bundle();
+                    data_bundle.putString(getString(R.string.user_selected_image), image_file_name);
+                    data_bundle.putString("user_message", composer_post_text.getText().toString());
+                    Fragment news_feed_fragment = new NewsFeedFragment();
+                    news_feed_fragment.setArguments(data_bundle);
+                    loadFragment(news_feed_fragment);
                 }
             });
         }
 
-        EditText composer_post_text = view.findViewById(R.id.composer_post_text);
-        composer_post_text.requestFocus();
     }
 
     @Override

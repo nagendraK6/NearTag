@@ -6,7 +6,26 @@
     android:gravity="center_horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress"
+        android:visibility="invisible"
+
+        android:max="100"
+        android:progress="45"/>
+    <TextView
+        android:layout_below="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/upload_in_progress_text"
+        android:visibility="gone"
+        android:text="अपलोड हो रहा है"
+        />
+
     <android.support.v7.widget.CardView
+        android:layout_below="@+id/upload_in_progress_text"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         card_view:cardCornerRadius="5dp"
         card_view:cardElevation="2dp"
@@ -72,10 +91,23 @@
         </RelativeLayout>
     </RelativeLayout>
 
-
     <TextView
         android:layout_marginTop="5dp"
         android:layout_below="@+id/header_row"
+        android:paddingLeft="10dp"
+        android:textSize="12dp"
+        android:layout_marginEnd="10dp"
+        android:textColor="@color/black"
+        android:id="@+id/user_post_text"
+        android:text="User text is here"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/user_post_text"
         android:paddingLeft="10dp"
         android:textSize="12dp"
         android:layout_marginEnd="10dp"

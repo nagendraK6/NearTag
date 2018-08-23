@@ -66,6 +66,26 @@ public class NewsFeedFragment extends Fragment {
                 loadFragment(new RecyclerGalaryFragment());
             }
         });
+
+
+        if (getArguments() != null) {
+            final String image_file_name =  getArguments()
+                    .getString(getString(R.string.user_selected_image));
+
+            final String user_message =  getArguments()
+                    .getString("user_message");
+
+            all_feeds.add(new NewsFeedElement(
+                 "#ok",
+                    "",
+                    "",
+                    false,
+                    user_message,
+                    image_file_name
+            ));
+            adapter.notifyDataSetChanged();
+        }
+
         getStandardViewList();
     }
 
@@ -88,12 +108,16 @@ public class NewsFeedFragment extends Fragment {
                         String tag_text = (String) obj.getString("tag_text");
                         String image_url = (String) obj.getString("image_url");
                         String profile_image_url = (String) obj.getString("profile_image_url");
+                        String message_text = (String) obj.getString("message_text");
 
 
                         NewsFeedElement current_element = new NewsFeedElement(
                                 tag_text,
                                 image_url,
-                                profile_image_url
+                                profile_image_url,
+                                true,
+                                message_text,
+                                ""
                         );
 
                         feed_elements.add(current_element);

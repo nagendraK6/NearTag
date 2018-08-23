@@ -8,11 +8,24 @@ public class NewsFeedElement  {
         private String bannerImageURL;
         private String profileImageURL;
         private String tag;
+        private Boolean hasPublished;
+        private String userPostText;
+        private String galleryImageFile;
 
-        public NewsFeedElement(String tag, String bannerImageURL, String profileImageURL) {
+        public NewsFeedElement(
+                String tag,
+                String bannerImageURL,
+                String profileImageURL,
+                Boolean hasPublished,
+                String messageText,
+                String galleryImageFile
+        ) {
             this.bannerImageURL = bannerImageURL;
             this.tag = tag;
             this.profileImageURL = profileImageURL;
+            this.hasPublished = hasPublished;
+            this.userPostText =  messageText;
+            this.galleryImageFile = galleryImageFile;
         }
 
 
@@ -27,6 +40,20 @@ public class NewsFeedElement  {
 
         public String getTag() {
             return tag;
+        }
+
+        public String getUserPostText() {
+        return userPostText;
+    }
+
+        public String getGalleryImageFile() {
+        return galleryImageFile;
+    }
+
+        public Boolean getHasPublished() { return hasPublished; }
+
+        public  void  setHasPublished(boolean b) {
+            hasPublished = true;
         }
 }
 
