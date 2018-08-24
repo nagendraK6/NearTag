@@ -4,9 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +19,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.beloo.widget.chipslayoutmanager.ChipsLayoutManager;
+import com.beloo.widget.chipslayoutmanager.gravity.IChildGravityResolver;
+import com.beloo.widget.chipslayoutmanager.layouter.breaker.IRowBreaker;
+import com.relylabs.around.composer.TagsListAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by nagendra on 8/17/18.
@@ -62,6 +71,53 @@ public class TagSearchFragment extends Fragment {
             });
         }
 
+        RecyclerView tags_list = view.findViewById(R.id.all_tags);
+        ArrayList<String> all_tags_data = new ArrayList<>();
+        all_tags_data.add("देश की आजादी");
+        all_tags_data.add("देश की आजादी");
+        all_tags_data.add("देश की आजादी");
+        all_tags_data.add("देश की आजादी");
+        all_tags_data.add("देश की आजादी");
+        all_tags_data.add("देश की आजादी");
+        all_tags_data.add("देश की आजादी");
+        all_tags_data.add("देश की आजादी");
+        all_tags_data.add("देश की आजादी");
+        all_tags_data.add("देश की आजादी");
+
+        ChipsLayoutManager chipsLayoutManager = ChipsLayoutManager.newBuilder(getContext())
+                //set vertical gravity for all items in a row. Default = Gravity.CENTER_VERTICAL
+                .setChildGravity(Gravity.TOP)
+                //whether RecyclerView can scroll. TRUE by default
+                .setScrollingEnabled(true)
+                //set maximum views count in a particular row
+                .setMaxViewsInRow(5)
+                //set gravity resolver where you can determine gravity for item in position.
+                //This method have priority over previous one
+                .setGravityResolver(new IChildGravityResolver() {
+                    @Override
+                    public int getItemGravity(int position) {
+                        return Gravity.CENTER;
+                    }
+                })
+                //you are able to break row due to your conditions. Row breaker should return true for that views
+                .setRowBreaker(new IRowBreaker() {
+                    @Override
+                    public boolean isItemBreakRow(@IntRange(from = 0) int position) {
+                        return false;
+                    }
+                })
+                //a layoutOrientation of layout manager, could be VERTICAL OR HORIZONTAL. HORIZONTAL by default
+                .setOrientation(ChipsLayoutManager.HORIZONTAL)
+                // row strategy for views in completed row, could be STRATEGY_DEFAULT, STRATEGY_FILL_VIEW,
+                //STRATEGY_FILL_SPACE or STRATEGY_CENTER
+                .setRowStrategy(ChipsLayoutManager.STRATEGY_FILL_VIEW)
+                // whether strategy is applied to last row. FALSE by default
+                .withLastRow(false)
+                .build();
+
+        tags_list.setLayoutManager(chipsLayoutManager);
+        TagsListAdapter adapter = new TagsListAdapter(getContext(), all_tags_data);
+        tags_list.setAdapter(adapter);
     }
 
     @Override

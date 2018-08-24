@@ -160,6 +160,7 @@
     <RelativeLayout
         android:layout_marginTop="10dp"
         android:layout_below="@+id/popular_tags"
+        android:id="@+id/post_action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
@@ -172,5 +173,18 @@
             android:text="पोस्ट करें"
             />
     </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/post_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/all_tags"
+
+        android:gravity="center"
+        android:background="@color/colorLightGreen"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"></android.support.v7.widget.RecyclerView>
+
 
 </RelativeLayout>
