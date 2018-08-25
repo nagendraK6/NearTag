@@ -66,6 +66,11 @@ public class NewsFeedFragment extends Fragment {
         });
 
 
+        PreCachingLayoutManager layoutManager = new PreCachingLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getActivity()));
+        news_feed_list.setLayoutManager(layoutManager);
+
         if (getArguments() != null) {
             final String image_file_name =  getArguments()
                     .getString(getString(R.string.user_selected_image));
@@ -81,15 +86,10 @@ public class NewsFeedFragment extends Fragment {
                     user_message,
                     image_file_name
             ));
-            adapter.notifyDataSetChanged();
+          //  adapter.notifyDataSetChanged();
         }
 
 
-        PreCachingLayoutManager layoutManager = new PreCachingLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        layoutManager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getActivity()));
-
-        news_feed_list.setLayoutManager(layoutManager);
 
 
         getStandardViewList();

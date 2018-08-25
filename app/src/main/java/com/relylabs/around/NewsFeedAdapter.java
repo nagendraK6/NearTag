@@ -134,7 +134,8 @@ public class NewsFeedAdapter extends
         viewHolder.userPostText.setText(current_element.getUserPostText());
 
         if (current_element.getHasPublished()) {
-            Picasso.with(getContext()).load(current_element.getBanngerImageURL()).into(
+            Picasso.with(getContext()).load(current_element.getBanngerImageURL())
+                    .into(
                     banner_image,
                     new com.squareup.picasso.Callback() {
                         @Override
@@ -151,19 +152,17 @@ public class NewsFeedAdapter extends
             );
             viewHolder.upload_in_progress_text.setVisibility(View.GONE);
         } else {
-
+            viewHolder.itemView.setVisibility(View.VISIBLE);
             File piccasso_file = new File(current_element.getGalleryImageFile());
             Picasso.with(getContext()).load(piccasso_file).
-                    centerCrop().
-                    fit().
                     into(
                     banner_image,
                     new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
-
-                            viewHolder.itemView.setVisibility(View.VISIBLE);
+                            Log.d("debug_data", "loading from local file");
                         }
+
 
                         @Override
                         public void onError() {
@@ -171,18 +170,17 @@ public class NewsFeedAdapter extends
                         }
                     }
             );
-
             viewHolder.upload_in_progress_text.setVisibility(View.VISIBLE);
             viewHolder.banngerImage.setAlpha((float) 0.5);
             viewHolder.profilePicURL.setAlpha((float) 0.5);
             viewHolder.tag.setAlpha((float) 0.5);
             viewHolder.uploadingFile.setVisibility(View.VISIBLE);
-            uploadUserProfileImage(piccasso_file, viewHolder, current_element);
+            createAPost(piccasso_file, viewHolder, current_element);
         }
     }
 
 
-    private void uploadUserProfileImage(File imgfile, final ViewHolder viewHolder,final  NewsFeedElement current_element) {
+    private void createAPost(File imgfile, final ViewHolder viewHolder,final  NewsFeedElement current_element) {
         Log.d("debug_data", "upload started...");
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
@@ -198,6 +196,14 @@ public class NewsFeedAdapter extends
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d("debug_data", "uploaded the image on server...");
+                /*
+                                viewHolder.upload_in_progress_text.setVisibility(View.INVISIBLE);
+                viewHolder.banngerImage.setAlpha((float) 1);
+                viewHolder.profilePicURL.setAlpha((float) 1);
+                viewHolder.tag.setAlpha((float) 1);
+                viewHolder.uploadingFile.setVisibility(View.INVISIBLE);
+
+                 */
             }
 
             @Override
@@ -207,21 +213,10 @@ public class NewsFeedAdapter extends
                 logData.put("message", t.getMessage());
                 Log.d("upload_image", "the errorstring: " +logData);
 
-                viewHolder.upload_in_progress_text.setVisibility(View.INVISIBLE);
-                viewHolder.banngerImage.setAlpha((float) 1);
-                viewHolder.profilePicURL.setAlpha((float) 1);
-                viewHolder.tag.setAlpha((float) 1);
-                viewHolder.uploadingFile.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
-                viewHolder.upload_in_progress_text.setVisibility(View.INVISIBLE);
-                viewHolder.banngerImage.setAlpha((float) 1);
-                viewHolder.profilePicURL.setAlpha((float) 1);
-                viewHolder.tag.setAlpha((float) 1);
-                viewHolder.uploadingFile.setVisibility(View.INVISIBLE);
-                current_element.setHasPublished(true);
             }
         };
 
