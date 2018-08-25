@@ -113,7 +113,9 @@ public class NewsFeedAdapter extends
 
         ImageView profile = viewHolder.profilePicURL;
         if (!current_element.getProfileImageURL().equals("")) {
-            Picasso.with(getContext()).load(current_element.getProfileImageURL()).into(
+            Picasso.with(getContext()).load(current_element.getProfileImageURL()).
+                    resize(50, 50).
+                    into(
                     profile,
                     new com.squareup.picasso.Callback() {
                         @Override
@@ -151,7 +153,10 @@ public class NewsFeedAdapter extends
         } else {
 
             File piccasso_file = new File(current_element.getGalleryImageFile());
-            Picasso.with(getContext()).load(piccasso_file).into(
+            Picasso.with(getContext()).load(piccasso_file).
+                    centerCrop().
+                    fit().
+                    into(
                     banner_image,
                     new com.squareup.picasso.Callback() {
                         @Override
@@ -207,7 +212,6 @@ public class NewsFeedAdapter extends
                 viewHolder.profilePicURL.setAlpha((float) 1);
                 viewHolder.tag.setAlpha((float) 1);
                 viewHolder.uploadingFile.setVisibility(View.INVISIBLE);
-                current_element.setHasPublished(true);
             }
 
             @Override

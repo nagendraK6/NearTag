@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +31,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nagendra on 8/17/18.
@@ -37,6 +39,9 @@ import java.util.ArrayList;
 
 public class TagSearchFragment extends Fragment {
 
+    RecyclerView tags_list;
+    ChipsLayoutManager chipsLayoutManager;
+    TagsListAdapter adapter;
 
     @Nullable
     @Override
@@ -71,7 +76,7 @@ public class TagSearchFragment extends Fragment {
             });
         }
 
-        RecyclerView tags_list = view.findViewById(R.id.all_tags);
+        tags_list = view.findViewById(R.id.all_tags);
         ArrayList<String> all_tags_data = new ArrayList<>();
         all_tags_data.add("देश की आजादी");
         all_tags_data.add("देश की आजादी");
@@ -84,7 +89,7 @@ public class TagSearchFragment extends Fragment {
         all_tags_data.add("देश की आजादी");
         all_tags_data.add("देश की आजादी");
 
-        ChipsLayoutManager chipsLayoutManager = ChipsLayoutManager.newBuilder(getContext())
+        chipsLayoutManager = ChipsLayoutManager.newBuilder(getContext())
                 //set vertical gravity for all items in a row. Default = Gravity.CENTER_VERTICAL
                 .setChildGravity(Gravity.TOP)
                 //whether RecyclerView can scroll. TRUE by default
@@ -116,7 +121,7 @@ public class TagSearchFragment extends Fragment {
                 .build();
 
         tags_list.setLayoutManager(chipsLayoutManager);
-        TagsListAdapter adapter = new TagsListAdapter(getContext(), all_tags_data);
+        adapter = new TagsListAdapter(getContext(), all_tags_data);
         tags_list.setAdapter(adapter);
     }
 
@@ -124,9 +129,15 @@ public class TagSearchFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         App.getRefWatcher(getActivity()).watch(this);
+        adapter = null;
+        chipsLayoutManager = null;
+        tags_list.setLayoutManager(null);
+        tags_list.setAdapter(null);
     }
 
     private void loadFragment(Fragment fragment_to_start) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        List<Fragment> frgs=  fragmentManager.getFragments();
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_holder, fragment_to_start);
         ft.commitAllowingStateLoss();

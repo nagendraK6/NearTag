@@ -55,8 +55,6 @@ public class NewsFeedFragment extends Fragment {
         // Attach the adapter to the recyclerview to populate items
         news_feed_list.setAdapter(adapter);
         // Set layout manager to position the items
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        news_feed_list.setLayoutManager(layoutManager);
         // line inbetween the data rows
 
         FloatingActionButton fab =  fragment_view.findViewById(R.id.fab);
@@ -85,6 +83,14 @@ public class NewsFeedFragment extends Fragment {
             ));
             adapter.notifyDataSetChanged();
         }
+
+
+        PreCachingLayoutManager layoutManager = new PreCachingLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getActivity()));
+
+        news_feed_list.setLayoutManager(layoutManager);
+
 
         getStandardViewList();
     }
@@ -144,7 +150,7 @@ public class NewsFeedFragment extends Fragment {
         // request
         client.addHeader("Accept", "application/json");
         //client.addHeader("Authorization", "Bearer " + user.AccessToken);
-        client.get(App.getBaseURL() + "newsfeed/", params, response_json);
+        client.get(App.getBaseURL() + "newsfeed", params, response_json);
     }
 
     private void loadFragment(Fragment fragment_to_start) {
@@ -157,7 +163,7 @@ public class NewsFeedFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         news_feed_list.setAdapter(null);
+        news_feed_list.setLayoutManager(null);
         App.getRefWatcher(getActivity()).watch(this);
     }
-
 }
