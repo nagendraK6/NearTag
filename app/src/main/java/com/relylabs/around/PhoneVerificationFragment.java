@@ -185,7 +185,7 @@ public class PhoneVerificationFragment extends Fragment {
 
 
 
-                                loadFragment(new UserNameAskFragment());
+                                loadFragment(new NewsFeedFragment());
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

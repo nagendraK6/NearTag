@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setUpFragment(new NewsFeedFragment());
+        setUpFragment(findFragment());
     }
 
     private void setUpFragment(Fragment fragment_to_start) {
@@ -24,18 +24,17 @@ public class MainActivity extends AppCompatActivity {
         ft.commitAllowingStateLoss();
     }
 
-    @Override
-    public void onBackPressed() {
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            Log.i("MainActivity", "popping backstack");
-            fm.popBackStack();
-        } else {
-            Log.i("MainActivity", "nothing on backstack, calling super");
-            super.onBackPressed();
+    private Fragment findFragment() {
+        User user = User.getLoggedInUser();
+        if (user == null) {
+            return new LoginFragment();
         }
-        super.onBackPressed();
-        Log.d("debug_data", "Back pressed");
+
+        if (user.IsOTPVerified == false) {
+            return new PhoneVerificationFragment();
+        }
+
+        return new NewsFeedFragment();
     }
 
     @Override

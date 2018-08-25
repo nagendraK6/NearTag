@@ -24,6 +24,11 @@
         android:hardwareAccelerated="true"
         android:theme="@style/DialogTheme">
 
+        <provider
+            android:name="com.activeandroid.content.ContentProvider"
+            android:authorities="com.relylabs.around"
+            android:exported="false" />
+
         <meta-data
             android:name="AA_DB_NAME"
             android:value="AroundDB" />
