@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.activeandroid.util.Log;
@@ -23,7 +24,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -44,6 +49,14 @@ public class NewsFeedFragment extends Fragment {
     @Override
     public void onViewCreated(View fragment_view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(fragment_view, savedInstanceState);
+
+        ImageView user_profile_shortlink = fragment_view.findViewById(R.id.user_profile_shortlink);
+        user_profile_shortlink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new UserProfileFragment());
+            }
+        });
 
         news_feed_list = (RecyclerView) fragment_view.findViewById(R.id.news_feed_list);
         busy_show_feed_fetch = (ProgressBar) fragment_view.findViewById(R.id.busy_show_feed_fetch);
@@ -78,14 +91,17 @@ public class NewsFeedFragment extends Fragment {
             final String user_message =  getArguments()
                     .getString("user_message");
 
-            all_feeds.add(new NewsFeedElement(
-                 "#ok",
+            NewsFeedElement new_post = new NewsFeedElement(
+                    "#ok",
                     "",
                     "",
                     false,
                     user_message,
                     image_file_name
-            ));
+            );
+
+            all_feeds.add(new_post);
+            createAPost(new_post);
           //  adapter.notifyDataSetChanged();
         }
 
@@ -99,6 +115,7 @@ public class NewsFeedFragment extends Fragment {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         busy_show_feed_fetch.setVisibility(View.VISIBLE);
+        User user = User.getLoggedInUser();
         // response
 
         JsonHttpResponseHandler response_json = new JsonHttpResponseHandler() {
@@ -149,7 +166,7 @@ public class NewsFeedFragment extends Fragment {
         };
         // request
         client.addHeader("Accept", "application/json");
-        //client.addHeader("Authorization", "Bearer " + user.AccessToken);
+        client.addHeader("Authorization", "Bearer " + user.AccessToken);
         client.get(App.getBaseURL() + "newsfeed", params, response_json);
     }
 
@@ -165,5 +182,50 @@ public class NewsFeedFragment extends Fragment {
         news_feed_list.setAdapter(null);
         news_feed_list.setLayoutManager(null);
         App.getRefWatcher(getActivity()).watch(this);
+    }
+
+
+    private void createAPost(
+            NewsFeedElement current_element
+    ) {
+        android.util.Log.d("debug_data", "upload started...");
+        User user = User.getLoggedInUser();
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        try {
+            File imgfile = new File(current_element.getGalleryImageFile());
+            params.put("file", imgfile);
+            params.put("tag", current_element.getTag());
+            params.put("post_text", current_element.getUserPostText());
+        } catch(FileNotFoundException fexception) {
+            fexception.printStackTrace();
+        }
+        JsonHttpResponseHandler jrep= new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                android.util.Log.d("debug_data", "uploaded the image on server...");
+                all_feeds.get(0).setHasPublished(true);
+                adapter.notifyItemChanged(0);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                HashMap logData = new HashMap<String, String>();
+                logData.put("status_code", statusCode);
+                logData.put("message", t.getMessage());
+                android.util.Log.d("upload_image", "the errorstring: " +logData);
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
+                android.util.Log.d("upload_image", "the errorstring: ");
+            }
+        };
+
+        client.addHeader("Accept", "application/json");
+        client.addHeader("Authorization", "Bearer " + user.AccessToken);
+        client.post(App.getBaseURL() + "post/create", params, jrep);
     }
 }

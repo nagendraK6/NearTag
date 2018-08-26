@@ -133,97 +133,63 @@ public class NewsFeedAdapter extends
         final ImageView banner_image = viewHolder.banngerImage;
         viewHolder.userPostText.setText(current_element.getUserPostText());
 
-        if (current_element.getHasPublished()) {
+        if (current_element.getBanngerImageURL() != "") {
             Picasso.with(getContext()).load(current_element.getBanngerImageURL())
                     .into(
-                    banner_image,
-                    new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {
+                            banner_image,
+                            new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
 
-                            viewHolder.itemView.setVisibility(View.VISIBLE);
-                        }
+                                    viewHolder.itemView.setVisibility(View.VISIBLE);
+                                }
 
-                        @Override
-                        public void onError() {
-                            //do smth when there is picture loading error
-                        }
-                    }
-            );
-            viewHolder.upload_in_progress_text.setVisibility(View.GONE);
-        } else {
+                                @Override
+                                public void onError() {
+                                    //do smth when there is picture loading error
+                                }
+                            }
+                    );
+        }
+
+        if (current_element.getGalleryImageFile() != "") {
             viewHolder.itemView.setVisibility(View.VISIBLE);
             File piccasso_file = new File(current_element.getGalleryImageFile());
             Picasso.with(getContext()).load(piccasso_file).
                     into(
-                    banner_image,
-                    new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {
-                            Log.d("debug_data", "loading from local file");
-                        }
+                            banner_image,
+                            new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d("debug_data", "loading from local file");
+                                }
 
 
-                        @Override
-                        public void onError() {
-                            //do smth when there is picture loading error
-                        }
-                    }
-            );
+                                @Override
+                                public void onError() {
+                                    //do smth when there is picture loading error
+                                }
+                            }
+                    );
+            if(current_element.getHasPublished()) {
+                viewHolder.banngerImage.setAlpha((float) 1);
+                viewHolder.profilePicURL.setAlpha((float) 1);
+                viewHolder.tag.setAlpha((float) 1);
+                viewHolder.uploadingFile.setVisibility(View.GONE);
+                viewHolder.upload_in_progress_text.setVisibility(View.GONE);
+            }
+        }
+
+        if (current_element.getHasPublished()) {
+            viewHolder.upload_in_progress_text.setVisibility(View.GONE);
+        } else {
+            viewHolder.itemView.setVisibility(View.VISIBLE);
             viewHolder.upload_in_progress_text.setVisibility(View.VISIBLE);
             viewHolder.banngerImage.setAlpha((float) 0.5);
             viewHolder.profilePicURL.setAlpha((float) 0.5);
             viewHolder.tag.setAlpha((float) 0.5);
             viewHolder.uploadingFile.setVisibility(View.VISIBLE);
-            createAPost(piccasso_file, viewHolder, current_element);
         }
-    }
-
-
-    private void createAPost(File imgfile, final ViewHolder viewHolder,final  NewsFeedElement current_element) {
-        Log.d("debug_data", "upload started...");
-        AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
-        try {
-            params.put("file", imgfile);
-            params.put("tag", current_element.getTag());
-
-        } catch(FileNotFoundException fexception) {
-            fexception.printStackTrace();
-        }
-        JsonHttpResponseHandler jrep= new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("debug_data", "uploaded the image on server...");
-                /*
-                                viewHolder.upload_in_progress_text.setVisibility(View.INVISIBLE);
-                viewHolder.banngerImage.setAlpha((float) 1);
-                viewHolder.profilePicURL.setAlpha((float) 1);
-                viewHolder.tag.setAlpha((float) 1);
-                viewHolder.uploadingFile.setVisibility(View.INVISIBLE);
-
-                 */
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                HashMap logData = new HashMap<String, String>();
-                logData.put("status_code", statusCode);
-                logData.put("message", t.getMessage());
-                Log.d("upload_image", "the errorstring: " +logData);
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
-            }
-        };
-
-        client.addHeader("Accept", "application/json");
-       // client.addHeader("Authorization", "Bearer " + user.AccessToken);
-
-        client.post(App.getBaseURL() + "Image/upload", params, jrep);
     }
 
 

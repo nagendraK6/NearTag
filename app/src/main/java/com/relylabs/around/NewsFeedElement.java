@@ -55,5 +55,9 @@ public class NewsFeedElement  {
         public  void  setHasPublished(boolean b) {
             hasPublished = true;
         }
+
+        public void setBannerImageURL(String s) {
+            bannerImageURL = s;
+        }
 }
 
