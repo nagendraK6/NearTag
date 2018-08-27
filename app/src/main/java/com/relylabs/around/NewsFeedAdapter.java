@@ -1,5 +1,6 @@
 package com.relylabs.around;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.WeakHashMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,15 +39,34 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class NewsFeedAdapter extends
         RecyclerView.Adapter<NewsFeedAdapter.ViewHolder> {
 
+    private  VisibilityTracker mVisibilityTracker;
+    private final WeakHashMap<View, Integer> mViewPositionMap = new WeakHashMap<>();
+
     // Store a member variable for the contacts
     private List<NewsFeedElement> news_feed_elements;
     // Store the context for easy access
     private Context mContext;
     View feed_view;
     // Pass in the contact array into the constructor
-    public NewsFeedAdapter(Context context, List<NewsFeedElement> all_feed_elements) {
+    public NewsFeedAdapter(Activity activity, Context context, List<NewsFeedElement> all_feed_elements) {
+        mVisibilityTracker = new VisibilityTracker(activity);
+        mVisibilityTracker.setVisibilityTrackerListener(new VisibilityTracker.VisibilityTrackerListener() {
+            @Override
+            public void onVisibilityChanged(List<View> visibleViews, List<View> invisibleViews) {
+                handleVisibleViews(visibleViews);
+            }
+        });
+
         news_feed_elements = all_feed_elements;
         mContext = context;
+    }
+
+    private void handleVisibleViews(List<View> visibleViews) {
+        Log.d(NewsFeedAdapter.class.getSimpleName(), "Currently visible views \n");
+        for (View v : visibleViews) {
+            Integer viewPosition = mViewPositionMap.get(v);
+            Log.d("debug_data", "VP " + viewPosition.toString());
+        }
     }
 
     // Easy access to the context object in the recyclerview
@@ -102,14 +123,13 @@ public class NewsFeedAdapter extends
 
     // Involves populating data into the item through holder
     @Override
-    public void onBindViewHolder(final NewsFeedAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final NewsFeedAdapter.ViewHolder viewHolder, final int position) {
         // Get the data model based on position
         final NewsFeedElement current_element = news_feed_elements.get(position);
         // Set item views based on your views and data model
         final TextView tag = viewHolder.tag;
         tag.setText(current_element.getTag());
         // Set item views based on your views and data model
-
 
         ImageView profile = viewHolder.profilePicURL;
         if (!current_element.getProfileImageURL().equals("")) {
@@ -140,7 +160,6 @@ public class NewsFeedAdapter extends
                             new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
-
                                     viewHolder.itemView.setVisibility(View.VISIBLE);
                                 }
 
@@ -190,6 +209,9 @@ public class NewsFeedAdapter extends
             viewHolder.tag.setAlpha((float) 0.5);
             viewHolder.uploadingFile.setVisibility(View.VISIBLE);
         }
+
+        mViewPositionMap.put(viewHolder.itemView, position);
+        mVisibilityTracker.addView(viewHolder.itemView, 50);
     }
 
 

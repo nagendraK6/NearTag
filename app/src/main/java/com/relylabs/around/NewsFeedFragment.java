@@ -63,7 +63,7 @@ public class NewsFeedFragment extends Fragment {
         // Initialize cont acts
         all_feeds = new ArrayList<NewsFeedElement>();
         // Create adapter passing in the sample user data
-        adapter = new NewsFeedAdapter(getActivity(), all_feeds);
+        adapter = new NewsFeedAdapter(getActivity(), getActivity(), all_feeds);
 
         // Attach the adapter to the recyclerview to populate items
         news_feed_list.setAdapter(adapter);
