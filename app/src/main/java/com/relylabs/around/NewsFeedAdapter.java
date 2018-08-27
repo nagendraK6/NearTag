@@ -21,10 +21,12 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.WeakHashMap;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
@@ -85,6 +87,7 @@ public class NewsFeedAdapter extends
         public ProgressBar uploadingFile;
         public TextView upload_in_progress_text;
         public TextView userPostText;
+        public ImageView like_icon;
 
         public ProgressBar busy;
 
@@ -101,6 +104,7 @@ public class NewsFeedAdapter extends
             uploadingFile = itemView.findViewById(R.id.progress);
             upload_in_progress_text = itemView.findViewById(R.id.upload_in_progress_text);
             userPostText = itemView.findViewById(R.id.user_post_text);
+            like_icon = itemView.findViewById(R.id.like_icon);
         }
     }
 
@@ -210,6 +214,18 @@ public class NewsFeedAdapter extends
             viewHolder.uploadingFile.setVisibility(View.VISIBLE);
         }
 
+
+        if (current_element.getHasLiked()) {
+            viewHolder.like_icon.setImageResource(R.drawable.like_icon_complete);
+        } else {
+            viewHolder.like_icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    viewHolder.like_icon.setImageResource(R.drawable.like_icon_complete);
+                    markPostLike(current_element.getPostId());
+                }
+            });
+        }
         mViewPositionMap.put(viewHolder.itemView, position);
         mVisibilityTracker.addView(viewHolder.itemView, 50);
     }
@@ -219,5 +235,34 @@ public class NewsFeedAdapter extends
     @Override
     public int getItemCount() {
         return news_feed_elements.size();
+    }
+
+    private void markPostLike(Integer post_id) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.add("post_id", post_id.toString());
+        User user = User.getLoggedInUser();
+
+        JsonHttpResponseHandler response_json = new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("debug_data", "liked");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                Log.d("debug_data", "liked failed");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
+                Log.d("debug_data", "liked failed");
+            }
+        };
+        // request
+        client.addHeader("Accept", "application/json");
+        client.addHeader("Authorization", "Bearer " + user.AccessToken);
+        client.post(App.getBaseURL() + "post/like", params, response_json);
     }
 }

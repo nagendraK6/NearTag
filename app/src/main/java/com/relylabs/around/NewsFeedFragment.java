@@ -92,9 +92,11 @@ public class NewsFeedFragment extends Fragment {
                     .getString("user_message");
 
             NewsFeedElement new_post = new NewsFeedElement(
+                    0,
                     "#ok",
                     "",
                     "",
+                    false,
                     false,
                     user_message,
                     image_file_name
@@ -127,17 +129,20 @@ public class NewsFeedFragment extends Fragment {
                     JSONArray all_contests = (JSONArray) response.getJSONArray("data");
                     for (int i =0; i < all_contests.length(); i++) {
                         JSONObject obj = all_contests.getJSONObject(i);
+                        Integer post_id = (Integer) obj.getInt("post_id");
 
                         String tag_text = (String) obj.getString("tag_text");
                         String image_url = (String) obj.getString("image_url");
                         String profile_image_url = (String) obj.getString("profile_image_url");
                         String message_text = (String) obj.getString("message_text");
-
+                        Boolean has_liked = (Boolean) obj.getBoolean("has_liked");
 
                         NewsFeedElement current_element = new NewsFeedElement(
+                                post_id,
                                 tag_text,
                                 image_url,
                                 profile_image_url,
+                                has_liked,
                                 true,
                                 message_text,
                                 ""

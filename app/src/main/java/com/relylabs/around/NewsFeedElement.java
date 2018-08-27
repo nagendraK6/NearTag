@@ -5,27 +5,33 @@ package com.relylabs.around;
  */
 
 public class NewsFeedElement  {
+        private Integer postId;
         private String bannerImageURL;
         private String profileImageURL;
         private String tag;
         private Boolean hasPublished;
         private String userPostText;
         private String galleryImageFile;
+        private Boolean hasLiked;
 
         public NewsFeedElement(
+                Integer postId,
                 String tag,
                 String bannerImageURL,
                 String profileImageURL,
+                Boolean hasLiked,
                 Boolean hasPublished,
                 String messageText,
                 String galleryImageFile
         ) {
+            this.postId = postId;
             this.bannerImageURL = bannerImageURL;
             this.tag = tag;
             this.profileImageURL = profileImageURL;
             this.hasPublished = hasPublished;
             this.userPostText =  messageText;
             this.galleryImageFile = galleryImageFile;
+            this.hasLiked = hasLiked;
         }
 
 
@@ -58,6 +64,18 @@ public class NewsFeedElement  {
 
         public void setBannerImageURL(String s) {
             bannerImageURL = s;
+        }
+
+        public  Integer getPostId() {
+            return postId;
+        }
+
+        public void setHasLiked() {
+            hasLiked = true;
+        }
+
+        public  Boolean getHasLiked() {
+            return hasLiked;
         }
 }
 
