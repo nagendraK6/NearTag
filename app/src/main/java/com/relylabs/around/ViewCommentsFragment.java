@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 /**
@@ -31,12 +32,24 @@ public class ViewCommentsFragment extends Fragment {
                 loadFragment();
             }
         });
+
+        // request focus
+        EditText comment = view.findViewById(R.id.comment);
+        comment.requestFocus();
+
+        ImageView ivPostComment = view.findViewById(R.id.ivPostComment);
+        ivPostComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // logic to post comment
+            }
+        });
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //App.getRefWatcher(getActivity()).watch(this);
+        App.getRefWatcher(getActivity()).watch(this);
     }
 
     @Override

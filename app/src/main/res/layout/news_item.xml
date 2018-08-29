@@ -138,15 +138,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <RelativeLayout
             android:layout_marginLeft="40dp"
             android:layout_alignParentLeft="true"
-            android:id="@+id/like_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_like_heart"
-            />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:id="@+id/like_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_like_heart"
+                />
+            <TextView
+                android:textColor="@color/black"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/like_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15 पसंद किया"/>
+        </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
         <ImageView
             android:layout_centerHorizontal="true"
@@ -154,17 +170,36 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/whatsapp" />
+            <TextView
+                android:textColor="@color/black"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/whatsapp_sharing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20 शेयर"/>
 
-
-        <ImageView
+        </RelativeLayout>
+        <RelativeLayout
             android:layout_marginRight="40dp"
             android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
+        <ImageView
             android:id="@+id/comment_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/comment_icon"
             />
+
+            <TextView
+                android:textColor="@color/black"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/comment_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10 विचार "/>
+        </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>
     </android.support.v7.widget.CardView>
