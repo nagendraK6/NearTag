@@ -1,6 +1,5 @@
 package com.relylabs.around;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,7 +8,10 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,9 +60,11 @@ public class NewsFeedAdapter extends
     private List<NewsFeedElement> news_feed_elements;
     // Store the context for easy access
     private Context mContext;
+
+    private AppCompatActivity activity;
     View feed_view;
     // Pass in the contact array into the constructor
-    public NewsFeedAdapter(Activity activity, Context context, List<NewsFeedElement> all_feed_elements) {
+    public NewsFeedAdapter(AppCompatActivity activity, Context context, List<NewsFeedElement> all_feed_elements) {
         mVisibilityTracker = new VisibilityTracker(activity);
         mVisibilityTracker.setVisibilityTrackerListener(new VisibilityTracker.VisibilityTrackerListener() {
             @Override
@@ -71,6 +75,7 @@ public class NewsFeedAdapter extends
 
         news_feed_elements = all_feed_elements;
         mContext = context;
+        this.activity = activity;
     }
 
     private void handleVisibleViews(List<View> visibleViews) {
@@ -99,6 +104,7 @@ public class NewsFeedAdapter extends
         public TextView userPostText;
         public ImageView like_icon;
         public ImageView share_button;
+        public ImageView comment_button;
 
         public ProgressBar busy;
 
@@ -117,6 +123,13 @@ public class NewsFeedAdapter extends
             userPostText = itemView.findViewById(R.id.user_post_text);
             like_icon = itemView.findViewById(R.id.like_icon);
             share_button = itemView.findViewById(R.id.whatsapp_sharing);
+            comment_button = itemView.findViewById(R.id.comment_icon);
+            comment_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    loadFragment(new ViewCommentsFragment());
+                }
+            });
         }
     }
 
@@ -349,5 +362,12 @@ public class NewsFeedAdapter extends
             app_installed = false;
         }
         return app_installed;
+    }
+
+    private void loadFragment(Fragment fragment_to_start) {
+        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.fragment_holder, fragment_to_start);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 }
