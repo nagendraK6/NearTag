@@ -25,11 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.relylabs.around.App;
-import com.relylabs.around.GalaryImageSelectFragment;
-import com.relylabs.around.ImageAdapter;
 import com.relylabs.around.R;
 import com.relylabs.around.TagSearchFragment;
 import com.squareup.picasso.Picasso;

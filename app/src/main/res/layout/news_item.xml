@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:background="#F2F2F2"
-    android:visibility="invisible"
+    android:visibility="visible"
     android:gravity="center_horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
@@ -84,9 +84,14 @@
 
             <TextView
                 android:layout_below="@+id/user_name"
-                android:id="@+id/time_ago"
-                android:text="30 mins ago"
-                android:layout_width="wrap_content"
+                android:paddingLeft="10dp"
+                android:textSize="12dp"
+                android:layout_marginEnd="10dp"
+                android:textColor="#33b5e5"
+                android:id="@+id/tag"
+                android:text="#Tag"
+                android:visibility="visible"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
         </RelativeLayout>
@@ -192,6 +197,7 @@
         </RelativeLayout>
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/text_and_tag"
         android:layout_below="@+id/action_section"
         android:layout_marginTop="2dp"
         android:layout_width="match_parent"
@@ -209,18 +215,16 @@
             android:layout_height="wrap_content" />
 
 
-        <TextView
-            android:layout_below="@+id/user_post_text"
-            android:paddingLeft="10dp"
-            android:textSize="12dp"
-            android:layout_marginEnd="10dp"
-            android:textColor="#33b5e5"
-            android:id="@+id/tag"
-            android:text="#Tag"
-            android:visibility="visible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+
     </RelativeLayout>
+
+    <TextView
+        android:layout_below="@+id/text_and_tag"
+        android:id="@+id/time_ago"
+        android:layout_marginLeft="10dp"
+        android:text="30 mins ago"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>
     </android.support.v7.widget.CardView>

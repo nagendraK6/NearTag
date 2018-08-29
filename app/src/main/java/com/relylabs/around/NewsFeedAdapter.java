@@ -241,7 +241,7 @@ public class NewsFeedAdapter extends
 
 
         if (current_element.getHasLiked()) {
-            viewHolder.like_icon.setImageResource(R.drawable.like_icon_complete);
+            viewHolder.like_icon.setImageResource(R.mipmap.ic_heart_red_like);
         } else {
             viewHolder.like_icon.setOnClickListener(new View.OnClickListener() {
                 @Override

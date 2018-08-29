@@ -23,7 +23,6 @@ import com.activeandroid.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.relylabs.around.composer.ComposerFragment;
 import com.relylabs.around.composer.RecyclerGalaryFragment;
 
 import org.json.JSONArray;
