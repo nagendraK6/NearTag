@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:background="#F2F2F2"
-    android:visibility="visible"
+    android:visibility="invisible"
     android:gravity="center_horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
@@ -30,7 +30,6 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         card_view:cardCornerRadius="5dp"
         card_view:cardElevation="2dp"
-        android:layout_margin="1dp"
         android:layout_marginTop="0dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -91,46 +90,36 @@
                 android:layout_height="wrap_content" />
 
         </RelativeLayout>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_ellipses"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:id="@+id/ivEllipses"/>
+
+        <View
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/ivEllipses"
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:id="@+id/seperator"
+            android:background="#eFeFeF" />
     </RelativeLayout>
 
-    <TextView
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/header_row"
-        android:paddingLeft="10dp"
-        android:textSize="12dp"
-        android:layout_marginEnd="10dp"
-        android:textColor="@color/black"
-        android:id="@+id/user_post_text"
-        android:text="User text is here"
-        android:visibility="visible"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
-
-    <TextView
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/user_post_text"
-        android:paddingLeft="10dp"
-        android:textSize="12dp"
-        android:layout_marginEnd="10dp"
-        android:textColor="#33b5e5"
-        android:id="@+id/tag"
-        android:text="#Tag"
-        android:visibility="visible"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 
     <ImageView
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/tag"
+        android:layout_below="@+id/header_row"
         android:layout_alignParentLeft="true"
         android:id="@+id/banner_image"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
     <RelativeLayout
         android:layout_centerHorizontal="true"
         android:id="@+id/action_section"
@@ -189,6 +178,7 @@
             android:id="@+id/comment_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
             android:src="@drawable/comment_icon"
             />
 
@@ -201,6 +191,37 @@
                 android:text="10 विचार "/>
         </RelativeLayout>
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_below="@+id/action_section"
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:paddingLeft="10dp"
+            android:textSize="12dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/black"
+            android:id="@+id/user_post_text"
+            android:text="User text is here"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:layout_below="@+id/user_post_text"
+            android:paddingLeft="10dp"
+            android:textSize="12dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="#33b5e5"
+            android:id="@+id/tag"
+            android:text="#Tag"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
 </RelativeLayout>
     </android.support.v7.widget.CardView>
 
