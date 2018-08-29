@@ -1,5 +1,9 @@
 package com.relylabs.around;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.activeandroid.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
@@ -40,6 +45,36 @@ public class NewsFeedFragment extends Fragment {
     NewsFeedAdapter adapter;
     RecyclerView news_feed_list;
     ProgressBar busy_show_feed_fetch;
+
+    BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("debug_data", "received data");
+
+
+                final String image_file_name =  intent
+                        .getStringExtra(getString(R.string.user_selected_image));
+
+                final String user_message =  intent
+                        .getStringExtra("user_message");
+
+                NewsFeedElement new_post = new NewsFeedElement(
+                        0,
+                        "#ok",
+                        "",
+                        "",
+                        false,
+                        false,
+                        user_message,
+                        image_file_name
+                );
+
+            createAPost(new_post);
+            all_feeds.add(0, new_post);
+                adapter.notifyDataSetChanged();
+            }
+    };
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,33 +119,10 @@ public class NewsFeedFragment extends Fragment {
         layoutManager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getActivity()));
         news_feed_list.setLayoutManager(layoutManager);
 
-        if (getArguments() != null) {
-            final String image_file_name =  getArguments()
-                    .getString(getString(R.string.user_selected_image));
-
-            final String user_message =  getArguments()
-                    .getString("user_message");
-
-            NewsFeedElement new_post = new NewsFeedElement(
-                    0,
-                    "#ok",
-                    "",
-                    "",
-                    false,
-                    false,
-                    user_message,
-                    image_file_name
-            );
-
-            all_feeds.add(new_post);
-            createAPost(new_post);
-          //  adapter.notifyDataSetChanged();
-        }
-
-
-
-
         getStandardViewList();
+
+        IntentFilter new_post = new IntentFilter("new_post");
+        getActivity().registerReceiver(broadCastNewMessage, new_post);
     }
 
     private void getStandardViewList() {
@@ -177,7 +189,8 @@ public class NewsFeedFragment extends Fragment {
 
     private void loadFragment(Fragment fragment_to_start) {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_holder, fragment_to_start);
+        ft.add(R.id.fragment_holder, fragment_to_start);
+        ft.addToBackStack(null);
         ft.commit();
     }
 

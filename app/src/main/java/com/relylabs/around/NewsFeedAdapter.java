@@ -2,8 +2,14 @@ package com.relylabs.around;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -21,6 +28,9 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,6 +98,7 @@ public class NewsFeedAdapter extends
         public TextView upload_in_progress_text;
         public TextView userPostText;
         public ImageView like_icon;
+        public ImageView share_button;
 
         public ProgressBar busy;
 
@@ -105,6 +116,7 @@ public class NewsFeedAdapter extends
             upload_in_progress_text = itemView.findViewById(R.id.upload_in_progress_text);
             userPostText = itemView.findViewById(R.id.user_post_text);
             like_icon = itemView.findViewById(R.id.like_icon);
+            share_button = itemView.findViewById(R.id.whatsapp_sharing);
         }
     }
 
@@ -228,6 +240,66 @@ public class NewsFeedAdapter extends
         }
         mViewPositionMap.put(viewHolder.itemView, position);
         mVisibilityTracker.addView(viewHolder.itemView, 50);
+        viewHolder.share_button.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+
+
+                viewHolder.itemView.setDrawingCacheEnabled(true);
+
+// this is the important code :)
+// Without it the view will have a dimension of 0,0 and the bitmap will be null
+                viewHolder.itemView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                viewHolder.itemView.layout(0, 0, viewHolder.itemView.getMeasuredWidth(), viewHolder.itemView.getMeasuredHeight());
+
+                viewHolder.itemView.buildDrawingCache(true);
+                Bitmap b = Bitmap.createBitmap(viewHolder.itemView.getDrawingCache());
+                viewHolder.itemView.setDrawingCacheEnabled(false); // clear drawing cache
+
+
+                Bitmap bitmap2 = b.copy(b.getConfig(), false);
+
+                String filename = "bitmap.png";
+
+
+
+                String root = Environment.getExternalStorageDirectory().toString();
+                File myDir = new File(root + "/req_images");
+                myDir.mkdirs();
+                File file = new File(myDir, filename);
+                if (file.exists())
+                    file.delete();
+                try {
+                    FileOutputStream out = new FileOutputStream(file);
+                    bitmap2.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                    out.flush();
+                    out.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                banner_image.setDrawingCacheEnabled(false);
+                //File f = new File(filename);
+
+                Uri apkURI = FileProvider.getUriForFile(
+                        getContext(),
+                        getContext()
+                                .getPackageName() + ".provider", file);
+
+                Uri imageUri = Uri.fromFile(myDir);
+
+
+                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                shareIntent.setType("image/*");
+                shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, apkURI);
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                boolean installed_whatsapp = appInstalledOrNot("com.whatsapp", getContext());
+                if (installed_whatsapp) {
+                    shareIntent.setPackage("com.whatsapp");
+                }
+                getContext().startActivity(Intent.createChooser(shareIntent, "Share via"));
+            }
+        });
     }
 
 
@@ -264,5 +336,18 @@ public class NewsFeedAdapter extends
         client.addHeader("Accept", "application/json");
         client.addHeader("Authorization", "Bearer " + user.AccessToken);
         client.post(App.getBaseURL() + "post/like", params, response_json);
+    }
+
+    private boolean appInstalledOrNot(String uri, Context context) {
+        PackageManager pm = context.getPackageManager();
+        boolean app_installed;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+        }
+        return app_installed;
     }
 }

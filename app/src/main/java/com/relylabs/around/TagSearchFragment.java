@@ -1,5 +1,6 @@
 package com.relylabs.around;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -38,7 +39,6 @@ import java.util.List;
  */
 
 public class TagSearchFragment extends Fragment {
-
     RecyclerView tags_list;
     ChipsLayoutManager chipsLayoutManager;
     TagsListAdapter adapter;
@@ -69,9 +69,7 @@ public class TagSearchFragment extends Fragment {
                     Bundle data_bundle = new Bundle();
                     data_bundle.putString(getString(R.string.user_selected_image), image_file_name);
                     data_bundle.putString("user_message", composer_post_text.getText().toString());
-                    Fragment news_feed_fragment = new NewsFeedFragment();
-                    news_feed_fragment.setArguments(data_bundle);
-                    loadFragment(news_feed_fragment);
+                    loadFragment(data_bundle);
                 }
             });
         }
@@ -135,11 +133,11 @@ public class TagSearchFragment extends Fragment {
         tags_list.setAdapter(null);
     }
 
-    private void loadFragment(Fragment fragment_to_start) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        List<Fragment> frgs=  fragmentManager.getFragments();
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_holder, fragment_to_start);
-        ft.commitAllowingStateLoss();
+    private void loadFragment(Bundle bundle) {
+        Intent intent=new Intent("new_post");
+        intent.putExtras(bundle);
+        getActivity().sendBroadcast(intent);
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 }

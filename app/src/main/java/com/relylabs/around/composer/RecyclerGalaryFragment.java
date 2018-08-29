@@ -62,12 +62,20 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ImageView closeButton = view.findViewById(R.id.ivCloseShare);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
         processImageSelection();
     }
 
     private void loadFragment(Fragment fragment_to_start) {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_holder, fragment_to_start);
+        ft.add(R.id.fragment_holder, fragment_to_start);
+        ft.addToBackStack(null);
         ft.commit();
     }
 
@@ -114,6 +122,8 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
 
         Picasso.with(getContext()).load(new File(all_images.get(position)))
                 .fit()
+                .placeholder(R.color.white)
+                .noFade()
                 .centerCrop()
                 .into(preview_image);
 
@@ -191,9 +201,8 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
         preview_image = fragment_view.findViewById(R.id.preview_image);
         Picasso.with(getContext()).load(new File(mSelectedImage))
                 .fit()
+                .placeholder(R.color.white)
                 .centerCrop()
                 .into(preview_image);
-
-
     }
 }
