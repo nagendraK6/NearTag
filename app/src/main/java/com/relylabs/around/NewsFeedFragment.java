@@ -113,7 +113,6 @@ public class NewsFeedFragment extends Fragment {
 
         view_img_upload = fragment_view.findViewById(R.id.upload_preview);
         image_in_progress = fragment_view.findViewById(R.id.upload_image);
-
         ImageView user_profile_shortlink = fragment_view.findViewById(R.id.user_profile_shortlink);
         user_profile_shortlink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +121,22 @@ public class NewsFeedFragment extends Fragment {
             }
         });
 
+
+        Picasso.with(getContext()).load("https://www.rely.ai/Image/a1.jpg").
+                resize(40, 40).
+                into(
+                        user_profile_shortlink,
+                        new com.squareup.picasso.Callback() {
+                            @Override
+                            public void onSuccess() {
+                            }
+
+                            @Override
+                            public void onError() {
+                                //do smth when there is picture loading error
+                            }
+                        }
+                );
         news_feed_list = (RecyclerView) fragment_view.findViewById(R.id.news_feed_list);
         busy_show_feed_fetch = (ProgressBar) fragment_view.findViewById(R.id.busy_show_feed_fetch);
         // Initialize cont acts
