@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -24,6 +25,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.relylabs.around.composer.RecyclerGalaryFragment;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,6 +48,8 @@ public class NewsFeedFragment extends Fragment {
     RecyclerView news_feed_list;
     ProgressBar busy_show_feed_fetch;
 
+    ImageView image_in_progress;
+    View view_img_upload;
     BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -57,6 +61,28 @@ public class NewsFeedFragment extends Fragment {
 
                 final String user_message =  intent
                         .getStringExtra("user_message");
+
+                view_img_upload.setVisibility(View.VISIBLE);
+                File f = new File(image_file_name);
+
+            Picasso.with(getContext()).load(Uri.fromFile(f)).
+                    resize(40, 40).
+                    into(
+                            image_in_progress,
+                            new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                }
+
+                                @Override
+                                public void onError() {
+                                    //do smth when there is picture loading error
+                                }
+                            }
+                    );
+
+
+
 
                 NewsFeedElement new_post = new NewsFeedElement(
                         0,
@@ -70,8 +96,8 @@ public class NewsFeedFragment extends Fragment {
                 );
 
             createAPost(new_post);
-            all_feeds.add(0, new_post);
-                adapter.notifyDataSetChanged();
+            //all_feeds.add(0, new_post);
+            //    adapter.notifyDataSetChanged();
             }
     };
 
@@ -84,6 +110,9 @@ public class NewsFeedFragment extends Fragment {
     @Override
     public void onViewCreated(View fragment_view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(fragment_view, savedInstanceState);
+
+        view_img_upload = fragment_view.findViewById(R.id.upload_preview);
+        image_in_progress = fragment_view.findViewById(R.id.upload_image);
 
         ImageView user_profile_shortlink = fragment_view.findViewById(R.id.user_profile_shortlink);
         user_profile_shortlink.setOnClickListener(new View.OnClickListener() {
@@ -204,7 +233,7 @@ public class NewsFeedFragment extends Fragment {
 
 
     private void createAPost(
-            NewsFeedElement current_element
+            final NewsFeedElement current_element
     ) {
         android.util.Log.d("debug_data", "upload started...");
         User user = User.getLoggedInUser();
@@ -223,8 +252,10 @@ public class NewsFeedFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 android.util.Log.d("debug_data", "uploaded the image on server...");
-                all_feeds.get(0).setHasPublished(true);
-                adapter.notifyItemChanged(0);
+                current_element.setHasPublished(true);
+                all_feeds.add(0, current_element);
+                adapter.notifyDataSetChanged();
+                view_img_upload.setVisibility(View.GONE);
             }
 
             @Override

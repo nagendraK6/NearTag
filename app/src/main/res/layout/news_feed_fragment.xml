@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="visible"
+    android:visibility="invisible"
     android:layout_marginLeft="2dp"
     android:layout_marginRight="2dp"
     android:background="#F2F2F2"
@@ -20,18 +20,59 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_below="@+id/relLayout1"
+        android:id="@+id/upload_preview"
+        android:visibility="gone"
+        android:background="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ProgressBar
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/busy_upload"/>
+        <ImageView
+            android:id="@+id/upload_image"
+            android:src="@drawable/ic_menu_h"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <ImageView
+            android:layout_toRightOf="@+id/upload_image"
+            android:id="@+id/upload_image_status"
+            android:src="@drawable/ic_checkmark"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <TextView
+            android:layout_toRightOf="@+id/upload_image_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/upload_in_progress_text"
+            android:visibility="visible"
+            android:text="अपलोड हो रहा है"
+            />
+    </RelativeLayout>
+
     <ProgressBar
         android:layout_gravity="center"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/busy_show_feed_fetch"/>
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/news_feed_list"
-        android:layout_below="@+id/relLayout1"
+        android:layout_below="@+id/upload_preview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
