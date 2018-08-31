@@ -153,7 +153,11 @@ public class NewsFeedFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadFragment(new RecyclerGalaryFragment());
+                Fragment frag = new RecyclerGalaryFragment();
+                Bundle bnd = new Bundle();
+                bnd.putString("ref", "composer");
+                frag.setArguments(bnd);
+                loadFragment(frag);
             }
         });
 

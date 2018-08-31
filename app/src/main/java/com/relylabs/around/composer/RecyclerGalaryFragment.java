@@ -3,6 +3,7 @@ package com.relylabs.around.composer;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +48,7 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
     ArrayList<String> all_images;
     ImageView preview_image;
     View fragment_view;
+    String ref = "";
 
     @Nullable
     @Override
@@ -66,6 +69,11 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
             }
         });
         processImageSelection();
+
+        if (getArguments() != null) {
+            ref =  getArguments()
+                    .getString("ref");
+        }
     }
 
     private void loadFragment(Fragment fragment_to_start) {
@@ -187,9 +195,18 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
             public void onClick(View view) {
                 Bundle data_bundle = new Bundle();
                 data_bundle.putString(getString(R.string.user_selected_image), mSelectedImage);
-                Fragment frg = new TagSearchFragment();
-                frg.setArguments(data_bundle);
-                loadFragment(frg);
+
+                if (ref.equals("composer")) {
+                    Fragment frg = new TagSearchFragment();
+                    frg.setArguments(data_bundle);
+                    loadFragment(frg);
+                } else {
+                    // close current fragment and pass data to previous fragment
+                    Intent intent=new Intent("profile_update");
+                    intent.putExtras(data_bundle);
+                    getActivity().sendBroadcast(intent);
+                    getActivity().onBackPressed();
+                }
             }
         });
 

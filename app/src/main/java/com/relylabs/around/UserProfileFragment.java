@@ -51,6 +51,20 @@ public class UserProfileFragment extends Fragment {
                 loadFragment();
             }
         });
+
+        TextView username = view.findViewById(R.id.username);
+        User user = User.getLoggedInUser();
+        if (user.Name != "") {
+            username.setText(user.Name);
+        }
+
+        TextView editProfile = (TextView) view.findViewById(R.id.textEditProfile);
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpFragment(new AccountEditFragment());
+            }
+        });
     }
 
     @Override
@@ -67,5 +81,12 @@ public class UserProfileFragment extends Fragment {
     private void loadFragment() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
+    private void setUpFragment(Fragment fragment_to_start) {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.fragment_holder, fragment_to_start);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 }

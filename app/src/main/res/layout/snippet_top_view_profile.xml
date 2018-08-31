@@ -101,6 +101,7 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintVertical_bias="0.0"
             android:textAlignment="center"
+            android:visibility="gone"
             android:background="@drawable/follow_button"/>
 
         <TextView
@@ -125,7 +126,7 @@
 
         <TextView
             android:id="@+id/textEditProfile"
-            android:layout_width="32dp"
+            android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:text="Edit your profile"
             android:textColor="@color/black"
@@ -140,8 +141,8 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintVertical_bias="0.0"
             android:textAlignment="center"
-            android:background="@drawable/ic_backarrow"
-            android:visibility="gone"/>
+            android:background="@drawable/grey_border"
+            android:visibility="visible"/>
 
 
     </android.support.constraint.ConstraintLayout>
