@@ -23,10 +23,13 @@ import com.loopj.android.http.RequestParams;
 import com.relylabs.around.composer.RecyclerGalaryFragment;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
@@ -104,6 +107,25 @@ public class AccountEditFragment extends Fragment {
 
         profile = view.findViewById(R.id.profile_photo);
 
+        User user = User.getLoggedInUser();
+        if (user.ProfilePicURL != "") {
+            Picasso.with(getContext()).load(user.ProfilePicURL).
+                    resize(120, 120).
+                    into(
+                            profile,
+                            new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                }
+
+                                @Override
+                                public void onError() {
+                                    //do smth when there is picture loading error
+                                }
+                            }
+                    );
+        }
+
             ImageView saveChange = view.findViewById(R.id.saveChanges);
             saveChange.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -129,6 +151,21 @@ public class AccountEditFragment extends Fragment {
                                 android.util.Log.d("debug_data", "uploaded the image on server...");
 
                                 // update user profile and broadcast the update
+                                try {
+                                    JSONObject data = (JSONObject) response.getJSONObject("data");
+                                    data.getString("profile_image_url");
+                                    User user = User.getLoggedInUser();
+                                    user.ProfilePicURL  = data.getString("profile_image_url");
+                                    user.save();
+
+                                    Intent intent=new Intent("user_profile_image_update");
+                                    getActivity().sendBroadcast(intent);
+                                    loadFragment();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+
                             }
 
                             @Override

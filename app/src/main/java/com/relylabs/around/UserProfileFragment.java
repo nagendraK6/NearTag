@@ -1,6 +1,10 @@
 package com.relylabs.around;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,13 +24,16 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by nagendra on 8/26/18.
@@ -34,6 +41,33 @@ import cz.msebera.android.httpclient.Header;
 
 public class UserProfileFragment extends Fragment {
 
+
+    CircleImageView profile_img;
+    BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            com.activeandroid.util.Log.d("debug_data", "received data");
+
+
+            User user = User.getLoggedInUser();
+
+            Picasso.with(getContext()).load(user.ProfilePicURL).
+                    resize(120, 120).
+                    into(
+                            profile_img,
+                            new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                }
+
+                                @Override
+                                public void onError() {
+                                    //do smth when there is picture loading error
+                                }
+                            }
+                    );
+        }
+    };
 
     @Nullable
     @Override
@@ -53,9 +87,29 @@ public class UserProfileFragment extends Fragment {
         });
 
         TextView username = view.findViewById(R.id.username);
+        profile_img = view.findViewById(R.id.profile_photo);
         User user = User.getLoggedInUser();
         if (user.Name != "") {
             username.setText(user.Name);
+        }
+
+
+        if (user.ProfilePicURL != "") {
+            Picasso.with(getContext()).load(user.ProfilePicURL).
+                    resize(120, 120).
+                    into(
+                            profile_img,
+                            new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                }
+
+                                @Override
+                                public void onError() {
+                                    //do smth when there is picture loading error
+                                }
+                            }
+                    );
         }
 
         TextView editProfile = (TextView) view.findViewById(R.id.textEditProfile);
@@ -65,6 +119,9 @@ public class UserProfileFragment extends Fragment {
                 setUpFragment(new AccountEditFragment());
             }
         });
+
+        IntentFilter new_post = new IntentFilter("user_profile_image_update");
+        getActivity().registerReceiver(broadCastNewMessage, new_post);
     }
 
     @Override
