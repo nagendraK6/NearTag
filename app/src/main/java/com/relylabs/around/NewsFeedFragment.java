@@ -27,6 +27,7 @@ import com.loopj.android.http.RequestParams;
 import com.relylabs.around.composer.RecyclerGalaryFragment;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -122,21 +123,25 @@ public class NewsFeedFragment extends Fragment {
         });
 
 
-        Picasso.with(getContext()).load("https://www.rely.ai/Image/a1.jpg").
-                resize(40, 40).
-                into(
-                        user_profile_shortlink,
-                        new com.squareup.picasso.Callback() {
-                            @Override
-                            public void onSuccess() {
-                            }
+        User user = User.getLoggedInUser();
+        if (!StringUtils.isEmpty(user.ProfilePicURL)) {
+            Picasso.with(getContext()).load(user.ProfilePicURL).
+                    resize(40, 40).
+                    into(
+                            user_profile_shortlink,
+                            new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                }
 
-                            @Override
-                            public void onError() {
-                                //do smth when there is picture loading error
+                                @Override
+                                public void onError() {
+                                    //do smth when there is picture loading error
+                                }
                             }
-                        }
-                );
+                    );
+
+        }
         news_feed_list = (RecyclerView) fragment_view.findViewById(R.id.news_feed_list);
         busy_show_feed_fetch = (ProgressBar) fragment_view.findViewById(R.id.busy_show_feed_fetch);
         // Initialize cont acts
@@ -248,6 +253,7 @@ public class NewsFeedFragment extends Fragment {
         news_feed_list.setAdapter(null);
         news_feed_list.setLayoutManager(null);
         App.getRefWatcher(getActivity()).watch(this);
+        getActivity().unregisterReceiver(broadCastNewMessage);
     }
 
 

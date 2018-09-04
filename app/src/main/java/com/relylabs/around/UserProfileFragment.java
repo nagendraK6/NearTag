@@ -21,11 +21,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.stetho.common.StringUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,6 +45,8 @@ public class UserProfileFragment extends Fragment {
 
 
     CircleImageView profile_img;
+    TextView username;
+    TextView display_name;
     BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -66,6 +70,11 @@ public class UserProfileFragment extends Fragment {
                                 }
                             }
                     );
+
+            if (!StringUtils.isEmpty(user.Name)) {
+                username.setText(user.Name);
+                display_name.setText(user.Name);
+            }
         }
     };
 
@@ -86,15 +95,20 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
-        TextView username = view.findViewById(R.id.username);
+        username = view.findViewById(R.id.username);
+        display_name = view.findViewById(R.id.display_name);
         profile_img = view.findViewById(R.id.profile_photo);
+
         User user = User.getLoggedInUser();
-        if (user.Name != "") {
+
+        if (!StringUtils.isEmpty(user.Name)) {
             username.setText(user.Name);
+            TextView display_name = view.findViewById(R.id.display_name);
+            display_name.setText(user.Name);
         }
 
 
-        if (user.ProfilePicURL != "") {
+        if (!StringUtils.isEmpty(user.ProfilePicURL)) {
             Picasso.with(getContext()).load(user.ProfilePicURL).
                     resize(120, 120).
                     into(
@@ -120,14 +134,15 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
-        IntentFilter new_post = new IntentFilter("user_profile_image_update");
+        IntentFilter new_post = new IntentFilter("user_profile_update");
         getActivity().registerReceiver(broadCastNewMessage, new_post);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //App.getRefWatcher(getActivity()).watch(this);
+        getActivity().unregisterReceiver(broadCastNewMessage);
+        App.getRefWatcher(getActivity()).watch(this);
     }
 
     @Override

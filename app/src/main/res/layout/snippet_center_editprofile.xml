@@ -26,7 +26,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Change Photo"
+                android:text="प्रोफाइल फोटो बदलें"
                 android:id="@+id/changeProfilePhoto"
                 android:layout_below="@+id/profile_photo"
                 android:layout_centerHorizontal="true"
@@ -58,7 +58,7 @@
                     android:layout_marginStart="40dp"
                     android:background="@null"
                     android:inputType="textNoSuggestions"
-                    android:hint="username"/>
+                    android:hint="यूजर नाम"/>
 
             </RelativeLayout>
 
@@ -86,7 +86,7 @@
                     android:layout_marginStart="40dp"
                     android:background="@null"
                     android:inputType="textNoSuggestions"
-                    android:hint="display name"/>
+                    android:hint="आपका नाम"/>
 
             </RelativeLayout>
 
@@ -98,6 +98,7 @@
                 android:layout_below="@+id/relLayout2"
                 android:background="@drawable/grey_border_bottom"
                 android:id="@+id/relLayout3"
+                android:visibility="gone"
                 android:layout_marginTop="15dp">
 
                 <ImageView
@@ -142,7 +143,7 @@
                     android:layout_marginStart="40dp"
                     android:background="@null"
                     android:inputType="textNoSuggestions"
-                    android:hint="Description"/>
+                    android:hint="अपने बारे में कुछ लिखे जैसे में बहुत सुन्दर हूँ"/>
 
             </RelativeLayout>
 

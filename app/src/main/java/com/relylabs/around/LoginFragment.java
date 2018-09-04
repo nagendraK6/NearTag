@@ -29,6 +29,7 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -154,6 +155,10 @@ public class LoginFragment extends Fragment {
                                                     user.Location = user_location;
                                                     user.IsOTPVerified = false;
                                                     user.AccessToken = user_token;
+
+                                                    if(response.has("profile_image_url")) {
+                                                        user.ProfilePicURL = response.getString("profile_image_url");
+                                                    }
                                                 } else {
                                                     user.AccessToken = user_token;
                                                 }
@@ -168,7 +173,12 @@ public class LoginFragment extends Fragment {
 
                                         @Override
                                         public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                                            Log.d("debug data_error", " " + statusCode);
+                                            HashMap logData = new HashMap<String, String>();
+                                        }
+
+                                        @Override
+                                        public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
+                                            HashMap logData = new HashMap<String, String>();
                                         }
                                     };
 

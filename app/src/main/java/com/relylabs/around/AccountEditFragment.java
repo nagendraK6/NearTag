@@ -10,10 +10,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.activeandroid.util.Log;
@@ -34,13 +38,14 @@ import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
 import de.hdodenhof.circleimageview.CircleImageView;
-
+import org.apache.commons.lang3.StringUtils;
 /**
  * Created by nagendra on 8/30/18.
  */
 public class AccountEditFragment extends Fragment {
 
     CircleImageView profile;
+    Boolean profile_updated = false;
     Boolean image_updated = false;
     String image_file_name;
 
@@ -54,6 +59,7 @@ public class AccountEditFragment extends Fragment {
             image_file_name = intent
                     .getStringExtra(getString(R.string.user_selected_image));
 
+            profile_updated = true;
             image_updated = true;
 
             File f = new File(image_file_name);
@@ -107,8 +113,8 @@ public class AccountEditFragment extends Fragment {
 
         profile = view.findViewById(R.id.profile_photo);
 
-        User user = User.getLoggedInUser();
-        if (user.ProfilePicURL != "") {
+        final User user = User.getLoggedInUser();
+        if (!StringUtils.isEmpty(user.ProfilePicURL)) {
             Picasso.with(getContext()).load(user.ProfilePicURL).
                     resize(120, 120).
                     into(
@@ -126,66 +132,100 @@ public class AccountEditFragment extends Fragment {
                     );
         }
 
-            ImageView saveChange = view.findViewById(R.id.saveChanges);
-            saveChange.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
-                    if (image_updated) {
+        final ImageView saveChange = view.findViewById(R.id.saveChanges);
+        final ProgressBar saveChangesBusy = view.findViewById(R.id.saveChangesBusy);
+        final EditText user_name = view.findViewById(R.id.username);
+        final  EditText display_name = view.findViewById(R.id.display_name);
+        user_name.setText(user.Name);
+        display_name.setText(user.Name);
+        display_name.addTextChangedListener(new TextWatcher() {
+                                                @Override
+                                                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                        android.util.Log.d("debug_data", "upload started...");
-                        User user = User.getLoggedInUser();
-                        AsyncHttpClient client = new AsyncHttpClient();
-                        RequestParams params = new RequestParams();
-                        try {
-                            File imgfile = new File(image_file_name);
-                            params.put("new_profile_image", imgfile);
-                        } catch(FileNotFoundException fexception) {
-                            fexception.printStackTrace();
-                        }
+                                                }
 
-                        JsonHttpResponseHandler jrep= new JsonHttpResponseHandler() {
+                                                @Override
+                                                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                android.util.Log.d("debug_data", "uploaded the image on server...");
+                                                }
 
-                                // update user profile and broadcast the update
+                                                @Override
+                                                public void afterTextChanged(Editable editable) {
+                                                    final String new_display_name = editable.toString();
+                                                    if (!new_display_name.equals(display_name)) {
+                                                        profile_updated = true;
+                                                    }
+                                                }
+                                            }
+        );
+
+                saveChange.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if (profile_updated) {
+
+                            saveChangesBusy.setVisibility(View.VISIBLE);
+                            saveChange.setVisibility(View.INVISIBLE);
+                            android.util.Log.d("debug_data", "upload started...");
+                            AsyncHttpClient client = new AsyncHttpClient();
+                            RequestParams params = new RequestParams();
+
+                            if (image_updated){
                                 try {
-                                    JSONObject data = (JSONObject) response.getJSONObject("data");
-                                    data.getString("profile_image_url");
-                                    User user = User.getLoggedInUser();
-                                    user.ProfilePicURL  = data.getString("profile_image_url");
-                                    user.save();
+                                    File imgfile = new File(image_file_name);
+                                    params.put("new_profile_image", imgfile);
+                                } catch (FileNotFoundException fexception) {
+                                    fexception.printStackTrace();
+                                }
+                            }
 
-                                    Intent intent=new Intent("user_profile_image_update");
-                                    getActivity().sendBroadcast(intent);
-                                    loadFragment();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                            params.put("name", display_name.getText().toString());
+
+                            JsonHttpResponseHandler jrep = new JsonHttpResponseHandler() {
+
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    android.util.Log.d("debug_data", "uploaded the image on server...");
+
+                                    // update user profile and broadcast the update
+                                    try {
+                                        JSONObject data = (JSONObject) response.getJSONObject("data");
+                                        if(data.has("profile_image_url")) {
+                                            user.ProfilePicURL = data.getString("profile_image_url");
+                                        }
+
+                                        user.Name = display_name.getText().toString();
+                                        user.save();
+                                        Intent intent = new Intent("user_profile_update");
+                                        getActivity().sendBroadcast(intent);
+                                        loadFragment();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+
                                 }
 
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                                    HashMap logData = new HashMap<String, String>();
+                                }
 
-                            }
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
+                                    HashMap logData = new HashMap<String, String>();
+                                }
+                            };
 
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                                HashMap logData = new HashMap<String, String>();
-                            }
+                            client.addHeader("Accept", "application/json");
+                            client.addHeader("Authorization", "Bearer " + user.AccessToken);
+                            client.post(App.getBaseURL() + "profile/update", params, jrep);
 
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
-                                HashMap logData = new HashMap<String, String>();
-                            }
-                        };
-
-                        client.addHeader("Accept", "application/json");
-                        client.addHeader("Authorization", "Bearer " + user.AccessToken);
-                        client.post(App.getBaseURL() + "profile/update", params, jrep);
-
+                        }
                     }
-                }
-            });
+                });
 
         IntentFilter profile_update = new IntentFilter("profile_update");
         getActivity().registerReceiver(broadCastNewMessage, profile_update);

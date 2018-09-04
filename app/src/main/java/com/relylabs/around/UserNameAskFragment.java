@@ -78,6 +78,8 @@ public class UserNameAskFragment extends Fragment {
                                 return;
                             }
 
+
+
                             user.Name = user_name.getText().toString();
                             user.save();
 
