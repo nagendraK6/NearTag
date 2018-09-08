@@ -23,6 +23,7 @@
                     android:layout_marginEnd="20dp"
                     android:layout_centerVertical="true"
                     android:id="@+id/menu"
+                    android:visibility="gone"
                     android:src="@drawable/ic_menu_h"/>
 
                 <ImageView
@@ -35,8 +36,6 @@
                     android:src="@drawable/profile_short_link"/>
 
             </RelativeLayout>
-
-
         </android.support.v7.widget.Toolbar>
 
 

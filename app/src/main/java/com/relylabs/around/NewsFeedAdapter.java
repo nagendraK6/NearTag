@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -105,7 +106,7 @@ public class NewsFeedAdapter extends
         public ImageView like_icon;
         public ImageView share_button;
         public ImageView comment_button;
-
+        public TextView user_name;
         public ProgressBar busy;
 
         // We also create a constructor that accepts the entire item row
@@ -115,9 +116,9 @@ public class NewsFeedAdapter extends
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            tag = (TextView) itemView.findViewById(R.id.tag);
-            banngerImage = (ImageView) itemView.findViewById(R.id.banner_image);
-            profilePicURL = (CircleImageView) itemView.findViewById(R.id.user_profile_image);
+            tag = itemView.findViewById(R.id.tag);
+            banngerImage = itemView.findViewById(R.id.banner_image);
+            profilePicURL = itemView.findViewById(R.id.user_profile_image);
             uploadingFile = itemView.findViewById(R.id.progress);
             upload_in_progress_text = itemView.findViewById(R.id.upload_in_progress_text);
             userPostText = itemView.findViewById(R.id.user_post_text);
@@ -130,6 +131,7 @@ public class NewsFeedAdapter extends
                     loadFragment(new ViewCommentsFragment());
                 }
             });
+            user_name = itemView.findViewById(R.id.user_name);
         }
     }
 
@@ -163,7 +165,6 @@ public class NewsFeedAdapter extends
         ImageView profile = viewHolder.profilePicURL;
         if (!current_element.getProfileImageURL().equals("")) {
             Picasso.with(getContext()).load(current_element.getProfileImageURL()).
-                    resize(50, 50).
                     into(
                     profile,
                     new com.squareup.picasso.Callback() {
@@ -178,6 +179,21 @@ public class NewsFeedAdapter extends
                     }
             );
         }
+
+        viewHolder.user_name.setText(current_element.getUserName());
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle data_bundle = new Bundle();
+                data_bundle.putInt("user_id", current_element.getUserId());
+                data_bundle.putString("profile_image_url", current_element.getProfileImageURL());
+                data_bundle.putString("user_name", current_element.getUserName());
+                Fragment frag = new UserProfileFragment();
+                frag.setArguments(data_bundle);
+                loadFragment(frag);
+            }
+        });
 
         final ImageView banner_image = viewHolder.banngerImage;
         viewHolder.userPostText.setText(current_element.getUserPostText());

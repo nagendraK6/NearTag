@@ -142,7 +142,7 @@ public class LoginFragment extends Fragment {
                                                 Toast.makeText(getContext(), " Message sent ", Toast.LENGTH_LONG).show();
                                                 busy.setVisibility(View.INVISIBLE);
 
-                                                String user_id = (String) response.getString("user_id");
+                                                Integer user_id =  response.getInt("user_id");
                                                 String user_name = (String) response.getString("user_name");
                                                 String user_location = (String) response.getString("user_location");
                                                 String user_token = (String) response.getString("user_token");
@@ -151,6 +151,7 @@ public class LoginFragment extends Fragment {
                                                 if(user == null) {
                                                     //
                                                     user = new User();
+                                                    user.UserID = user_id;
                                                     user.Name = user_name;
                                                     user.Location = user_location;
                                                     user.IsOTPVerified = false;
@@ -160,6 +161,7 @@ public class LoginFragment extends Fragment {
                                                         user.ProfilePicURL = response.getString("profile_image_url");
                                                     }
                                                 } else {
+                                                    user.UserID = user_id;
                                                     user.AccessToken = user_token;
                                                 }
 
@@ -173,12 +175,11 @@ public class LoginFragment extends Fragment {
 
                                         @Override
                                         public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                                            HashMap logData = new HashMap<String, String>();
+
                                         }
 
                                         @Override
                                         public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
-                                            HashMap logData = new HashMap<String, String>();
                                         }
                                     };
 

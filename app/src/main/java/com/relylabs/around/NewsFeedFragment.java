@@ -84,7 +84,7 @@ public class NewsFeedFragment extends Fragment {
 
 
 
-
+                User user  = User.getLoggedInUser();
                 NewsFeedElement new_post = new NewsFeedElement(
                         0,
                         "#ok",
@@ -93,7 +93,9 @@ public class NewsFeedFragment extends Fragment {
                         false,
                         false,
                         user_message,
-                        image_file_name
+                        image_file_name,
+                        user.UserID,
+                        user.Name
                 );
 
             createAPost(new_post);
@@ -199,8 +201,10 @@ public class NewsFeedFragment extends Fragment {
                         String tag_text = (String) obj.getString("tag_text");
                         String image_url = (String) obj.getString("image_url");
                         String profile_image_url = (String) obj.getString("profile_image_url");
+                        Integer user_id = obj.getInt("user_id");
                         String message_text = (String) obj.getString("message_text");
                         Boolean has_liked = (Boolean) obj.getBoolean("has_liked");
+                        String user_name = obj.getString("user_name");
 
                         NewsFeedElement current_element = new NewsFeedElement(
                                 post_id,
@@ -210,7 +214,10 @@ public class NewsFeedFragment extends Fragment {
                                 has_liked,
                                 true,
                                 message_text,
-                                ""
+                                "",
+                                user_id,
+                                user_name
+
                         );
 
                         feed_elements.add(current_element);

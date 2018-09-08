@@ -13,6 +13,8 @@ public class NewsFeedElement  {
         private String userPostText;
         private String galleryImageFile;
         private Boolean hasLiked;
+        private Integer userId;
+        private String userName;
 
         public NewsFeedElement(
                 Integer postId,
@@ -22,7 +24,9 @@ public class NewsFeedElement  {
                 Boolean hasLiked,
                 Boolean hasPublished,
                 String messageText,
-                String galleryImageFile
+                String galleryImageFile,
+                Integer userId,
+                String userName
         ) {
             this.postId = postId;
             this.bannerImageURL = bannerImageURL;
@@ -32,6 +36,8 @@ public class NewsFeedElement  {
             this.userPostText =  messageText;
             this.galleryImageFile = galleryImageFile;
             this.hasLiked = hasLiked;
+            this.userId = userId;
+            this.userName = userName;
         }
 
 
@@ -77,5 +83,9 @@ public class NewsFeedElement  {
         public  Boolean getHasLiked() {
             return hasLiked;
         }
+
+        public  Integer getUserId() { return userId; }
+
+        public  String getUserName() { return userName; }
 }
 

@@ -234,7 +234,8 @@ public class AccountEditFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //App.getRefWatcher(getActivity()).watch(this);
+        App.getRefWatcher(getActivity()).watch(this);
+        getActivity().unregisterReceiver(broadCastNewMessage);
     }
 
     @Override
