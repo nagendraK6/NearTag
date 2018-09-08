@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
@@ -18,29 +16,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.relylabs.around.comments.ViewCommentsFragment;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.WeakHashMap;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -64,6 +55,7 @@ public class NewsFeedAdapter extends
 
     private AppCompatActivity activity;
     View feed_view;
+    User user;
     // Pass in the contact array into the constructor
     public NewsFeedAdapter(AppCompatActivity activity, Context context, List<NewsFeedElement> all_feed_elements) {
         mVisibilityTracker = new VisibilityTracker(activity);
@@ -77,6 +69,7 @@ public class NewsFeedAdapter extends
         news_feed_elements = all_feed_elements;
         mContext = context;
         this.activity = activity;
+        this.user = User.getLoggedInUser();
     }
 
     private void handleVisibleViews(List<View> visibleViews) {
@@ -99,7 +92,7 @@ public class NewsFeedAdapter extends
         // for any view that will be set as you render a row
         public TextView tag;
         public ImageView banngerImage;
-        public CircleImageView profilePicURL;
+        public CircleImageView profilePicURL, creator_profile_pic;
         public ProgressBar uploadingFile;
         public TextView upload_in_progress_text;
         public TextView userPostText;
@@ -125,13 +118,8 @@ public class NewsFeedAdapter extends
             like_icon = itemView.findViewById(R.id.like_icon);
             share_button = itemView.findViewById(R.id.whatsapp_sharing);
             comment_button = itemView.findViewById(R.id.comment_icon);
-            comment_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    loadFragment(new ViewCommentsFragment());
-                }
-            });
             user_name = itemView.findViewById(R.id.user_name);
+            creator_profile_pic = itemView.findViewById(R.id.comment_creator_profile);
         }
     }
 
@@ -163,7 +151,7 @@ public class NewsFeedAdapter extends
         // Set item views based on your views and data model
 
         ImageView profile = viewHolder.profilePicURL;
-        if (!current_element.getProfileImageURL().equals("")) {
+        if (!StringUtils.isEmpty(current_element.getProfileImageURL())) {
             Picasso.with(getContext()).load(current_element.getProfileImageURL()).
                     into(
                     profile,
@@ -178,7 +166,26 @@ public class NewsFeedAdapter extends
                         }
                     }
             );
+
         }
+
+        if (!StringUtils.isEmpty(this.user.ProfilePicURL)) {
+            Picasso.with(getContext()).load(this.user.ProfilePicURL).
+                    into(
+                            viewHolder.creator_profile_pic,
+                            new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                }
+
+                                @Override
+                                public void onError() {
+                                    //do smth when there is picture loading error
+                                }
+                            }
+                    );
+        }
+
 
         viewHolder.user_name.setText(current_element.getUserName());
 
@@ -196,9 +203,9 @@ public class NewsFeedAdapter extends
         });
 
         final ImageView banner_image = viewHolder.banngerImage;
-        viewHolder.userPostText.setText(current_element.getUserPostText());
+       // viewHolder.userPostText.setText(current_element.getUserPostText());
 
-        if (current_element.getBanngerImageURL() != "") {
+        if (!StringUtils.isEmpty(current_element.getBanngerImageURL())) {
             Picasso.with(getContext()).load(current_element.getBanngerImageURL())
                     .into(
                             banner_image,
@@ -262,16 +269,17 @@ public class NewsFeedAdapter extends
             viewHolder.like_icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    viewHolder.like_icon.setImageResource(R.drawable.like_icon_complete);
+                    viewHolder.like_icon.setImageResource(R.mipmap.ic_heart_red_like);
                     markPostLike(current_element.getPostId());
                 }
             });
         }
+
+
         mViewPositionMap.put(viewHolder.itemView, position);
         mVisibilityTracker.addView(viewHolder.itemView, 50);
         viewHolder.share_button.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-
 
                 viewHolder.itemView.setDrawingCacheEnabled(true);
 
@@ -327,6 +335,17 @@ public class NewsFeedAdapter extends
                     shareIntent.setPackage("com.whatsapp");
                 }
                 getContext().startActivity(Intent.createChooser(shareIntent, "Share via"));
+            }
+        });
+
+        viewHolder.comment_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle data_bundle = new Bundle();
+                data_bundle.putInt("post_id", current_element.getPostId());
+                Fragment frg = new ViewCommentsFragment();
+                frg.setArguments(data_bundle);
+                loadFragment(frg);
             }
         });
     }

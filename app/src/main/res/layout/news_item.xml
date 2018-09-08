@@ -216,29 +216,37 @@
         </RelativeLayout>
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/text_and_tag"
+        android:id="@+id/add_ur_comment"
         android:layout_below="@+id/action_section"
         android:layout_marginTop="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/comment_creator_profile"
+            android:layout_alignParentLeft="true"
+            android:alpha="0.4"
+            android:src="@drawable/ic_profile_avatar"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
         <TextView
+            android:layout_toRightOf="@+id/comment_creator_profile"
             android:paddingLeft="10dp"
             android:textSize="12dp"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
             android:textColor="@color/black"
             android:id="@+id/user_post_text"
-            android:text="User text is here"
+            android:text="अपनी राय दें …"
             android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
 
-
     </RelativeLayout>
 
     <TextView
-        android:layout_below="@+id/text_and_tag"
+        android:layout_below="@+id/add_ur_comment"
         android:id="@+id/time_ago"
         android:layout_marginLeft="10dp"
         android:text="30 mins ago"
