@@ -1,6 +1,5 @@
 package com.relylabs.around;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -11,13 +10,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,11 +23,10 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.relylabs.around.models.User;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 

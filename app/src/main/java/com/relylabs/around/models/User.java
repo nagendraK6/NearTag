@@ -1,4 +1,4 @@
-package com.relylabs.around;
+package com.relylabs.around.models;
 
 /**
  * Created by nagendra on 8/2/18.

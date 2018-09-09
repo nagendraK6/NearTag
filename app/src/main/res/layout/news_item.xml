@@ -86,9 +86,8 @@
                 android:layout_below="@+id/user_name"
                 android:textSize="12dp"
                 android:layout_marginEnd="10dp"
-                android:textColor="#33b5e5"
-                android:id="@+id/tag"
-                android:text="#Tag"
+                android:id="@+id/location"
+                android:text="Patna, Bihar"
                 android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -117,17 +116,17 @@
 
 
 
-    <ImageView
+    <com.relylabs.around.Utils.SquareImageView
         android:layout_below="@+id/header_row"
         android:layout_alignParentLeft="true"
         android:id="@+id/banner_image"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="11dp"
         android:layout_marginTop="5dp"
         android:id="@+id/status_bar"
         android:layout_below="@+id/banner_image"
@@ -146,7 +145,7 @@
         android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="11dp"
             android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -181,6 +180,7 @@
             android:layout_height="40dp"
             android:src="@drawable/whatsapp" />
             <TextView
+                android:textSize="12sp"
                 android:textColor="#3b3939"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/whatsapp_sharing"
@@ -205,6 +205,7 @@
             />
 
             <TextView
+                android:textSize="12sp"
                 android:textColor="#3b3939"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/comment_icon"
@@ -216,8 +217,38 @@
         </RelativeLayout>
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/add_ur_comment"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/post_tag_and_text"
         android:layout_below="@+id/action_section"
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/comment_creator_name"
+            android:layout_alignParentLeft="true"
+            android:textSize="14dp"
+            android:text="नागेंद्र :"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/comment_text"
+            android:layout_toRightOf="@+id/comment_creator_name"
+            android:textSize="14dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/black"
+            android:text="आजादी हम लेकर रहेंगे. हिंदुस्तान ज़िंदाबाद "
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/add_ur_comment"
+        android:layout_below="@+id/post_tag_and_text"
         android:layout_marginTop="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -232,17 +263,15 @@
         <TextView
             android:layout_toRightOf="@+id/comment_creator_profile"
             android:paddingLeft="10dp"
-            android:textSize="12dp"
+            android:textSize="14dp"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
             android:textColor="@color/black"
-            android:id="@+id/user_post_text"
+            android:id="@+id/put_comment"
             android:text="अपनी राय दें …"
             android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-
     </RelativeLayout>
 
     <TextView

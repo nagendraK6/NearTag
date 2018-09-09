@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,6 +13,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +29,9 @@ import android.widget.TextView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.relylabs.around.Utils.SquareImageView;
 import com.relylabs.around.comments.ViewCommentsFragment;
+import com.relylabs.around.models.User;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -91,7 +99,7 @@ public class NewsFeedAdapter extends
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView tag;
-        public ImageView banngerImage;
+        public SquareImageView banngerImage;
         public CircleImageView profilePicURL, creator_profile_pic;
         public ProgressBar uploadingFile;
         public TextView upload_in_progress_text;
@@ -101,7 +109,8 @@ public class NewsFeedAdapter extends
         public ImageView comment_button;
         public TextView user_name;
         public ProgressBar busy;
-
+        public TextView post_creator_name;
+        public TextView put_comment;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView) {
@@ -109,17 +118,19 @@ public class NewsFeedAdapter extends
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            tag = itemView.findViewById(R.id.tag);
+            //tag = itemView.findViewById(R.id.tag);
             banngerImage = itemView.findViewById(R.id.banner_image);
             profilePicURL = itemView.findViewById(R.id.user_profile_image);
             uploadingFile = itemView.findViewById(R.id.progress);
             upload_in_progress_text = itemView.findViewById(R.id.upload_in_progress_text);
-            userPostText = itemView.findViewById(R.id.user_post_text);
+            userPostText = itemView.findViewById(R.id.comment_text);
             like_icon = itemView.findViewById(R.id.like_icon);
             share_button = itemView.findViewById(R.id.whatsapp_sharing);
             comment_button = itemView.findViewById(R.id.comment_icon);
             user_name = itemView.findViewById(R.id.user_name);
             creator_profile_pic = itemView.findViewById(R.id.comment_creator_profile);
+            post_creator_name = itemView.findViewById(R.id.comment_creator_name);
+            put_comment = itemView.findViewById(R.id.put_comment);
         }
     }
 
@@ -146,8 +157,8 @@ public class NewsFeedAdapter extends
         // Get the data model based on position
         final NewsFeedElement current_element = news_feed_elements.get(position);
         // Set item views based on your views and data model
-        final TextView tag = viewHolder.tag;
-        tag.setText(current_element.getTag());
+       // final TextView tag = viewHolder.tag;
+       // tag.setText(current_element.getTag());
         // Set item views based on your views and data model
 
         ImageView profile = viewHolder.profilePicURL;
@@ -202,13 +213,20 @@ public class NewsFeedAdapter extends
             }
         });
 
-        final ImageView banner_image = viewHolder.banngerImage;
-       // viewHolder.userPostText.setText(current_element.getUserPostText());
+
+        if (!StringUtils.isEmpty(current_element.getUserPostText())) {
+            setTags(viewHolder.userPostText, current_element.getUserPostText());
+           // viewHolder.userPostText.setText(current_element.getUserPostText());
+            viewHolder.post_creator_name.setText(current_element.getUserName() + ": ");
+        } else {
+            viewHolder.userPostText.setVisibility(View.GONE);
+            viewHolder.post_creator_name.setVisibility(View.GONE);
+        }
 
         if (!StringUtils.isEmpty(current_element.getBanngerImageURL())) {
             Picasso.with(getContext()).load(current_element.getBanngerImageURL())
                     .into(
-                            banner_image,
+                            viewHolder.banngerImage,
                             new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
@@ -228,7 +246,7 @@ public class NewsFeedAdapter extends
             File piccasso_file = new File(current_element.getGalleryImageFile());
             Picasso.with(getContext()).load(piccasso_file).
                     into(
-                            banner_image,
+                            viewHolder.banngerImage,
                             new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
@@ -246,7 +264,7 @@ public class NewsFeedAdapter extends
                 viewHolder.banngerImage.setAlpha((float) 1);
                 viewHolder.profilePicURL.setAlpha((float) 1);
                 viewHolder.tag.setAlpha((float) 1);
-                viewHolder.uploadingFile.setVisibility(View.GONE);
+              //  viewHolder.uploadingFile.setVisibility(View.GONE);
                 viewHolder.upload_in_progress_text.setVisibility(View.GONE);
             }
         }
@@ -258,7 +276,7 @@ public class NewsFeedAdapter extends
             viewHolder.upload_in_progress_text.setVisibility(View.VISIBLE);
             viewHolder.banngerImage.setAlpha((float) 0.5);
             viewHolder.profilePicURL.setAlpha((float) 0.5);
-            viewHolder.tag.setAlpha((float) 0.5);
+          //  viewHolder.tag.setAlpha((float) 0.5);
             viewHolder.uploadingFile.setVisibility(View.VISIBLE);
         }
 
@@ -283,8 +301,6 @@ public class NewsFeedAdapter extends
 
                 viewHolder.itemView.setDrawingCacheEnabled(true);
 
-// this is the important code :)
-// Without it the view will have a dimension of 0,0 and the bitmap will be null
                 viewHolder.itemView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                 viewHolder.itemView.layout(0, 0, viewHolder.itemView.getMeasuredWidth(), viewHolder.itemView.getMeasuredHeight());
@@ -315,7 +331,7 @@ public class NewsFeedAdapter extends
                     e.printStackTrace();
                 }
 
-                banner_image.setDrawingCacheEnabled(false);
+                viewHolder.banngerImage.setDrawingCacheEnabled(false);
                 //File f = new File(filename);
 
                 Uri apkURI = FileProvider.getUriForFile(
@@ -339,6 +355,17 @@ public class NewsFeedAdapter extends
         });
 
         viewHolder.comment_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle data_bundle = new Bundle();
+                data_bundle.putInt("post_id", current_element.getPostId());
+                Fragment frg = new ViewCommentsFragment();
+                frg.setArguments(data_bundle);
+                loadFragment(frg);
+            }
+        });
+
+        viewHolder.put_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bundle data_bundle = new Bundle();
@@ -404,5 +431,43 @@ public class NewsFeedAdapter extends
         ft.add(R.id.fragment_holder, fragment_to_start);
         ft.addToBackStack(null);
         ft.commit();
+    }
+
+    private void setTags(TextView pTextView, String pTagString) {
+        SpannableString string = new SpannableString(pTagString);
+
+        int start = -1;
+        for (int i = 0; i < pTagString.length(); i++) {
+            if (pTagString.charAt(i) == '#') {
+                start = i;
+            } else if (pTagString.charAt(i) == ' ' || (i == pTagString.length() - 1 && start != -1)) {
+                if (start != -1) {
+                    if (i == pTagString.length() - 1) {
+                        i++; // case for if hash is last word and there is no
+                        // space after word
+                    }
+
+                    final String tag = pTagString.substring(start, i);
+                    string.setSpan(new ClickableSpan() {
+
+                        @Override
+                        public void onClick(View widget) {
+                            Log.d("Hash", String.format("Clicked %s!", tag));
+                        }
+
+                        @Override
+                        public void updateDrawState(TextPaint ds) {
+                            // link color
+                            ds.setColor(Color.parseColor("#003569"));
+                            ds.setUnderlineText(false);
+                        }
+                    }, start, i, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    start = -1;
+                }
+            }
+        }
+
+        pTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        pTextView.setText(string);
     }
 }

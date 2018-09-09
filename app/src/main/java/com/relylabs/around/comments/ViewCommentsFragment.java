@@ -1,6 +1,5 @@
 package com.relylabs.around.comments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,18 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.relylabs.around.App;
 import com.relylabs.around.DeviceUtils;
-import com.relylabs.around.NewsFeedAdapter;
-import com.relylabs.around.NewsFeedElement;
 import com.relylabs.around.PreCachingLayoutManager;
 import com.relylabs.around.R;
-import com.relylabs.around.User;
+import com.relylabs.around.models.User;
 import com.relylabs.around.models.Comment;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,10 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
 
