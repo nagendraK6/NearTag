@@ -15,6 +15,7 @@ public class NewsFeedElement  {
         private Boolean hasLiked;
         private Integer userId;
         private String userName;
+        private Long timestamp;
 
         public NewsFeedElement(
                 Integer postId,
@@ -26,7 +27,8 @@ public class NewsFeedElement  {
                 String messageText,
                 String galleryImageFile,
                 Integer userId,
-                String userName
+                String userName,
+                Long timestamp
         ) {
             this.postId = postId;
             this.bannerImageURL = bannerImageURL;
@@ -38,6 +40,7 @@ public class NewsFeedElement  {
             this.hasLiked = hasLiked;
             this.userId = userId;
             this.userName = userName;
+            this.timestamp = timestamp;
         }
 
 
@@ -87,5 +90,7 @@ public class NewsFeedElement  {
         public  Integer getUserId() { return userId; }
 
         public  String getUserName() { return userName; }
+
+        public  Long getTimeStamp() { return timestamp; }
 }
 

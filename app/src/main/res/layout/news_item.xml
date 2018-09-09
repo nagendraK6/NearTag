@@ -247,6 +247,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:layout_marginLeft="10dp"
         android:id="@+id/add_ur_comment"
         android:layout_below="@+id/post_tag_and_text"
         android:layout_marginTop="2dp"

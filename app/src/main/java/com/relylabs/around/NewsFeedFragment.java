@@ -95,7 +95,8 @@ public class NewsFeedFragment extends Fragment {
                         user_message,
                         image_file_name,
                         user.UserID,
-                        user.Name
+                        user.Name,
+                        new Long(0)
                 );
 
             createAPost(new_post);
@@ -205,6 +206,7 @@ public class NewsFeedFragment extends Fragment {
                         String message_text = (String) obj.getString("message_text");
                         Boolean has_liked = (Boolean) obj.getBoolean("has_liked");
                         String user_name = obj.getString("user_name");
+                        Long timeStamp = obj.getLong("timestamp");
 
                         NewsFeedElement current_element = new NewsFeedElement(
                                 post_id,
@@ -216,7 +218,8 @@ public class NewsFeedFragment extends Fragment {
                                 message_text,
                                 "",
                                 user_id,
-                                user_name
+                                user_name,
+                                timeStamp
 
                         );
 

@@ -30,6 +30,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.relylabs.around.Utils.SquareImageView;
+import com.relylabs.around.Utils.TimeAgo;
 import com.relylabs.around.comments.ViewCommentsFragment;
 import com.relylabs.around.models.User;
 import com.squareup.picasso.Picasso;
@@ -107,7 +108,7 @@ public class NewsFeedAdapter extends
         public ImageView like_icon;
         public ImageView share_button;
         public ImageView comment_button;
-        public TextView user_name;
+        public TextView user_name, time_ago;
         public ProgressBar busy;
         public TextView post_creator_name;
         public TextView put_comment;
@@ -131,6 +132,7 @@ public class NewsFeedAdapter extends
             creator_profile_pic = itemView.findViewById(R.id.comment_creator_profile);
             post_creator_name = itemView.findViewById(R.id.comment_creator_name);
             put_comment = itemView.findViewById(R.id.put_comment);
+            time_ago = itemView.findViewById(R.id.time_ago);
         }
     }
 
@@ -375,6 +377,13 @@ public class NewsFeedAdapter extends
                 loadFragment(frg);
             }
         });
+
+        String time_ago_text = TimeAgo.getTimeAgo(current_element.getTimeStamp());
+        if (StringUtils.isEmpty(time_ago_text)) {
+            viewHolder.time_ago.setVisibility(View.GONE);
+        } else {
+            viewHolder.time_ago.setText(time_ago_text);
+        }
     }
 
 
