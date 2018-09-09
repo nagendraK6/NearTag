@@ -19,11 +19,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
 import com.activeandroid.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.relylabs.around.composer.RecyclerGalaryFragment;
+import com.relylabs.around.models.NewsFeedElement;
 import com.relylabs.around.models.User;
 import com.squareup.picasso.Picasso;
 
@@ -36,6 +39,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -188,46 +192,61 @@ public class NewsFeedFragment extends Fragment {
         User user = User.getLoggedInUser();
         // response
 
+        /*if(all_feeds.size() == 0) {
+            // read from local storage
+            List<NewsFeedElement> feed_elements = new Select()
+                    .all()
+                    .from(NewsFeedElement.class)
+                    .execute();
+            all_feeds.addAll(feed_elements);
+            adapter.notifyDataSetChanged();
+        }*/
+
+
         JsonHttpResponseHandler response_json = new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 ArrayList<NewsFeedElement> feed_elements = new ArrayList<>();
                 try {
-                    JSONArray all_contests = (JSONArray) response.getJSONArray("data");
-                    for (int i =0; i < all_contests.length(); i++) {
-                        JSONObject obj = all_contests.getJSONObject(i);
-                        Integer post_id = (Integer) obj.getInt("post_id");
+                    JSONArray all_news_items = (JSONArray) response.getJSONArray("data");
+                    if (all_news_items.length() > 0) {
+                        new Delete().from(NewsFeedElement.class).execute();
+                        for (int i =0; i < all_news_items.length(); i++) {
+                            JSONObject obj = all_news_items.getJSONObject(i);
+                            Integer post_id = obj.getInt("post_id");
 
-                        String tag_text = (String) obj.getString("tag_text");
-                        String image_url = (String) obj.getString("image_url");
-                        String profile_image_url = (String) obj.getString("profile_image_url");
-                        Integer user_id = obj.getInt("user_id");
-                        String message_text = (String) obj.getString("message_text");
-                        Boolean has_liked = (Boolean) obj.getBoolean("has_liked");
-                        String user_name = obj.getString("user_name");
-                        Long timeStamp = obj.getLong("timestamp");
+                            String tag_text = obj.getString("tag_text");
+                            String image_url = obj.getString("image_url");
+                            String profile_image_url = obj.getString("profile_image_url");
+                            Integer user_id = obj.getInt("user_id");
+                            String message_text = obj.getString("message_text");
+                            Boolean has_liked = obj.getBoolean("has_liked");
+                            String user_name = obj.getString("user_name");
+                            Long timeStamp = obj.getLong("timestamp");
 
-                        NewsFeedElement current_element = new NewsFeedElement(
-                                post_id,
-                                tag_text,
-                                image_url,
-                                profile_image_url,
-                                has_liked,
-                                true,
-                                message_text,
-                                "",
-                                user_id,
-                                user_name,
-                                timeStamp
+                            NewsFeedElement current_element = new NewsFeedElement(
+                                    post_id,
+                                    tag_text,
+                                    image_url,
+                                    profile_image_url,
+                                    has_liked,
+                                    true,
+                                    message_text,
+                                    "",
+                                    user_id,
+                                    user_name,
+                                    timeStamp
 
-                        );
+                            );
 
-                        feed_elements.add(current_element);
+                            feed_elements.add(current_element);
+                        }
+
+                        all_feeds.clear();
+                        all_feeds.addAll(feed_elements);
+                        adapter.notifyDataSetChanged();
                     }
-
-                    all_feeds.addAll(feed_elements);
-                    adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -235,10 +254,28 @@ public class NewsFeedFragment extends Fragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                if(all_feeds.size() == 0) {
+                    // read from local storage
+                    List<NewsFeedElement> feed_elements = new Select()
+                            .all()
+                            .from(NewsFeedElement.class)
+                            .execute();
+                    all_feeds.addAll(feed_elements);
+                    adapter.notifyDataSetChanged();
+                }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
+                if(all_feeds.size() == 0) {
+                    // read from local storage
+                    List<NewsFeedElement> feed_elements = new Select()
+                            .all()
+                            .from(NewsFeedElement.class)
+                            .execute();
+                    all_feeds.addAll(feed_elements);
+                    adapter.notifyDataSetChanged();
+                }
                 Log.d("debug_data", " " + statusCode);
                 if (statusCode == 401) {
                 }

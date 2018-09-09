@@ -52,8 +52,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/user_profile_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:padding="2dp"
             android:backgroundTint="@color/colorAccent"
             android:src="@drawable/ic_user_white"
@@ -257,10 +257,11 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/comment_creator_profile"
             android:layout_alignParentLeft="true"
-            android:alpha="0.4"
+            android:alpha="0.6"
             android:src="@drawable/ic_profile_avatar"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:padding="2dp" />
         <TextView
             android:layout_toRightOf="@+id/comment_creator_profile"
             android:paddingLeft="10dp"

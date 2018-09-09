@@ -1,21 +1,67 @@
-package com.relylabs.around;
+package com.relylabs.around.models;
+
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
 
 /**
  * Created by nagendra on 8/7/18.
  */
 
-public class NewsFeedElement  {
-        private Integer postId;
-        private String bannerImageURL;
-        private String profileImageURL;
-        private String tag;
-        private Boolean hasPublished;
-        private String userPostText;
-        private String galleryImageFile;
-        private Boolean hasLiked;
-        private Integer userId;
-        private String userName;
-        private Long timestamp;
+public class NewsFeedElement  extends Model {
+
+        @Column(name = "postId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+        public Integer postId;
+
+        @Column(name = "bannerImageURL")
+        public String bannerImageURL;
+
+
+        @Column(name = "profileImageURL")
+        public String profileImageURL;
+
+
+        @Column(name = "tag")
+        public String tag;
+
+
+        @Column(name = "hasPublished")
+        public Boolean hasPublished;
+
+
+        @Column(name = "userPostText")
+        public String userPostText;
+
+        @Column(name = "galleryImageFile")
+        public String galleryImageFile;
+
+
+        @Column(name = "hasLiked")
+        public Boolean hasLiked;
+
+        @Column(name = "userId")
+        public Integer userId;
+
+        @Column(name = "userName")
+        public String userName;
+
+        @Column(name = "timestamp")
+        public Long timestamp;
+
+        public NewsFeedElement() {
+            super();
+            this.postId = -1;
+            this.bannerImageURL = "";
+            this.tag = "";
+            this.profileImageURL = "";
+            this.hasPublished = false;
+            this.userPostText =  "";
+            this.galleryImageFile = "";
+            this.hasLiked = false;
+            this.userId = -1;
+            this.userName = "";
+            this.timestamp = new Long(0);
+            this.save();
+        }
 
         public NewsFeedElement(
                 Integer postId,
@@ -30,6 +76,7 @@ public class NewsFeedElement  {
                 String userName,
                 Long timestamp
         ) {
+            super();
             this.postId = postId;
             this.bannerImageURL = bannerImageURL;
             this.tag = tag;
@@ -41,9 +88,8 @@ public class NewsFeedElement  {
             this.userId = userId;
             this.userName = userName;
             this.timestamp = timestamp;
+            this.save();
         }
-
-
 
         public String getBanngerImageURL() {
             return bannerImageURL;

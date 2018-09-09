@@ -32,6 +32,7 @@ import com.loopj.android.http.RequestParams;
 import com.relylabs.around.Utils.SquareImageView;
 import com.relylabs.around.Utils.TimeAgo;
 import com.relylabs.around.comments.ViewCommentsFragment;
+import com.relylabs.around.models.NewsFeedElement;
 import com.relylabs.around.models.User;
 import com.squareup.picasso.Picasso;
 
@@ -118,8 +119,6 @@ public class NewsFeedAdapter extends
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-
-            //tag = itemView.findViewById(R.id.tag);
             banngerImage = itemView.findViewById(R.id.banner_image);
             profilePicURL = itemView.findViewById(R.id.user_profile_image);
             uploadingFile = itemView.findViewById(R.id.progress);
@@ -219,7 +218,7 @@ public class NewsFeedAdapter extends
         if (!StringUtils.isEmpty(current_element.getUserPostText())) {
             setTags(viewHolder.userPostText, current_element.getUserPostText());
            // viewHolder.userPostText.setText(current_element.getUserPostText());
-            viewHolder.post_creator_name.setText(current_element.getUserName() + ": ");
+            viewHolder.post_creator_name.setText(current_element.getUserName() + " ");
         } else {
             viewHolder.userPostText.setVisibility(View.GONE);
             viewHolder.post_creator_name.setVisibility(View.GONE);
@@ -265,8 +264,6 @@ public class NewsFeedAdapter extends
             if(current_element.getHasPublished()) {
                 viewHolder.banngerImage.setAlpha((float) 1);
                 viewHolder.profilePicURL.setAlpha((float) 1);
-                viewHolder.tag.setAlpha((float) 1);
-              //  viewHolder.uploadingFile.setVisibility(View.GONE);
                 viewHolder.upload_in_progress_text.setVisibility(View.GONE);
             }
         }
@@ -278,7 +275,6 @@ public class NewsFeedAdapter extends
             viewHolder.upload_in_progress_text.setVisibility(View.VISIBLE);
             viewHolder.banngerImage.setAlpha((float) 0.5);
             viewHolder.profilePicURL.setAlpha((float) 0.5);
-          //  viewHolder.tag.setAlpha((float) 0.5);
             viewHolder.uploadingFile.setVisibility(View.VISIBLE);
         }
 
