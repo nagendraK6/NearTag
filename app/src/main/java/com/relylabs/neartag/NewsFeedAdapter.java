@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,6 +27,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -224,7 +230,7 @@ public class NewsFeedAdapter extends
             viewHolder.post_creator_name.setVisibility(View.GONE);
         }
 
-        if (!StringUtils.isEmpty(current_element.getBanngerImageURLLow())) {
+       /* if (!StringUtils.isEmpty(current_element.getBanngerImageURLLow())) {
             Picasso.with(getContext()).load(current_element.getBanngerImageURLLow())
                     .into(
                             viewHolder.banngerImage,
@@ -258,6 +264,17 @@ public class NewsFeedAdapter extends
                                 }
                             }
                     );
+        }*/
+
+        if(!StringUtils.isEmpty(current_element.getBanngerImageURLHigh())) {
+            RequestBuilder<Drawable> thumbnailRequest = Glide
+                    .with(getContext())
+                    .load(current_element.getBanngerImageURLLow());
+
+            Glide.with(getContext())
+                    .load(current_element.getBanngerImageURLHigh())
+                    .thumbnail(thumbnailRequest)
+                    .into(viewHolder.banngerImage);
         }
 
         if (current_element.getGalleryImageFile() != "") {

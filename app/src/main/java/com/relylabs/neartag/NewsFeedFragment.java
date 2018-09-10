@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +23,9 @@ import android.widget.ProgressBar;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.activeandroid.util.Log;
+import com.github.ybq.android.spinkit.style.Circle;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
+import com.github.ybq.android.spinkit.style.Wave;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -152,6 +156,9 @@ public class NewsFeedFragment extends Fragment {
         }
         news_feed_list = (RecyclerView) fragment_view.findViewById(R.id.news_feed_list);
         busy_show_feed_fetch = (ProgressBar) fragment_view.findViewById(R.id.busy_show_feed_fetch);
+        Circle cr = new Circle();
+        cr.setColor(Color.GRAY);
+        busy_show_feed_fetch.setIndeterminateDrawable(cr);
         // Initialize cont acts
         all_feeds = new ArrayList<NewsFeedElement>();
         // Create adapter passing in the sample user data
