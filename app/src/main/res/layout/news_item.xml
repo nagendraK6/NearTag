@@ -116,7 +116,7 @@
 
 
 
-    <com.relylabs.around.Utils.SquareImageView
+    <com.relylabs.neartag.Utils.SquareImageView
         android:layout_below="@+id/header_row"
         android:layout_alignParentLeft="true"
         android:id="@+id/banner_image"
