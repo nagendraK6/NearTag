@@ -49,6 +49,15 @@ public class NewsFeedElement  extends Model {
         @Column(name = "timestamp")
         public Long timestamp;
 
+        @Column(name = "commentsCount")
+        public String commentsCount;
+
+        @Column(name = "likesCount")
+        public String likesCount;
+
+        @Column(name = "sharesCount")
+        public String sharesCount;
+
         public NewsFeedElement() {
             super();
             this.postId = -1;
@@ -63,6 +72,9 @@ public class NewsFeedElement  extends Model {
             this.userId = -1;
             this.userName = "";
             this.timestamp = new Long(0);
+            this.commentsCount = "";
+            this.sharesCount = "";
+            this.likesCount = "";
             this.save();
         }
 
@@ -78,8 +90,12 @@ public class NewsFeedElement  extends Model {
                 String galleryImageFile,
                 Integer userId,
                 String userName,
-                Long timestamp
-        ) {
+                Long timestamp,
+                String likesCount,
+                String sharesCount,
+                String commentsCount
+
+                ) {
             super();
             this.postId = postId;
             this.bannerImageURLLow = bannerImageURLLow;
@@ -93,6 +109,9 @@ public class NewsFeedElement  extends Model {
             this.userId = userId;
             this.userName = userName;
             this.timestamp = timestamp;
+            this.likesCount = likesCount;
+            this.sharesCount = sharesCount;
+            this.commentsCount = commentsCount;
             this.save();
         }
 
@@ -149,5 +168,10 @@ public class NewsFeedElement  extends Model {
         public  String getUserName() { return userName; }
 
         public  Long getTimeStamp() { return timestamp; }
-}
 
+        public  String getLikesCount() { return likesCount; }
+
+        public  String getSharesCount() { return sharesCount; }
+
+        public  String getCommentsCount() { return commentsCount; }
+}

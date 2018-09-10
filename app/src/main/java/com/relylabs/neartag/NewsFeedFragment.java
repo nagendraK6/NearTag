@@ -105,7 +105,10 @@ public class NewsFeedFragment extends Fragment {
                         image_file_name,
                         user.UserID,
                         user.Name,
-                        new Long(0)
+                        new Long(0),
+                        "",
+                        "",
+                        ""
                 );
 
             createAPost(new_post);
@@ -235,6 +238,10 @@ public class NewsFeedFragment extends Fragment {
                             String user_name = obj.getString("user_name");
                             Long timeStamp = obj.getLong("timestamp");
 
+                            String likes_count = obj.getString("likes_count");
+                            String shared_count = obj.getString("shared_count");
+                            String comments_count = obj.getString("comments_count");
+
                             NewsFeedElement current_element = new NewsFeedElement(
                                     post_id,
                                     tag_text,
@@ -247,8 +254,10 @@ public class NewsFeedFragment extends Fragment {
                                     "",
                                     user_id,
                                     user_name,
-                                    timeStamp
-
+                                    timeStamp,
+                                    likes_count,
+                                    shared_count,
+                                    comments_count
                             );
 
                             feed_elements.add(current_element);

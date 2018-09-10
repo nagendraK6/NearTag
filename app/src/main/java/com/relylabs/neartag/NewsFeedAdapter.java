@@ -115,7 +115,7 @@ public class NewsFeedAdapter extends
         public ImageView like_icon;
         public ImageView share_button;
         public ImageView comment_button;
-        public TextView user_name, time_ago;
+        public TextView user_name, time_ago, status_bar;
         public ProgressBar busy;
         public TextView post_creator_name;
         public TextView put_comment;
@@ -138,6 +138,7 @@ public class NewsFeedAdapter extends
             post_creator_name = itemView.findViewById(R.id.comment_creator_name);
             put_comment = itemView.findViewById(R.id.put_comment);
             time_ago = itemView.findViewById(R.id.time_ago);
+            status_bar = itemView.findViewById(R.id.status_bar);
         }
     }
 
@@ -230,7 +231,7 @@ public class NewsFeedAdapter extends
             viewHolder.post_creator_name.setVisibility(View.GONE);
         }
 
-       /* if (!StringUtils.isEmpty(current_element.getBanngerImageURLLow())) {
+       if (!StringUtils.isEmpty(current_element.getBanngerImageURLLow())) {
             Picasso.with(getContext()).load(current_element.getBanngerImageURLLow())
                     .into(
                             viewHolder.banngerImage,
@@ -264,9 +265,9 @@ public class NewsFeedAdapter extends
                                 }
                             }
                     );
-        }*/
+        }
 
-        if(!StringUtils.isEmpty(current_element.getBanngerImageURLHigh())) {
+        /*if(!StringUtils.isEmpty(current_element.getBanngerImageURLHigh())) {
             RequestBuilder<Drawable> thumbnailRequest = Glide
                     .with(getContext())
                     .load(current_element.getBanngerImageURLLow());
@@ -275,7 +276,7 @@ public class NewsFeedAdapter extends
                     .load(current_element.getBanngerImageURLHigh())
                     .thumbnail(thumbnailRequest)
                     .into(viewHolder.banngerImage);
-        }
+        }*/
 
         if (current_element.getGalleryImageFile() != "") {
             viewHolder.itemView.setVisibility(View.VISIBLE);
@@ -415,6 +416,13 @@ public class NewsFeedAdapter extends
         } else {
             viewHolder.time_ago.setText(time_ago_text);
         }
+
+        String stats_text = getStatsString(current_element);
+        if (StringUtils.isEmpty(stats_text)) {
+            viewHolder.status_bar.setVisibility(View.GONE);
+        } else {
+            viewHolder.status_bar.setText(stats_text);
+        }
     }
 
 
@@ -509,5 +517,23 @@ public class NewsFeedAdapter extends
 
         pTextView.setMovementMethod(LinkMovementMethod.getInstance());
         pTextView.setText(string);
+    }
+
+
+    private String getStatsString(NewsFeedElement current_element) {
+        String status = "";
+        if (!StringUtils.isEmpty(current_element.getLikesCount())) {
+            status = current_element.getLikesCount() + " पसंद . ";
+        }
+
+        if (!StringUtils.isEmpty(current_element.getSharesCount())) {
+            status += current_element.getSharesCount() + " शेयर . ";
+        }
+
+        if (!StringUtils.isEmpty(current_element.getCommentsCount())) {
+            status += current_element.getCommentsCount() + " राय";
+        }
+
+        return status;
     }
 }
