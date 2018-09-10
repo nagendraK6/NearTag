@@ -224,8 +224,26 @@ public class NewsFeedAdapter extends
             viewHolder.post_creator_name.setVisibility(View.GONE);
         }
 
-        if (!StringUtils.isEmpty(current_element.getBanngerImageURL())) {
-            Picasso.with(getContext()).load(current_element.getBanngerImageURL())
+        if (!StringUtils.isEmpty(current_element.getBanngerImageURLLow())) {
+            Picasso.with(getContext()).load(current_element.getBanngerImageURLLow())
+                    .into(
+                            viewHolder.banngerImage,
+                            new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    viewHolder.itemView.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void onError() {
+                                    //do smth when there is picture loading error
+                                }
+                            }
+                    );
+        }
+
+        if (!StringUtils.isEmpty(current_element.getBanngerImageURLHigh())) {
+            Picasso.with(getContext()).load(current_element.getBanngerImageURLHigh())
                     .into(
                             viewHolder.banngerImage,
                             new com.squareup.picasso.Callback() {

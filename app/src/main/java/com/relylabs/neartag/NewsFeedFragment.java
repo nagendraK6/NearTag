@@ -94,6 +94,7 @@ public class NewsFeedFragment extends Fragment {
                         "#ok",
                         "",
                         "",
+                        "",
                         false,
                         false,
                         user_message,
@@ -217,7 +218,9 @@ public class NewsFeedFragment extends Fragment {
                             Integer post_id = obj.getInt("post_id");
 
                             String tag_text = obj.getString("tag_text");
-                            String image_url = obj.getString("image_url");
+                            String banner_image_url_low = obj.getString("banner_image_url_low");
+                            String banner_image_url_high = obj.getString("banner_image_url_high");
+
                             String profile_image_url = obj.getString("profile_image_url");
                             Integer user_id = obj.getInt("user_id");
                             String message_text = obj.getString("message_text");
@@ -228,7 +231,8 @@ public class NewsFeedFragment extends Fragment {
                             NewsFeedElement current_element = new NewsFeedElement(
                                     post_id,
                                     tag_text,
-                                    image_url,
+                                    banner_image_url_low,
+                                    banner_image_url_high,
                                     profile_image_url,
                                     has_liked,
                                     true,

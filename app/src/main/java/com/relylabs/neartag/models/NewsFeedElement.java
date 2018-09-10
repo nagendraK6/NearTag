@@ -12,13 +12,15 @@ public class NewsFeedElement  extends Model {
         @Column(name = "postId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
         public Integer postId;
 
-        @Column(name = "bannerImageURL")
-        public String bannerImageURL;
+        @Column(name = "bannerImageURLLow")
+        public String bannerImageURLLow;
 
+
+        @Column(name = "bannerImageURLHigh")
+        public String bannerImageURLHigh;
 
         @Column(name = "profileImageURL")
         public String profileImageURL;
-
 
         @Column(name = "tag")
         public String tag;
@@ -50,7 +52,8 @@ public class NewsFeedElement  extends Model {
         public NewsFeedElement() {
             super();
             this.postId = -1;
-            this.bannerImageURL = "";
+            this.bannerImageURLLow = "";
+            this.bannerImageURLHigh = "";
             this.tag = "";
             this.profileImageURL = "";
             this.hasPublished = false;
@@ -66,7 +69,8 @@ public class NewsFeedElement  extends Model {
         public NewsFeedElement(
                 Integer postId,
                 String tag,
-                String bannerImageURL,
+                String bannerImageURLLow,
+                String bannerImageURLHigh,
                 String profileImageURL,
                 Boolean hasLiked,
                 Boolean hasPublished,
@@ -78,7 +82,8 @@ public class NewsFeedElement  extends Model {
         ) {
             super();
             this.postId = postId;
-            this.bannerImageURL = bannerImageURL;
+            this.bannerImageURLLow = bannerImageURLLow;
+            this.bannerImageURLHigh = bannerImageURLHigh;
             this.tag = tag;
             this.profileImageURL = profileImageURL;
             this.hasPublished = hasPublished;
@@ -91,9 +96,13 @@ public class NewsFeedElement  extends Model {
             this.save();
         }
 
-        public String getBanngerImageURL() {
-            return bannerImageURL;
+        public String getBanngerImageURLLow() {
+            return bannerImageURLLow;
         }
+
+        public String getBanngerImageURLHigh() {
+        return bannerImageURLHigh;
+    }
 
         public String getProfileImageURL() {
         return profileImageURL;
@@ -117,9 +126,11 @@ public class NewsFeedElement  extends Model {
             hasPublished = true;
         }
 
-        public void setBannerImageURL(String s) {
-            bannerImageURL = s;
+        public void setBannerImageURLLow(String s) {
+            bannerImageURLLow = s;
         }
+
+        public void setBannerImageURLHigh(String s) {bannerImageURLHigh = s;}
 
         public  Integer getPostId() {
             return postId;
