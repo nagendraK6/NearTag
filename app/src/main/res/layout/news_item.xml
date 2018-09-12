@@ -115,33 +115,39 @@
 
 
 
-
-    <com.relylabs.neartag.Utils.SquareImageView
+    <RelativeLayout
+        android:id="@+id/center_content"
+        android:background="@color/colorWhite"
         android:layout_below="@+id/header_row"
-        android:layout_alignParentLeft="true"
-        android:id="@+id/banner_image"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <com.relylabs.neartag.Utils.SquareImageView
+            android:layout_alignParentLeft="true"
+            android:id="@+id/banner_image"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        android:layout_marginLeft="11dp"
-        android:layout_marginTop="5dp"
-        android:id="@+id/status_bar"
-        android:layout_below="@+id/banner_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="#737074"
-        android:text="15 पसंद . 34 शेयर . 4 राय"
-        />
+        <TextView
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/status_bar"
+            android:layout_below="@+id/banner_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#737074"
+            android:text="15 पसंद . 34 शेयर . 4 राय"
+            />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_centerHorizontal="true"
         android:id="@+id/action_section"
-        android:layout_below="@+id/status_bar"
-        android:layout_width="wrap_content"
+        android:layout_below="@+id/center_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <RelativeLayout
@@ -257,7 +263,6 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/comment_creator_profile"
             android:layout_alignParentLeft="true"
-            android:alpha="0.6"
             android:src="@drawable/ic_profile_avatar"
             android:layout_width="35dp"
             android:layout_height="35dp"

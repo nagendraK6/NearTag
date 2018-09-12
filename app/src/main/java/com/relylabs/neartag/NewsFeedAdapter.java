@@ -1,5 +1,6 @@
 package com.relylabs.neartag;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -125,6 +126,7 @@ public class NewsFeedAdapter extends
         public ProgressBar busy;
         public TextView post_creator_name;
         public TextView put_comment;
+        public View shared_content_view;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView) {
@@ -145,6 +147,7 @@ public class NewsFeedAdapter extends
             put_comment = itemView.findViewById(R.id.put_comment);
             time_ago = itemView.findViewById(R.id.time_ago);
             status_bar = itemView.findViewById(R.id.status_bar);
+            shared_content_view = itemView.findViewById(R.id.center_content);
         }
     }
 
@@ -353,15 +356,15 @@ public class NewsFeedAdapter extends
         viewHolder.share_button.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
 
-                viewHolder.itemView.setDrawingCacheEnabled(true);
+                viewHolder.shared_content_view.setDrawingCacheEnabled(true);
 
-                viewHolder.itemView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                viewHolder.shared_content_view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                viewHolder.itemView.layout(0, 0, viewHolder.itemView.getMeasuredWidth(), viewHolder.itemView.getMeasuredHeight());
+                //viewHolder.shared_content_view.layout(0, 0, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                viewHolder.itemView.buildDrawingCache(true);
-                Bitmap b = Bitmap.createBitmap(viewHolder.itemView.getDrawingCache());
-                viewHolder.itemView.setDrawingCacheEnabled(false); // clear drawing cache
+                viewHolder.shared_content_view.buildDrawingCache(true);
+                Bitmap b = Bitmap.createBitmap(viewHolder.shared_content_view.getDrawingCache());
+                viewHolder.shared_content_view.setDrawingCacheEnabled(false); // clear drawing cache
 
 
                 Bitmap bitmap2 = b.copy(b.getConfig(), false);
@@ -385,7 +388,7 @@ public class NewsFeedAdapter extends
                     e.printStackTrace();
                 }
 
-                viewHolder.banngerImage.setDrawingCacheEnabled(false);
+             //   viewHolder.banngerImage.setDrawingCacheEnabled(false);
                 //File f = new File(filename);
 
                 Uri apkURI = FileProvider.getUriForFile(
@@ -404,7 +407,8 @@ public class NewsFeedAdapter extends
                 if (installed_whatsapp) {
                     shareIntent.setPackage("com.whatsapp");
                 }
-                getContext().startActivity(Intent.createChooser(shareIntent, "Share via"));
+
+                ((AppCompatActivity)getContext()).startActivityForResult(shareIntent, current_element.getPostId());
             }
         });
 
@@ -554,6 +558,44 @@ public class NewsFeedAdapter extends
             status += current_element.getCommentsCount() + " राय";
         }
 
+        if (StringUtils.isEmpty(status)) {
+            status = "सबसे पहले पसंद करने वाले बनिये \uD83D\uDE42";
+        }
+
         return status;
+    }
+
+    public void OnSharingCallback(Integer post_id) {
+        // update server to increment the share count
+        postShareCountIncrement(post_id);
+    }
+
+    private void postShareCountIncrement(Integer post_id) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.add("post_id", post_id.toString());
+        User user = User.getLoggedInUser();
+
+        JsonHttpResponseHandler response_json = new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("debug_data", "liked");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                Log.d("debug_data", "liked failed");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
+                Log.d("debug_data", "liked failed");
+            }
+        };
+        // request
+        client.addHeader("Accept", "application/json");
+        client.addHeader("Authorization", "Bearer " + user.AccessToken);
+        client.post(App.getBaseURL() + "post/share", params, response_json);
     }
 }

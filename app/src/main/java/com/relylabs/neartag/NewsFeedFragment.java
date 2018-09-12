@@ -25,14 +25,10 @@ import com.activeandroid.query.Select;
 import com.activeandroid.util.Log;
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
-import com.github.ybq.android.spinkit.style.Circle;
-import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.github.ybq.android.spinkit.style.FadingCircle;
-import com.github.ybq.android.spinkit.style.Wave;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.relylabs.neartag.composer.MyRecyclerViewAdapter;
 import com.relylabs.neartag.composer.RecyclerGalaryFragment;
 import com.relylabs.neartag.models.NewsFeedElement;
 import com.relylabs.neartag.models.User;
@@ -387,6 +383,13 @@ public class NewsFeedFragment extends Fragment {
 
         client.addHeader("Accept", "application/json");
         client.addHeader("Authorization", "Bearer " + user.AccessToken);
-       // client.post(App.getBaseURL() + "post/create", params, jrep);
+        client.post(App.getBaseURL() + "post/create", params, jrep);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("debug_data", "phirki main on activity result called");
+        super.onActivityResult(requestCode, resultCode, data);
+        adapter.OnSharingCallback(requestCode);
     }
 }
