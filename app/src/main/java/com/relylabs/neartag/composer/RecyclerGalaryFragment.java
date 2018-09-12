@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -21,17 +22,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.relylabs.neartag.App;
 import com.relylabs.neartag.R;
 import com.relylabs.neartag.TagSearchFragment;
+import com.relylabs.neartag.Utils.FilePaths;
+import com.relylabs.neartag.Utils.FileSearch;
 import com.squareup.picasso.Picasso;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by nagendra on 8/21/18.
@@ -47,6 +56,9 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
     ImageView preview_image;
     View fragment_view;
     String ref = "";
+    TextView tvNext;
+    private Spinner directorySpinner;
+    ArrayList<String> directoryNames = new ArrayList<>();
 
     @Nullable
     @Override
@@ -66,12 +78,35 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
                 getActivity().onBackPressed();
             }
         });
+
+        directorySpinner = view.findViewById(R.id.spinnerDirectory);
+
         processImageSelection();
 
         if (getArguments() != null) {
             ref =  getArguments()
                     .getString("ref");
         }
+
+        setAlbumNames();
+        ArrayAdapter<String> dr_adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, directoryNames);
+        dr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        directorySpinner.setAdapter(dr_adapter);
+
+        directorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                galleryIntent(directoryNames.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        tvNext = fragment_view.findViewById(R.id.tvNext);
     }
 
     private void loadFragment(Fragment fragment_to_start) {
@@ -89,7 +124,7 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
 
     }
 
-    private ArrayList<String> getAllShownImagesPath() {
+    private ArrayList<String> getAllShownImagesPath(String directoryName) {
         Uri uri;
         Cursor cursor;
         Context context = getContext();
@@ -109,19 +144,43 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
                 null, orderBy);
 
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        while (cursor.moveToNext()) {
-            absolutePathOfImage = cursor.getString(column_index_data);
-            listOfAllImages.add(absolutePathOfImage);
-            column_index_folder_name = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+        if (StringUtils.isEmpty(directoryName)) {
+            while (cursor.moveToNext()) {
+                absolutePathOfImage = cursor.getString(column_index_data);
+                listOfAllImages.add(absolutePathOfImage);
+            }
+        } else {
+            while (cursor.moveToNext()) {
+                absolutePathOfImage = cursor.getString(column_index_data);
+                File f = new File((absolutePathOfImage));
+                String dirName =f.getParentFile().getName();
+                if (dirName.equals(directoryName)) {
+                    listOfAllImages.add(absolutePathOfImage);
+                }
+            }
         }
+
         return listOfAllImages;
+    }
+
+    private void setAlbumNames() {
+        ArrayList<String> names = new ArrayList<>();
+        String[] projection = new String[] {"DISTINCT " + MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME};
+        Cursor cur = getContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
+        StringBuffer list = new StringBuffer();
+        while (cur.moveToNext()) {
+            names.add(cur.getString((cur.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME))));
+        }
+
+        directoryNames = names;
+        Integer wIndex = directoryNames.indexOf("WhatsApp Images");
+        if (wIndex >= 0 && wIndex < directoryNames.size()) {
+            Collections.swap(directoryNames, 0, wIndex);
+        }
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        Log.d("debug_data", "position is " + position);
-
         Picasso.with(getContext()).load(new File(all_images.get(position)))
                 .fit()
                 .placeholder(R.color.white)
@@ -142,7 +201,7 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
     public void findPermissionsAndSelectImage() {
         boolean result = checkPermission(getActivity());
         if (result) {
-            galleryIntent();
+            setAlbumNames();
         }
     }
 
@@ -170,24 +229,23 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
     public void onRequestPermissionsResult(int RC, String per[], int[] PResult) {
         super.onRequestPermissionsResult(RC, per, PResult);
         if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
-            galleryIntent();
+            setAlbumNames();
 
         } else {
             Toast.makeText(getActivity(), "Permission is needed to capture image for the profile", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void galleryIntent() {
-        all_images =  getAllShownImagesPath();
+    private void galleryIntent(String directoName) {
+        all_images =  getAllShownImagesPath(directoName);
 
         // set up the RecyclerView
-        recyclerView = (RecyclerView) fragment_view.findViewById(R.id.all_images);
+        recyclerView = fragment_view.findViewById(R.id.all_images);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         adapter = new MyRecyclerViewAdapter(getContext(), all_images);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
-
-        TextView tvNext = fragment_view.findViewById(R.id.tvNext);
+        tvNext = fragment_view.findViewById(R.id.tvNext);
         tvNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -214,6 +272,19 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
                 .fit()
                 .placeholder(R.color.white)
                 .centerCrop()
-                .into(preview_image);
+                .into(preview_image, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        //do smth when picture is loaded successfully
+                        tvNext.setVisibility(View.VISIBLE);
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        //do smth when there is picture loading error
+                        tvNext.setVisibility(View.INVISIBLE);
+                    }
+                });
     }
 }

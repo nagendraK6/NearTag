@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
@@ -29,15 +30,20 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.relylabs.neartag.Utils.SquareImageView;
 import com.relylabs.neartag.Utils.TimeAgo;
 import com.relylabs.neartag.comments.ViewCommentsFragment;
+import com.relylabs.neartag.composer.MyRecyclerViewAdapter;
 import com.relylabs.neartag.models.NewsFeedElement;
 import com.relylabs.neartag.models.User;
 import com.squareup.picasso.Picasso;
@@ -231,8 +237,10 @@ public class NewsFeedAdapter extends
             viewHolder.post_creator_name.setVisibility(View.GONE);
         }
 
+
        if (!StringUtils.isEmpty(current_element.getBanngerImageURLLow())) {
             Picasso.with(getContext()).load(current_element.getBanngerImageURLLow())
+                    .placeholder(R.color.light_transparent)
                     .into(
                             viewHolder.banngerImage,
                             new com.squareup.picasso.Callback() {
@@ -251,6 +259,7 @@ public class NewsFeedAdapter extends
 
         if (!StringUtils.isEmpty(current_element.getBanngerImageURLHigh())) {
             Picasso.with(getContext()).load(current_element.getBanngerImageURLHigh())
+                    .placeholder(R.color.light_transparent)
                     .into(
                             viewHolder.banngerImage,
                             new com.squareup.picasso.Callback() {
@@ -268,13 +277,24 @@ public class NewsFeedAdapter extends
         }
 
         /*if(!StringUtils.isEmpty(current_element.getBanngerImageURLHigh())) {
-            RequestBuilder<Drawable> thumbnailRequest = Glide
-                    .with(getContext())
-                    .load(current_element.getBanngerImageURLLow());
+
+            Log.d("debug_data_1", "start " + current_element.getPostId());
 
             Glide.with(getContext())
                     .load(current_element.getBanngerImageURLHigh())
-                    .thumbnail(thumbnailRequest)
+                    .thumbnail( 0.1f )
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            Log.d("debug_data_1", "done " + current_element.getPostId());
+                               return false;
+                        }
+                    })
                     .into(viewHolder.banngerImage);
         }*/
 

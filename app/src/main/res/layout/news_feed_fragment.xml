@@ -10,9 +10,11 @@
         <!-- gallery toolbar -->
         <include layout="@layout/snippet_app_header"/>
 
-
     <RelativeLayout
-        android:layout_below="@+id/relLayout1"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <RelativeLayout
         android:id="@+id/upload_preview"
         android:visibility="gone"
         android:background="@color/colorWhite"
@@ -63,12 +65,11 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/news_feed_list"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_below="@+id/upload_preview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
-
+    </RelativeLayout>
     <android.support.design.widget.FloatingActionButton
     android:id="@+id/fab"
     android:layout_width="wrap_content"

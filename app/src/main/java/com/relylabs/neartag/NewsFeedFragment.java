@@ -23,12 +23,16 @@ import android.widget.ProgressBar;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.activeandroid.util.Log;
+import com.ethanhua.skeleton.Skeleton;
+import com.ethanhua.skeleton.SkeletonScreen;
 import com.github.ybq.android.spinkit.style.Circle;
 import com.github.ybq.android.spinkit.style.DoubleBounce;
+import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.github.ybq.android.spinkit.style.Wave;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.relylabs.neartag.composer.MyRecyclerViewAdapter;
 import com.relylabs.neartag.composer.RecyclerGalaryFragment;
 import com.relylabs.neartag.models.NewsFeedElement;
 import com.relylabs.neartag.models.User;
@@ -59,6 +63,8 @@ public class NewsFeedFragment extends Fragment {
 
     ImageView image_in_progress;
     View view_img_upload;
+    SkeletonScreen skeletonScreen;
+
     BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -157,10 +163,13 @@ public class NewsFeedFragment extends Fragment {
                     );
 
         }
-        news_feed_list = (RecyclerView) fragment_view.findViewById(R.id.news_feed_list);
-        busy_show_feed_fetch = (ProgressBar) fragment_view.findViewById(R.id.busy_show_feed_fetch);
-        Circle cr = new Circle();
-        cr.setColor(Color.GRAY);
+        news_feed_list = fragment_view.findViewById(R.id.news_feed_list);
+
+;
+
+        busy_show_feed_fetch = fragment_view.findViewById(R.id.busy_show_feed_fetch);
+        FadingCircle cr = new FadingCircle();
+        cr.setColor(Color.GREEN);
         busy_show_feed_fetch.setIndeterminateDrawable(cr);
         // Initialize cont acts
         all_feeds = new ArrayList<NewsFeedElement>();
@@ -189,16 +198,24 @@ public class NewsFeedFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getActivity()));
         news_feed_list.setLayoutManager(layoutManager);
+        getStandardViewList(2);
+        getStandardViewList(50);
 
-        getStandardViewList();
+
+        skeletonScreen  = Skeleton.bind(news_feed_list)
+                .adapter(adapter)
+                .load(R.layout.item_skeletion_news)
+                .frozen(false)
+                .show();
 
         IntentFilter new_post = new IntentFilter("new_post");
         getActivity().registerReceiver(broadCastNewMessage, new_post);
     }
 
-    private void getStandardViewList() {
+    private void getStandardViewList(Integer limit) {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
+        params.add("limit", limit.toString());
         busy_show_feed_fetch.setVisibility(View.VISIBLE);
         User user = User.getLoggedInUser();
         // response
@@ -265,6 +282,7 @@ public class NewsFeedFragment extends Fragment {
 
                         all_feeds.clear();
                         all_feeds.addAll(feed_elements);
+                        skeletonScreen.hide();
                         adapter.notifyDataSetChanged();
                     }
                 } catch (JSONException e) {
@@ -281,6 +299,7 @@ public class NewsFeedFragment extends Fragment {
                             .from(NewsFeedElement.class)
                             .execute();
                     all_feeds.addAll(feed_elements);
+                    skeletonScreen.hide();
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -294,6 +313,7 @@ public class NewsFeedFragment extends Fragment {
                             .from(NewsFeedElement.class)
                             .execute();
                     all_feeds.addAll(feed_elements);
+                    skeletonScreen.hide();
                     adapter.notifyDataSetChanged();
                 }
                 Log.d("debug_data", " " + statusCode);
@@ -367,6 +387,6 @@ public class NewsFeedFragment extends Fragment {
 
         client.addHeader("Accept", "application/json");
         client.addHeader("Authorization", "Bearer " + user.AccessToken);
-        client.post(App.getBaseURL() + "post/create", params, jrep);
+       // client.post(App.getBaseURL() + "post/create", params, jrep);
     }
 }
