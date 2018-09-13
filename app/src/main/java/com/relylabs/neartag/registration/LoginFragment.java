@@ -1,8 +1,7 @@
-package com.relylabs.neartag;
+package com.relylabs.neartag.registration;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,9 +19,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.relylabs.neartag.App;
+import com.relylabs.neartag.R;
 import com.relylabs.neartag.models.User;
 
 import org.json.JSONException;
@@ -58,10 +60,6 @@ public class LoginFragment extends Fragment {
     public void onResume() {
         super.onResume();
         running = true;
-
-        Typeface fontHindi = Typeface.createFromAsset(getContext().getAssets(), "mangal.ttf");
-        phone_desc.setTypeface(fontHindi);
-        phone_desc.setText(R.string.phn_msg);
         phone_no.post(new Runnable() {
             @Override
             public void run() {
@@ -116,8 +114,8 @@ public class LoginFragment extends Fragment {
                     } else {
                         builder = new AlertDialog.Builder(getContext());
                     }
-                    builder.setMessage("We will be verifying the phone number \n\n" + country_code.getText() + "-" + phone_number + "\n\n" + "Is this ok or would you like to enter new number?")
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    builder.setMessage(getString(R.string.verify_no_msg) +  " \n\n" + country_code.getText() + "-" + phone_number + "\n\n" + getString(R.string.edit_no_msg))
+                            .setPositiveButton(getString(R.string.ok) , new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     // continue with delete
                                     AsyncHttpClient client = new AsyncHttpClient();
@@ -135,7 +133,7 @@ public class LoginFragment extends Fragment {
                                                     return;
                                                 }
 
-                                                Toast.makeText(getContext(), " Message sent ", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(getContext(), getString(R.string.otp_send_text), Toast.LENGTH_LONG).show();
                                                 busy.setVisibility(View.INVISIBLE);
 
                                                 Integer user_id =  response.getInt("user_id");
@@ -180,11 +178,15 @@ public class LoginFragment extends Fragment {
                                     };
 
                                     busy.setVisibility(View.VISIBLE);
+                                    FadingCircle cr = new FadingCircle();
+                                    cr.setColor(R.color.neartagtextcolor);
+                                    busy.setIndeterminateDrawable(cr);
+
                                     client.post( App.getBaseURL() + "user_register/phone_add", params, jrep);
 
                                 }
                             })
-                            .setNegativeButton("EDIT", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(getString(R.string.edit), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     // do nothing
                                     phone_no.setText("");

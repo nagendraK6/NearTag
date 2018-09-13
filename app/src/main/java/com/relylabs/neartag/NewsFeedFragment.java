@@ -29,6 +29,7 @@ import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.relylabs.neartag.Utils.Logger;
 import com.relylabs.neartag.composer.RecyclerGalaryFragment;
 import com.relylabs.neartag.models.NewsFeedElement;
 import com.relylabs.neartag.models.User;
@@ -44,6 +45,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.WeakHashMap;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -64,8 +66,6 @@ public class NewsFeedFragment extends Fragment {
     BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("debug_data", "received data");
-
 
                 final String image_file_name =  intent
                         .getStringExtra(getString(R.string.user_selected_image));
@@ -114,8 +114,6 @@ public class NewsFeedFragment extends Fragment {
                 );
 
             createAPost(new_post);
-            //all_feeds.add(0, new_post);
-            //    adapter.notifyDataSetChanged();
             }
     };
 
@@ -209,23 +207,13 @@ public class NewsFeedFragment extends Fragment {
     }
 
     private void getStandardViewList(Integer limit) {
+        Logger.log(Logger.NEWS_FEED_FETCH_START);
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.add("limit", limit.toString());
         busy_show_feed_fetch.setVisibility(View.VISIBLE);
         User user = User.getLoggedInUser();
         // response
-
-        /*if(all_feeds.size() == 0) {
-            // read from local storage
-            List<NewsFeedElement> feed_elements = new Select()
-                    .all()
-                    .from(NewsFeedElement.class)
-                    .execute();
-            all_feeds.addAll(feed_elements);
-            adapter.notifyDataSetChanged();
-        }*/
-
 
         JsonHttpResponseHandler response_json = new JsonHttpResponseHandler() {
 
@@ -280,6 +268,7 @@ public class NewsFeedFragment extends Fragment {
                         all_feeds.addAll(feed_elements);
                         skeletonScreen.hide();
                         adapter.notifyDataSetChanged();
+                        Logger.log(Logger.NEWS_FEED_FETCH_SUCCESS);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -298,6 +287,11 @@ public class NewsFeedFragment extends Fragment {
                     skeletonScreen.hide();
                     adapter.notifyDataSetChanged();
                 }
+                WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                log_data.put(Logger.RES, res);
+                log_data.put(Logger.THROWABLE, t.toString());
+                Logger.log(Logger.NEWS_FEED_FETCH_FAILED, log_data);
             }
 
             @Override
@@ -312,9 +306,11 @@ public class NewsFeedFragment extends Fragment {
                     skeletonScreen.hide();
                     adapter.notifyDataSetChanged();
                 }
-                Log.d("debug_data", " " + statusCode);
-                if (statusCode == 401) {
-                }
+                WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                log_data.put(Logger.JSON, obj.toString());
+                log_data.put(Logger.THROWABLE, t.toString());
+                Logger.log(Logger.NEWS_FEED_FETCH_FAILED, log_data);
             }
         };
         // request
@@ -340,9 +336,8 @@ public class NewsFeedFragment extends Fragment {
     }
 
 
-    private void createAPost(
-            final NewsFeedElement current_element
-    ) {
+    private void createAPost(final NewsFeedElement current_element) {
+        Logger.log(Logger.POST_CREATE_START);
         android.util.Log.d("debug_data", "upload started...");
         User user = User.getLoggedInUser();
         AsyncHttpClient client = new AsyncHttpClient();
@@ -359,25 +354,29 @@ public class NewsFeedFragment extends Fragment {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                android.util.Log.d("debug_data", "uploaded the image on server...");
                 current_element.setHasPublished(true);
                 all_feeds.add(0, current_element);
                 adapter.notifyDataSetChanged();
                 view_img_upload.setVisibility(View.GONE);
+                Logger.log(Logger.POST_CREATE_SUCCESS);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                HashMap logData = new HashMap<String, String>();
-                logData.put("status_code", statusCode);
-                logData.put("message", t.getMessage());
-                android.util.Log.d("upload_image", "the errorstring: " +logData);
-
+                WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                log_data.put(Logger.RES, res);
+                log_data.put(Logger.THROWABLE, t.toString());
+                Logger.log(Logger.POST_CREATE_FAILED, log_data);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
-                android.util.Log.d("upload_image", "the errorstring: ");
+                WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                log_data.put(Logger.JSON, obj.toString());
+                log_data.put(Logger.THROWABLE, t.toString());
+                Logger.log(Logger.POST_CREATE_FAILED, log_data);
             }
         };
 
@@ -388,7 +387,6 @@ public class NewsFeedFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("debug_data", "phirki main on activity result called");
         super.onActivityResult(requestCode, resultCode, data);
         adapter.OnSharingCallback(requestCode);
     }

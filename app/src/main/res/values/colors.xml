@@ -18,4 +18,8 @@
     <color name="orange">#FF3400</color>
     <color name="hashtag">#003569</color>
     <color name="colorLine">#dfdfdf</color>
+    <color name="neartagtheme">#f7e9e1</color>
+    <color name="neartagtextcolor">#4a4a4a</color>
+    <color name="bordercolor">#979797</color>
+    <color name="texthintcolor">#9a8989</color>
 </resources>

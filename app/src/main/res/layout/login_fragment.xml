@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/wallpaper"
+    android:background="@color/neartagtheme"
     android:theme="@style/DialogTheme"
     tools:context="com.relylabs.neartag.MainActivity">
 
@@ -13,29 +13,32 @@
       android:layout_marginTop="100dp"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:textSize="20dp"
+      android:textSize="24sp"
       android:textStyle="bold"
-      android:textColor="@color/colorWhite"
+      android:textColor="@color/neartagtextcolor"
       android:id="@+id/phone_no_title"
-      android:text="अपना फोन नंबर ब्ताएँ"/>
+      android:text="@string/phone_no_ask"/>
 
     <TextView
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        android:textColor="@color/neartagtextcolor"
         android:id="@+id/phone_no_desc"
         android:layout_below="@id/phone_no_title"
         android:text="@string/phn_msg"/>
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="62dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="34dp"
         android:gravity="bottom"
+        android:background="@drawable/main_screen_no_ask"
         android:layout_centerInParent="true"
         android:layout_below="@id/phone_no_desc">
       <EditText
@@ -44,30 +47,23 @@
           android:layout_height="wrap_content"
           android:text="+1"
           android:textSize="18sp"
-          android:textColor="#d8cbcb"
+          android:textColor="@color/neartagtextcolor"
           android:gravity="center_horizontal"
-          android:backgroundTint="#faf8f8"
+          android:backgroundTint="@color/black"
           />
-
-      <ImageView
-          android:layout_width="32dp"
-          android:layout_height="32dp"
-          android:src="@drawable/in"
-          android:layout_marginBottom="5dp"
-          android:layout_marginRight="20dp"
-          />
-
       <EditText
-          android:layout_width="wrap_content"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:id="@+id/edit_txt_phone"
-          android:textSize="20dp"
+          android:textSize="18sp"
           android:maxLength="10"
+         android:layout_marginLeft="10dp"
+          android:gravity="center"
           android:focusable="true"
           android:inputType="number"
-          android:textColor="@color/colorWhite"
-          android:textColorHint="@color/colorWhite"
-          android:backgroundTint="@color/colorWhite"
+          android:textColor="@color/neartagtextcolor"
+          android:textColorHint="@color/texthintcolor"
+          android:backgroundTint="@color/black"
           android:hint="10 अन्को का फोन"/>
     </LinearLayout>
   <ProgressBar

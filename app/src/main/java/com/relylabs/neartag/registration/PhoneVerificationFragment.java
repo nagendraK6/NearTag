@@ -1,4 +1,4 @@
-package com.relylabs.neartag;
+package com.relylabs.neartag.registration;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,9 +16,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.relylabs.neartag.App;
+import com.relylabs.neartag.R;
 import com.relylabs.neartag.models.User;
 
 import android.content.Context;
@@ -144,6 +147,9 @@ public class PhoneVerificationFragment extends Fragment {
                 if (otp.length() == 4) {
                     ProgressBar busy = view.findViewById(R.id.busy_send_otp);
                     busy.setVisibility(View.VISIBLE);
+                    FadingCircle cr = new FadingCircle();
+                    cr.setColor(R.color.neartagtextcolor);
+                    busy.setIndeterminateDrawable(cr);
 
                     AsyncHttpClient client = new AsyncHttpClient();
                     client.addHeader("Accept", "application/json");

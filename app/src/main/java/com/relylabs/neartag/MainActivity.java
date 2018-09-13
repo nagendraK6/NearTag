@@ -6,13 +6,30 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.amplitude.api.Amplitude;
 import com.relylabs.neartag.models.User;
+import com.relylabs.neartag.registration.LoginFragment;
+import com.relylabs.neartag.registration.PhoneVerificationFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        User user =  User.getLoggedInUser();
+        if (user != null) {
+            Amplitude.getInstance().initialize(
+                    getApplicationContext(),
+                    "fcb10b1e728780e9d9bae42ac53d16a4",
+                    Integer.toString(user.UserID)
+            ).enableForegroundTracking(getApplication()
+            );
+        } else {
+            Amplitude.getInstance().initialize(
+                    getApplicationContext(),
+                    "fcb10b1e728780e9d9bae42ac53d16a4").enableForegroundTracking(getApplication()
+            );
+        }
         setContentView(R.layout.activity_main);
         setUpFragment(findFragment());
     }

@@ -1,4 +1,4 @@
-package com.relylabs.neartag;
+package com.relylabs.neartag.registration;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,7 +18,11 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.relylabs.neartag.App;
+import com.relylabs.neartag.NewsFeedFragment;
+import com.relylabs.neartag.R;
 import com.relylabs.neartag.models.User;
+import com.relylabs.neartag.registration.LoginFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;

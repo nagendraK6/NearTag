@@ -4,30 +4,43 @@
     android:layout_height="match_parent"
     android:windowSoftInputMode="stateVisible"
     android:focusableInTouchMode="true"
-    android:background="@drawable/wallpaper">
+    android:background="@color/neartagtheme">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24sp"
+        android:textStyle="bold"
         android:layout_marginTop="31dp"
-        android:textColor="#ffffff"
+        android:textColor="@color/neartagtextcolor"
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
         android:layout_gravity="center_horizontal"
-        android:text="Verify your phone number"
+        android:text="@string/verify_your_phone_number"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:id="@+id/toverify"
+        android:id="@+id/phone_no"
         android:layout_marginTop="79dp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:textColor="#ffffff"
+        android:textColor="@color/neartagtextcolor"
         android:gravity="center_horizontal"
-        android:text="Enter the 4-digit code we sent to
-+918823588235"
+        android:text="@string/phone_no_sample"
+        />
+    <TextView
+        android:layout_below="@+id/phone_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:id="@+id/toverify"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/neartagtextcolor"
+        android:gravity="center_horizontal"
+        android:text="@string/otp_verify_description"
         />
     <LinearLayout
         android:layout_width="wrap_content"
@@ -50,8 +63,8 @@
             android:layout_marginRight="5dp"
             android:layout_marginEnd="5dp"
             android:width="35dp"
-            android:backgroundTint="#faf8f8"
-            android:textColor="#faf8f8"
+            android:backgroundTint="@color/black"
+            android:textColor="@color/neartagtextcolor"
             />
         <EditText
             android:id="@+id/otp2"
@@ -63,8 +76,8 @@
             android:inputType="number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#faf8f8"
-            android:textColor="#faf8f8"
+            android:backgroundTint="@color/black"
+            android:textColor="@color/neartagtextcolor"
             android:width="35dp"
             />
         <EditText
@@ -78,8 +91,8 @@
             android:layout_marginRight="5dp"
             android:layout_marginEnd="5dp"
             android:width="35dp"
-            android:textColor="#faf8f8"
-            android:backgroundTint="#faf8f8"
+            android:backgroundTint="@color/black"
+            android:textColor="@color/neartagtextcolor"
             />
         <EditText
             android:width="35dp"
@@ -92,8 +105,8 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginEnd="5dp"
-            android:textColor="#faf8f8"
-            android:backgroundTint="#faf8f8"
+            android:backgroundTint="@color/black"
+            android:textColor="@color/neartagtextcolor"
             />
     </LinearLayout>
     <ProgressBar
@@ -114,5 +127,5 @@
         android:textAlignment="center"
         android:background="@drawable/disabled_text"
         android:gravity="center"
-        android:text="Resend SMS in 30 seconds"/>
+        android:text="@string/send_again"/>
 </RelativeLayout>

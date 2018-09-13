@@ -1,7 +1,17 @@
 <resources>
     <string name="app_name">NearTag</string>
-    <string name="phn_msg">आप्के फोन कि पुश्ति के लिये एक मेसेज भेजा जायेगा</string>
+    <string name="phone_no_ask">अपना फोन नंबर ब्ताएँ</string>
+    <string name="phn_msg">आपके फ़ोन पर एक OTP भेजा जायेगा</string>
     <string name="string_next">ठीक है</string>
     <string name="selected_image">selected_image</string>
     <string name="user_selected_image">user_selected_image</string>
+    <string name="verify_no_msg">हम आपके नंबर की जाँच कर रहे है</string>
+    <string name="ok">ठीक है</string>
+    <string name="edit">बदलना है</string>
+    <string name="edit_no_msg">क्या आपका नंबर ठीक है  या आप कोई और नंबर डालेंगे?</string>
+    <string name="otp_send_text">OTP भेज दिया गया</string>
+    <string name="verify_your_phone_number">फोन नंबर verify करें</string>
+    <string name="otp_verify_description">पे भेजी गयी 4 संख्या वाली OTP नीचे डालें</string>
+    <string name="phone_no_sample">+98181881818</string>
+    <string name="send_again">फिर से भेजें</string>
 </resources>
