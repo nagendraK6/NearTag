@@ -25,10 +25,13 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.relylabs.neartag.App;
 import com.relylabs.neartag.R;
+import com.relylabs.neartag.Utils.Logger;
 import com.relylabs.neartag.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.WeakHashMap;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -53,6 +56,9 @@ public class LoginFragment extends Fragment {
         phone_desc = view.findViewById(R.id.phone_no_desc);
         country_code = view.findViewById(R.id.country_code);
         busy = view.findViewById(R.id.busy_send);
+        FadingCircle cr = new FadingCircle();
+        cr.setColor(R.color.neartagtextcolor);
+        busy.setIndeterminateDrawable(cr);
         return view;
     }
 
@@ -114,6 +120,8 @@ public class LoginFragment extends Fragment {
                     } else {
                         builder = new AlertDialog.Builder(getContext());
                     }
+
+                    Logger.log(Logger.PHONE_ADD_REQUEST_START);
                     builder.setMessage(getString(R.string.verify_no_msg) +  " \n\n" + country_code.getText() + "-" + phone_number + "\n\n" + getString(R.string.edit_no_msg))
                             .setPositiveButton(getString(R.string.ok) , new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -159,6 +167,7 @@ public class LoginFragment extends Fragment {
                                                     user.AccessToken = user_token;
                                                 }
 
+                                                Logger.log(Logger.PHONE_ADD_REQUEST_SUCCESS);
                                                 user.save();
                                                 loadFragment(new PhoneVerificationFragment());
                                                 // move to code verification
@@ -169,19 +178,24 @@ public class LoginFragment extends Fragment {
 
                                         @Override
                                         public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-
+                                            WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                                            log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                                            log_data.put(Logger.RES, res);
+                                            log_data.put(Logger.THROWABLE, t.toString());
+                                            Logger.log(Logger.PHONE_ADD_REQUEST_FAILED, log_data);
                                         }
 
                                         @Override
                                         public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
+                                            WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                                            log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                                            log_data.put(Logger.JSON, obj.toString());
+                                            log_data.put(Logger.THROWABLE, t.toString());
+                                            Logger.log(Logger.PHONE_ADD_REQUEST_FAILED, log_data);
                                         }
                                     };
 
                                     busy.setVisibility(View.VISIBLE);
-                                    FadingCircle cr = new FadingCircle();
-                                    cr.setColor(R.color.neartagtextcolor);
-                                    busy.setIndeterminateDrawable(cr);
-
                                     client.post( App.getBaseURL() + "user_register/phone_add", params, jrep);
 
                                 }

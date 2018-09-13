@@ -10,6 +10,8 @@ import com.amplitude.api.Amplitude;
 import com.relylabs.neartag.models.User;
 import com.relylabs.neartag.registration.LoginFragment;
 import com.relylabs.neartag.registration.PhoneVerificationFragment;
+import com.relylabs.neartag.registration.UserNameAskFragment;
+import com.relylabs.neartag.registration.UserPreferenceAskFragment;
 
 public class MainActivity extends AppCompatActivity {
 

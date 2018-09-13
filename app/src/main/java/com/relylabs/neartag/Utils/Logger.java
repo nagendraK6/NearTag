@@ -33,6 +33,30 @@ public class Logger {
     public static final String POST_CREATE_SUCCESS = "POST_CREATE_SUCCESS";
     public static final String POST_CREATE_FAILED = "POST_CREATE_FAILED";
 
+    // phone no
+    public static final String PHONE_ADD_REQUEST_START = "PHONE_ADD_REQUEST_START";
+    public static final String PHONE_ADD_REQUEST_SUCCESS = "PHONE_ADD_REQUEST_SUCCESS";
+    public static final String PHONE_ADD_REQUEST_FAILED = "PHONE_ADD_REQUEST_FAILED";
+
+    public static final String USER_NAME_SEND_REQUEST_START = "USER_NAME_SEND_REQUEST_START";
+    public static final String USER_NAME_SEND_REQUEST_SUCCESS = "USER_NAME_SEND_REQUEST_SUCCESS";
+    public static final String USER_NAME_SEND_REQUEST_FAILED = "USER_NAME_SEND_REQUEST_FAILED";
+
+    public static final String USER_LOCATION_SEND_REQUEST_START = "USER_LOCATION_SEND_REQUEST_START";
+    public static final String USER_LOCATION_SEND_REQUEST_SUCCESS = "USER_LOCATION_SEND_REQUEST_SUCCESS";
+    public static final String USER_LOCATION_SEND_REQUEST_FAILED = "USER_LOCATION_SEND_REQUEST_FAILED";
+
+
+    public static final String USER_PREFERENCE_SEND_REQUEST_START = "USER_PREFERENCE_SEND_REQUEST_START";
+    public static final String USER_PREFERENCE_SEND_REQUEST_SUCCESS = "USER_PREFERENCE_SEND_REQUEST_SUCCESS";
+    public static final String USER_PREFERENCE_SEND_REQUEST_FAILED = "USER_PREFERENCE_SEND_REQUEST_FAILED";
+
+
+    public static final String OTP_VERIFY_REQUEST_START = "OTP_VERIFY_REQUEST_START";
+    public static final String OTP_VERIFY_REQUEST_SUCCESS = "OTP_VERIFY_REQUEST_START";
+    public static final String OTP_VERIFY_REQUEST_FAILED = "OTP_VERIFY_REQUEST_FAILED";
+    public static final String OTP_TYPING = "OTP_TYPING";
+    public static final String OTP_RESEND = "OTP_RESEND";
 
     public static void log(String eventName) {
         Amplitude.getInstance().logEvent(eventName);

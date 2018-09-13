@@ -7,14 +7,14 @@
         />
 
 
-    <padding android:left="2dp"
+    <padding android:left="50dp"
         android:top="10dp"
-        android:right="2dp"
+        android:right="50dp"
         android:bottom="10dp"
         />
 
-    <corners android:bottomRightRadius="10dp"
-        android:bottomLeftRadius="10dp"
-        android:topLeftRadius="10dp"
-        android:topRightRadius="10dp"/>
+    <corners android:bottomRightRadius="50dp"
+        android:bottomLeftRadius="50dp"
+        android:topLeftRadius="50dp"
+        android:topRightRadius="50dp"/>
 </shape>

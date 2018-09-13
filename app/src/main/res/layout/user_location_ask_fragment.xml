@@ -5,7 +5,7 @@
     android:background="@color/neartagtheme"
     android:orientation="vertical">
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/location_name"
         android:textColor="@color/neartagtextcolor"
         android:fontFamily="Helvetica-Bold"
         android:layout_marginTop="30dp"
@@ -13,9 +13,9 @@
         android:textSize="24sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/what_s_your_name"/>
+        android:text="@string/user_location_ask_str"/>
     <EditText
-        android:id="@+id/edit_user_name"
+        android:id="@+id/edit_location_name"
         android:layout_marginTop="110dp"
         android:focusable="true"
         android:gravity="center"
@@ -28,7 +28,7 @@
         android:textColorHint="@color/texthintcolor"
         android:textSize="18sp"
         android:layout_centerHorizontal="true"
-        android:hint="@string/name_add_hint" />
+        android:hint="@string/location_hint_text" />
     <TextView
         android:id="@+id/send_user_name"
         android:layout_width="wrap_content"
@@ -51,5 +51,5 @@
         android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/busy_send_user_name"/>
+        android:id="@+id/busy_send_location_name"/>
 </RelativeLayout>

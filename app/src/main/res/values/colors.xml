@@ -22,4 +22,5 @@
     <color name="neartagtextcolor">#4a4a4a</color>
     <color name="bordercolor">#979797</color>
     <color name="texthintcolor">#9a8989</color>
+    <color name="next_button_bg">#ff5412</color>
 </resources>

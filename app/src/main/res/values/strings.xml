@@ -14,4 +14,21 @@
     <string name="otp_verify_description">पे भेजी गयी 4 संख्या वाली OTP नीचे डालें</string>
     <string name="phone_no_sample">+98181881818</string>
     <string name="send_again">फिर से भेजें</string>
+    <string name="what_s_your_name">अपना नाम बतायें</string>
+    <string name="name_add_hint">जैसे: राम कुमार</string>
+    <string name="empty_name_msg">नाम देना ज़रूरी है</string>
+    <string name="next">आगे बढ़ें</string>
+    <string name="user_location_ask_str">आप कहाँ से हैं?</string>
+    <string name="location_hint_text">जैसे: गया, बिहार</string>
+    <string name="user_preferences_title">अपनी पसंद बताएं</string>
+    <string name="preference_text_1">नीचे अपनी पसंद के मुद्दों को चुने,</string>
+    <string name="preference_text_2">ताकि हम आपको पसंद की चीजें दिखा सकें</string>
+    <string name="option_1">ज्योतिष</string>
+    <string name="option_2">राजनीति</string>
+    <string name="option_3">क्रिकेट</string>
+    <string name="option_4">भक्ति</string>
+    <string name="option_5">सिनेमा</string>
+    <string name="option_6">खेलकूद</string>
+    <string name="option_7">रोमांस</string>
+
 </resources>

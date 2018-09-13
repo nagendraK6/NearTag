@@ -163,7 +163,7 @@ public class NewsFeedFragment extends Fragment {
 
         busy_show_feed_fetch = fragment_view.findViewById(R.id.busy_show_feed_fetch);
         FadingCircle cr = new FadingCircle();
-        cr.setColor(Color.GREEN);
+        cr.setColor(getResources().getColor(R.color.neartagtextcolor));
         busy_show_feed_fetch.setIndeterminateDrawable(cr);
         // Initialize cont acts
         all_feeds = new ArrayList<NewsFeedElement>();

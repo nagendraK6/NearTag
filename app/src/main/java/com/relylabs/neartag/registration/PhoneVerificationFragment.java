@@ -22,6 +22,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.relylabs.neartag.App;
 import com.relylabs.neartag.R;
+import com.relylabs.neartag.Utils.Logger;
 import com.relylabs.neartag.models.User;
 
 import android.content.Context;
@@ -31,6 +32,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.WeakHashMap;
+
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -49,11 +52,17 @@ public class PhoneVerificationFragment extends Fragment {
     EditText otp1, otp2, otp3, otp4;
     TextView phone_no_label;
     boolean running = false;
+    ProgressBar busy;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.phone_verification_fragment, container, false);
+        View view = inflater.inflate(R.layout.phone_verification_fragment, container, false);
+        busy = view.findViewById(R.id.busy_send_otp);
+        FadingCircle cr = new FadingCircle();
+        cr.setColor(R.color.neartagtextcolor);
+        busy.setIndeterminateDrawable(cr);
+        return view;
     }
 
     @Override
@@ -142,9 +151,11 @@ public class PhoneVerificationFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Logger.log(Logger.OTP_TYPING);
                 otp4_text = editable.toString();
                 String otp = otp1_text + otp2_text + otp3_text + otp4_text;
                 if (otp.length() == 4) {
+                    Logger.log(Logger.OTP_VERIFY_REQUEST_START);
                     ProgressBar busy = view.findViewById(R.id.busy_send_otp);
                     busy.setVisibility(View.VISIBLE);
                     FadingCircle cr = new FadingCircle();
@@ -152,12 +163,8 @@ public class PhoneVerificationFragment extends Fragment {
                     busy.setIndeterminateDrawable(cr);
 
                     AsyncHttpClient client = new AsyncHttpClient();
-                    client.addHeader("Accept", "application/json");
-                    client.addHeader("Authorization", "Bearer " + user.AccessToken);
-                    Log.d("debug_data", user.AccessToken);
                     RequestParams params = new RequestParams();
                     params.add("otp", otp);
-                    Log.d("debug_data", "otp is " + otp);
 
                     SharedPreferences cached = getActivity().getSharedPreferences("app_shared_pref", Context.MODE_PRIVATE);
                     String fcm_token = cached.getString("fcm_token", null);
@@ -178,8 +185,6 @@ public class PhoneVerificationFragment extends Fragment {
                                     otp3.setText("");
                                     otp4.setText("");
                                     otp1.requestFocus();
-                                    //EditText otp = view.findViewById(R.id.otp);
-                                    //otp.setText("");
                                     return;
                                 }
 
@@ -189,9 +194,7 @@ public class PhoneVerificationFragment extends Fragment {
                                 user.AccessToken = user_token;
                                 user.IsOTPVerified = true;
                                 user.save();
-
-
-
+                                Logger.log(Logger.OTP_VERIFY_REQUEST_SUCCESS);
                                 loadFragment(new UserNameAskFragment());
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -200,23 +203,25 @@ public class PhoneVerificationFragment extends Fragment {
 
                         @Override
                         public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                            Log.d("debug_data", "" + res);
-                            HashMap logData = new HashMap<String, String>();
-                            logData.put("status_code", statusCode);
-                            logData.put("message", t.getMessage());
-                            // PhirkiLogging.log(PhirkiLogging.USER_REGISTRATION_DATA_FAILED, logData);
+                            WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                            log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                            log_data.put(Logger.RES, res);
+                            log_data.put(Logger.THROWABLE, t.toString());
+                            Logger.log(Logger.OTP_VERIFY_REQUEST_FAILED, log_data);
                         }
 
                         @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject obj) {
-                            if (statusCode == 401) {
-                                user.AccessToken = "";
-                                 user.save();
-                                loadFragment(new LoginFragment());
-                            }
+                        public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
+                            WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                            log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                            log_data.put(Logger.JSON, obj.toString());
+                            log_data.put(Logger.THROWABLE, t.toString());
+                            Logger.log(Logger.OTP_VERIFY_REQUEST_FAILED, log_data);
                         }
                     };
 
+                    client.addHeader("Accept", "application/json");
+                    client.addHeader("Authorization", "Bearer " + user.AccessToken);
                     client.post(App.getBaseURL() + "user_register/otp_send", params, jrep);
                 }
             }
@@ -287,9 +292,6 @@ public class PhoneVerificationFragment extends Fragment {
         otp4_text = "";
 
         AsyncHttpClient client = new AsyncHttpClient();
-        client.addHeader("Accept", "application/json");
-        client.addHeader("Authorization", "Bearer " + user.AccessToken);
-        Log.d("debug_data", user.AccessToken);
         RequestParams params = new RequestParams();
 
         JsonHttpResponseHandler jrep = new JsonHttpResponseHandler() {
@@ -309,22 +311,15 @@ public class PhoneVerificationFragment extends Fragment {
             @Override
             public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
                 Log.d("debug_data", "" + res);
-                HashMap logData = new HashMap<String, String>();
-                logData.put("status_code", statusCode);
-                logData.put("message", t.getMessage());
-                //PhirkiLogging.log(PhirkiLogging.USER_REGISTRATION_DATA_FAILED, logData);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject obj) {
-                if (statusCode == 401) {
-                    user.AccessToken = "";
-                    user.save();
-                    loadFragment(new LoginFragment());
-                }
             }
         };
 
+        client.addHeader("Accept", "application/json");
+        client.addHeader("Authorization", "Bearer " + user.AccessToken);
         client.post(App.getBaseURL() + "user_register/otp_resend", params, jrep);
     }
 

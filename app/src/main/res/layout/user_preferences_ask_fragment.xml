@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/neartagtheme"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/preference_title"
+        android:textColor="@color/neartagtextcolor"
+        android:fontFamily="Helvetica-Bold"
+        android:layout_marginTop="30dp"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/user_preferences_title"/>
+    <TextView
+        android:layout_below="@+id/preference_title"
+        android:id="@+id/preference_description_1"
+        android:textColor="@color/neartagtextcolor"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/preference_text_1"/>
+    <TextView
+        android:layout_below="@+id/preference_description_1"
+        android:id="@+id/preference_description_2"
+        android:textColor="@color/neartagtextcolor"
+        android:layout_marginTop="10dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/preference_text_2"/>
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/preference_description_2"
+        android:layout_above="@+id/send_user_preference"
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/preference_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
+
+
+
+    </RelativeLayout>
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/send_user_preference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/getstartedoval"
+        android:text="@string/next"
+        android:textColor="#ffffff"
+        android:fontFamily="Helvetica-Bold"
+        android:gravity="center_horizontal"
+        android:paddingLeft="50dp"
+        android:textSize="24sp" />
+
+    <ProgressBar
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/busy_send_preference"/>
+</RelativeLayout>
