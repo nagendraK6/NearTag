@@ -1,5 +1,6 @@
 package com.relylabs.neartag.registration;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -54,7 +55,6 @@ public class LoginFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        running = true;
         final View view = inflater.inflate(R.layout.login_fragment, container, false);
         phone_no = view.findViewById(R.id.edit_txt_phone);
         phone_desc = view.findViewById(R.id.phone_no_desc);
@@ -63,6 +63,7 @@ public class LoginFragment extends Fragment {
         FadingCircle cr = new FadingCircle();
         cr.setColor(R.color.neartagtextcolor);
         busy.setIndeterminateDrawable(cr);
+        running = true;
         return view;
     }
 
@@ -118,6 +119,7 @@ public class LoginFragment extends Fragment {
                 final String phone_number = editable.toString();
                 if (phone_number.length() == 10) {
 
+                    checkPermissionAndGrantPermission(getContext());
                     AlertDialog.Builder builder;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
@@ -129,7 +131,7 @@ public class LoginFragment extends Fragment {
                     builder.setMessage(getString(R.string.verify_no_msg) +  " \n\n" + country_code.getText() + "-" + phone_number + "\n\n" + getString(R.string.edit_no_msg))
                             .setPositiveButton(getString(R.string.ok) , new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    checkPermissionAndGrantPermission(getContext());
+
                                     // continue with delete
                                     AsyncHttpClient client = new AsyncHttpClient();
                                     RequestParams params = new RequestParams();
@@ -229,9 +231,12 @@ public class LoginFragment extends Fragment {
     public void checkPermissionAndGrantPermission(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, android.Manifest.permission.RECEIVE_SMS)) {
-                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS}, 0);
+                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_CONTACTS}, 0);
+                } else {
+                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_CONTACTS}, 0);
                 }
             }
         }

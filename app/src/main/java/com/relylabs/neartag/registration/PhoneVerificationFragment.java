@@ -85,8 +85,6 @@ public class PhoneVerificationFragment extends Fragment {
             });
         }
 
-        final User user = User.getLoggedInUser();
-
         //phone_no_label.setText("Enter the 4-digit code we sent to\n" + user.getFormattedNo());
         otp1 = view.findViewById(R.id.otp1);
         otp2 = view.findViewById(R.id.otp2);
@@ -177,7 +175,7 @@ public class PhoneVerificationFragment extends Fragment {
 
         });
 
-        TextView resend = (TextView) view.findViewById(R.id.re_send);
+        TextView resend = view.findViewById(R.id.re_send);
         resend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View fragment_view) {
@@ -297,15 +295,12 @@ public class PhoneVerificationFragment extends Fragment {
     }
 
     private void otpSendToServer(String otp, final Boolean auto) {
-        if (auto) {
+        if (!auto) {
             Logger.log(Logger.OTP_VERIFY_REQUEST_START);
         } else {
             Logger.log(Logger.AUTO_OTP_VERIFY_REQUEST_START);
         }
         busy.setVisibility(View.VISIBLE);
-        FadingCircle cr = new FadingCircle();
-        cr.setColor(R.color.neartagtextcolor);
-        busy.setIndeterminateDrawable(cr);
         final User user = User.getLoggedInUser();
 
         AsyncHttpClient client = new AsyncHttpClient();
@@ -338,7 +333,7 @@ public class PhoneVerificationFragment extends Fragment {
                     user.AccessToken = user_token;
                     user.IsOTPVerified = true;
                     user.save();
-                    if (auto) {
+                    if (!auto) {
                         Logger.log(Logger.OTP_VERIFY_REQUEST_SUCCESS);
                     } else {
                         Logger.log(Logger.AUTO_OTP_VERIFY_REQUEST_SUCCESS);
@@ -355,7 +350,7 @@ public class PhoneVerificationFragment extends Fragment {
                 log_data.put(Logger.STATUS, Integer.toString(statusCode));
                 log_data.put(Logger.RES, res);
                 log_data.put(Logger.THROWABLE, t.toString());
-                if (auto) {
+                if (!auto) {
                     Logger.log(Logger.OTP_VERIFY_REQUEST_FAILED, log_data);
                 } else {
                     Logger.log(Logger.AUTO_OTP_VERIFY_REQUEST_FAILED, log_data);
@@ -368,7 +363,7 @@ public class PhoneVerificationFragment extends Fragment {
                 log_data.put(Logger.STATUS, Integer.toString(statusCode));
                 log_data.put(Logger.JSON, obj.toString());
                 log_data.put(Logger.THROWABLE, t.toString());
-                if (auto) {
+                if (!auto) {
                     Logger.log(Logger.OTP_VERIFY_REQUEST_FAILED, log_data);
                 } else {
                     Logger.log(Logger.AUTO_OTP_VERIFY_REQUEST_FAILED, log_data);

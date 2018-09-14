@@ -88,24 +88,6 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
                     .getString("ref");
         }
 
-        setAlbumNames();
-        ArrayAdapter<String> dr_adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, directoryNames);
-        dr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        directorySpinner.setAdapter(dr_adapter);
-
-        directorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                galleryIntent(directoryNames.get(position));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
         tvNext = fragment_view.findViewById(R.id.tvNext);
     }
 
@@ -177,6 +159,24 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
         if (wIndex >= 0 && wIndex < directoryNames.size()) {
             Collections.swap(directoryNames, 0, wIndex);
         }
+
+
+        ArrayAdapter<String> dr_adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, directoryNames);
+        dr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        directorySpinner.setAdapter(dr_adapter);
+
+        directorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                galleryIntent(directoryNames.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
