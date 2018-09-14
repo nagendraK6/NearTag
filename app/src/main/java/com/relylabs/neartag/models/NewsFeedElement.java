@@ -46,6 +46,9 @@ public class NewsFeedElement  extends Model {
         @Column(name = "userName")
         public String userName;
 
+        @Column(name = "userLocation")
+        public String userLocation;
+
         @Column(name = "timestamp")
         public Long timestamp;
 
@@ -75,6 +78,7 @@ public class NewsFeedElement  extends Model {
             this.commentsCount = "";
             this.sharesCount = "";
             this.likesCount = "";
+            this.userLocation = "";
             this.save();
         }
 
@@ -90,6 +94,7 @@ public class NewsFeedElement  extends Model {
                 String galleryImageFile,
                 Integer userId,
                 String userName,
+                String userLocation,
                 Long timestamp,
                 String likesCount,
                 String sharesCount,
@@ -112,6 +117,7 @@ public class NewsFeedElement  extends Model {
             this.likesCount = likesCount;
             this.sharesCount = sharesCount;
             this.commentsCount = commentsCount;
+            this.userLocation = userLocation;
             this.save();
         }
 
@@ -166,6 +172,8 @@ public class NewsFeedElement  extends Model {
         public  Integer getUserId() { return userId; }
 
         public  String getUserName() { return userName; }
+
+        public  String getUserLocation() { return userLocation; }
 
         public  Long getTimeStamp() { return timestamp; }
 

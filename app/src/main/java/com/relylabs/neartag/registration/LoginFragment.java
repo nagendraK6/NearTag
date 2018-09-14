@@ -1,12 +1,16 @@
 package com.relylabs.neartag.registration;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -125,6 +129,7 @@ public class LoginFragment extends Fragment {
                     builder.setMessage(getString(R.string.verify_no_msg) +  " \n\n" + country_code.getText() + "-" + phone_number + "\n\n" + getString(R.string.edit_no_msg))
                             .setPositiveButton(getString(R.string.ok) , new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    checkPermissionAndGrantPermission(getContext());
                                     // continue with delete
                                     AsyncHttpClient client = new AsyncHttpClient();
                                     RequestParams params = new RequestParams();
@@ -219,5 +224,16 @@ public class LoginFragment extends Fragment {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_holder, fragment_to_start);
         ft.commit();
+    }
+
+    public void checkPermissionAndGrantPermission(final Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, android.Manifest.permission.RECEIVE_SMS)) {
+                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS}, 0);
+                }
+            }
+        }
     }
 }

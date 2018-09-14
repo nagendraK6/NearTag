@@ -1,6 +1,8 @@
 package com.relylabs.neartag.Utils;
 
 import com.amplitude.api.Amplitude;
+import com.amplitude.api.AmplitudeClient;
+import com.relylabs.neartag.models.User;
 
 import java.util.HashMap;
 import java.util.WeakHashMap;
@@ -55,15 +57,28 @@ public class Logger {
     public static final String OTP_VERIFY_REQUEST_START = "OTP_VERIFY_REQUEST_START";
     public static final String OTP_VERIFY_REQUEST_SUCCESS = "OTP_VERIFY_REQUEST_START";
     public static final String OTP_VERIFY_REQUEST_FAILED = "OTP_VERIFY_REQUEST_FAILED";
+    public static final String AUTO_OTP_VERIFY_REQUEST_START = "AUTO_OTP_VERIFY_REQUEST_START";
+    public static final String AUTO_OTP_VERIFY_REQUEST_SUCCESS = "AUTO_OTP_VERIFY_REQUEST_START";
+    public static final String AUTO_OTP_VERIFY_REQUEST_FAILED = "AUTO_OTP_VERIFY_REQUEST_START";
+
     public static final String OTP_TYPING = "OTP_TYPING";
     public static final String OTP_RESEND = "OTP_RESEND";
 
     public static void log(String eventName) {
-        Amplitude.getInstance().logEvent(eventName);
-
+        getInstance().logEvent(eventName);
     }
 
     public static void log(String eventName, WeakHashMap<String, String> arguments) {
-        Amplitude.getInstance().logEvent(eventName, new JSONObject(arguments));
+        getInstance().logEvent(eventName, new JSONObject(arguments));
+    }
+
+    private static AmplitudeClient getInstance() {
+        AmplitudeClient client = Amplitude.getInstance();
+        User user = User.getLoggedInUser();
+        if (user != null) {
+            client.setUserId(Integer.toString(user.UserID));
+        }
+
+        return client;
     }
 }

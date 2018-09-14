@@ -107,6 +107,7 @@ public class NewsFeedFragment extends Fragment {
                         image_file_name,
                         user.UserID,
                         user.Name,
+                        user.Location,
                         new Long(0),
                         "",
                         "",
@@ -237,6 +238,7 @@ public class NewsFeedFragment extends Fragment {
                             String message_text = obj.getString("message_text");
                             Boolean has_liked = obj.getBoolean("has_liked");
                             String user_name = obj.getString("user_name");
+                            String user_location = obj.getString("user_location");
                             Long timeStamp = obj.getLong("timestamp");
 
                             String likes_count = obj.getString("likes_count");
@@ -255,6 +257,7 @@ public class NewsFeedFragment extends Fragment {
                                     "",
                                     user_id,
                                     user_name,
+                                    user_location,
                                     timeStamp,
                                     likes_count,
                                     shared_count,

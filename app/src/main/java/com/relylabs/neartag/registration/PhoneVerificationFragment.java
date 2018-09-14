@@ -1,11 +1,15 @@
 package com.relylabs.neartag.registration;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -53,6 +57,7 @@ public class PhoneVerificationFragment extends Fragment {
     TextView phone_no_label;
     boolean running = false;
     ProgressBar busy;
+    String otp;
 
     @Nullable
     @Override
@@ -69,6 +74,17 @@ public class PhoneVerificationFragment extends Fragment {
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         phone_no_label = view.findViewById(R.id.toverify);
         running = true;
+
+        if (shouldRegister(getContext())) {
+            SmsReceiver.bindListener(new SmsListener() {
+                @Override
+                public void messageReceived(String messageText) {
+                    otp = messageText;
+                    otpSendToServer(otp, false);
+                }
+            });
+        }
+
         final User user = User.getLoggedInUser();
 
         //phone_no_label.setText("Enter the 4-digit code we sent to\n" + user.getFormattedNo());
@@ -155,74 +171,7 @@ public class PhoneVerificationFragment extends Fragment {
                 otp4_text = editable.toString();
                 String otp = otp1_text + otp2_text + otp3_text + otp4_text;
                 if (otp.length() == 4) {
-                    Logger.log(Logger.OTP_VERIFY_REQUEST_START);
-                    ProgressBar busy = view.findViewById(R.id.busy_send_otp);
-                    busy.setVisibility(View.VISIBLE);
-                    FadingCircle cr = new FadingCircle();
-                    cr.setColor(R.color.neartagtextcolor);
-                    busy.setIndeterminateDrawable(cr);
-
-                    AsyncHttpClient client = new AsyncHttpClient();
-                    RequestParams params = new RequestParams();
-                    params.add("otp", otp);
-
-                    SharedPreferences cached = getActivity().getSharedPreferences("app_shared_pref", Context.MODE_PRIVATE);
-                    String fcm_token = cached.getString("fcm_token", null);
-                    params.add("fcm_token", fcm_token);
-
-                    JsonHttpResponseHandler jrep = new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            try {
-                                String error_message = (String) response.getString("error_message");
-                                if (!error_message.equals("SUCCESS") && running) {
-                                    Toast.makeText(getContext(), error_message, Toast.LENGTH_LONG).show();
-
-                                    ProgressBar busy = view.findViewById(R.id.busy_send_otp);
-                                    busy.setVisibility(View.INVISIBLE);
-                                    otp1.setText("");
-                                    otp2.setText("");
-                                    otp3.setText("");
-                                    otp4.setText("");
-                                    otp1.requestFocus();
-                                    return;
-                                }
-
-                                String user_token = (String) response.getString("user_token");
-
-                                User user = User.getLoggedInUser();
-                                user.AccessToken = user_token;
-                                user.IsOTPVerified = true;
-                                user.save();
-                                Logger.log(Logger.OTP_VERIFY_REQUEST_SUCCESS);
-                                loadFragment(new UserNameAskFragment());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                            WeakHashMap<String, String> log_data = new WeakHashMap<>();
-                            log_data.put(Logger.STATUS, Integer.toString(statusCode));
-                            log_data.put(Logger.RES, res);
-                            log_data.put(Logger.THROWABLE, t.toString());
-                            Logger.log(Logger.OTP_VERIFY_REQUEST_FAILED, log_data);
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
-                            WeakHashMap<String, String> log_data = new WeakHashMap<>();
-                            log_data.put(Logger.STATUS, Integer.toString(statusCode));
-                            log_data.put(Logger.JSON, obj.toString());
-                            log_data.put(Logger.THROWABLE, t.toString());
-                            Logger.log(Logger.OTP_VERIFY_REQUEST_FAILED, log_data);
-                        }
-                    };
-
-                    client.addHeader("Accept", "application/json");
-                    client.addHeader("Authorization", "Bearer " + user.AccessToken);
-                    client.post(App.getBaseURL() + "user_register/otp_send", params, jrep);
+                    otpSendToServer(otp, false);
                 }
             }
 
@@ -338,4 +287,97 @@ public class PhoneVerificationFragment extends Fragment {
         App.getRefWatcher(getActivity()).watch(this);
     }
 
+    public boolean shouldRegister(final Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            return ContextCompat.checkSelfPermission(context, android.Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
+        }
+
+        return true;
+    }
+
+    private void otpSendToServer(String otp, final Boolean auto) {
+        if (auto) {
+            Logger.log(Logger.OTP_VERIFY_REQUEST_START);
+        } else {
+            Logger.log(Logger.AUTO_OTP_VERIFY_REQUEST_START);
+        }
+        busy.setVisibility(View.VISIBLE);
+        FadingCircle cr = new FadingCircle();
+        cr.setColor(R.color.neartagtextcolor);
+        busy.setIndeterminateDrawable(cr);
+        final User user = User.getLoggedInUser();
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.add("otp", otp);
+
+        SharedPreferences cached = getActivity().getSharedPreferences("app_shared_pref", Context.MODE_PRIVATE);
+        String fcm_token = cached.getString("fcm_token", null);
+        params.add("fcm_token", fcm_token);
+
+        JsonHttpResponseHandler jrep = new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    String error_message = (String) response.getString("error_message");
+                    if (!error_message.equals("SUCCESS") && running) {
+                        busy.setVisibility(View.INVISIBLE);
+                        if (!auto) {
+                            Toast.makeText(getContext(), error_message, Toast.LENGTH_LONG).show();
+                            otp1.setText("");
+                            otp2.setText("");
+                            otp3.setText("");
+                            otp4.setText("");
+                            otp1.requestFocus();
+                        }
+                        return;
+                    }
+
+                    String user_token = (String) response.getString("user_token");
+                    user.AccessToken = user_token;
+                    user.IsOTPVerified = true;
+                    user.save();
+                    if (auto) {
+                        Logger.log(Logger.OTP_VERIFY_REQUEST_SUCCESS);
+                    } else {
+                        Logger.log(Logger.AUTO_OTP_VERIFY_REQUEST_SUCCESS);
+                    }
+                    loadFragment(new UserNameAskFragment());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                log_data.put(Logger.RES, res);
+                log_data.put(Logger.THROWABLE, t.toString());
+                if (auto) {
+                    Logger.log(Logger.OTP_VERIFY_REQUEST_FAILED, log_data);
+                } else {
+                    Logger.log(Logger.AUTO_OTP_VERIFY_REQUEST_FAILED, log_data);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
+                WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                log_data.put(Logger.JSON, obj.toString());
+                log_data.put(Logger.THROWABLE, t.toString());
+                if (auto) {
+                    Logger.log(Logger.OTP_VERIFY_REQUEST_FAILED, log_data);
+                } else {
+                    Logger.log(Logger.AUTO_OTP_VERIFY_REQUEST_FAILED, log_data);
+                }
+            }
+        };
+
+        client.addHeader("Accept", "application/json");
+        client.addHeader("Authorization", "Bearer " + user.AccessToken);
+        client.post(App.getBaseURL() + "user_register/otp_send", params, jrep);
+    }
 }
