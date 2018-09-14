@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/neartagtheme"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:textSize="48sp"
+        android:textColor="@color/next_button_bg"
+        android:gravity="center_horizontal"
+        android:text="#NearTag"
+        />
+    <TextView
+        android:layout_below="@+id/title"
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"
+        android:text="थोड़ा गप्प शप्प हो जाये !"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        />
+
+    <ImageView
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="35dp"
+        android:layout_below="@+id/description"
+        android:layout_width="match_parent"
+        android:src="@drawable/home_page_icons"
+        android:layout_marginBottom="20dp"
+        android:layout_height="match_parent" />
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:id="@+id/get_started"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/getstartedoval"
+        android:text="@string/getstarted"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:fontFamily="Helvetica-Bold"
+        android:gravity="center_horizontal"
+        android:paddingLeft="50dp"
+        android:textSize="24sp" />
+
+</RelativeLayout>

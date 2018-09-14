@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import com.amplitude.api.Amplitude;
 import com.relylabs.neartag.models.User;
+import com.relylabs.neartag.registration.GetStartedFragment;
 import com.relylabs.neartag.registration.LoginFragment;
 import com.relylabs.neartag.registration.PhoneVerificationFragment;
 import com.relylabs.neartag.registration.UserNameAskFragment;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment findFragment() {
         User user = User.getLoggedInUser();
         if (user == null) {
-            return new LoginFragment();
+            return new GetStartedFragment();
         }
 
         if (user.IsOTPVerified == false) {

@@ -61,6 +61,9 @@ public class Logger {
     public static final String AUTO_OTP_VERIFY_REQUEST_SUCCESS = "AUTO_OTP_VERIFY_REQUEST_START";
     public static final String AUTO_OTP_VERIFY_REQUEST_FAILED = "AUTO_OTP_VERIFY_REQUEST_START";
 
+    public static final String GET_STARTED_CLICKED = "GET_STARTED_CLICKED";
+
+
     public static final String OTP_TYPING = "OTP_TYPING";
     public static final String OTP_RESEND = "OTP_RESEND";
 
