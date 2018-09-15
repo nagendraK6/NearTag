@@ -102,8 +102,9 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
     public void onDestroy() {
         super.onDestroy();
         App.getRefWatcher(getActivity()).watch(this);
-        recyclerView.setAdapter(null);
-
+        if (recyclerView != null) {
+            recyclerView.setAdapter(null);
+        }
     }
 
     private ArrayList<String> getAllShownImagesPath(String directoryName) {

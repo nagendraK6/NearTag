@@ -79,6 +79,10 @@ public class VisibilityTracker {
         mVisibilityTrackerListener = listener;
     }
 
+    public void setVisibilityCheck(Boolean visibilityCheck) {
+        mIsVisibilityCheckScheduled = false;
+    }
+
     public void removeVisibilityTrackerListener() {
         mVisibilityTrackerListener = null;
     }
@@ -109,10 +113,7 @@ public class VisibilityTracker {
             final long totalViewArea = (long) view.getHeight() * view.getWidth();
 
             return totalViewArea > 0 && 100 * visibleArea >= minPercentageViewed * totalViewArea;
-
         }
-
-
     }
 
     class VisibilityRunnable implements Runnable {
@@ -146,5 +147,4 @@ public class VisibilityTracker {
             mInvisibleViews.clear();
         }
     }
-
 }

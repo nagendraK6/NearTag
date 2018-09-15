@@ -61,6 +61,8 @@ public class NewsFeedElement  extends Model {
         @Column(name = "sharesCount")
         public String sharesCount;
 
+        public Integer totalDurationCount;
+
         public NewsFeedElement() {
             super();
             this.postId = -1;
@@ -79,6 +81,7 @@ public class NewsFeedElement  extends Model {
             this.sharesCount = "";
             this.likesCount = "";
             this.userLocation = "";
+            this.totalDurationCount = 0;
             this.save();
         }
 
@@ -118,7 +121,16 @@ public class NewsFeedElement  extends Model {
             this.sharesCount = sharesCount;
             this.commentsCount = commentsCount;
             this.userLocation = userLocation;
+            this.totalDurationCount = 0;
             this.save();
+        }
+
+        public void incrementDuration() {
+          this.totalDurationCount = this.totalDurationCount + 1;
+        }
+
+        public boolean shouldShowComments() {
+            return this.totalDurationCount > 10;
         }
 
         public String getBanngerImageURLLow() {

@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/upload_in_progress_text"
         android:visibility="gone"
-        android:text="अपलोड हो रहा है"
+        android:text="@string/upload_in_progress"
         />
 
     <android.support.v7.widget.CardView
@@ -60,7 +60,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:gravity="center_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
 
 
             android:layout_alignParentTop="true"
@@ -77,14 +77,14 @@
 
             <TextView
                 android:id="@+id/user_name"
-                android:text="Nagendra"
+                android:text="@string/sample_user_name"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:layout_below="@+id/user_name"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 android:layout_marginEnd="10dp"
                 android:id="@+id/user_location"
                 android:text=""
@@ -233,7 +233,7 @@
         <TextView
             android:id="@+id/comment_creator_name"
             android:layout_alignParentLeft="true"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:text="नागेंद्र :"
             android:textColor="@color/black"
             android:textStyle="bold"
@@ -246,7 +246,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
             android:textColor="@color/black"
-            android:text="आजादी हम लेकर रहेंगे. हिंदुस्तान ज़िंदाबाद "
+            android:text="@string/comments_text"
             android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -255,6 +255,7 @@
     <RelativeLayout
         android:layout_marginLeft="10dp"
         android:id="@+id/add_ur_comment"
+        android:visibility="gone"
         android:layout_below="@+id/post_tag_and_text"
         android:layout_marginTop="2dp"
         android:layout_width="match_parent"
@@ -268,9 +269,22 @@
             android:layout_height="35dp"
             android:padding="2dp" />
         <TextView
+            android:id="@+id/empty_comment_creator_profile"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/blank_circular_profile"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            android:textColor="@color/white"
+            android:gravity="center_horizontal|center_vertical"
+            android:src="@drawable/ic_profile_avatar"
+            android:layout_width="35dp"
+            android:text="@string/sample_name_on_empty_profile"
+            android:layout_height="35dp"
+            android:padding="2dp" />
+        <TextView
             android:layout_toRightOf="@+id/comment_creator_profile"
             android:paddingLeft="10dp"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
             android:textColor="@color/black"

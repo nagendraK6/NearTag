@@ -31,5 +31,9 @@
     <string name="option_6">खेलकूद</string>
     <string name="option_7">रोमांस</string>
     <string name="getstarted">शुरू करें</string>
+    <string name="comments_text">आजादी हम लेकर रहेंगे. हिंदुस्तान ज़िंदाबाद</string>
+    <string name="upload_in_progress">अपलोड हो रहा है</string>
+    <string name="sample_name_on_empty_profile">a</string>
+    <string name="sample_user_name">Nagendra</string>
 
 </resources>

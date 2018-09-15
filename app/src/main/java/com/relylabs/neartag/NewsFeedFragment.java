@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
@@ -157,6 +158,10 @@ public class NewsFeedFragment extends Fragment {
                             }
                     );
 
+        } else {
+            TextView empty_profile = fragment_view.findViewById(R.id.empty_profile_image);
+            empty_profile.setVisibility(View.VISIBLE);
+            empty_profile.setText(user.Name.substring(0, 1));
         }
         news_feed_list = fragment_view.findViewById(R.id.news_feed_list);
 

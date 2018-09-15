@@ -99,6 +99,12 @@ public class NewsFeedAdapter extends
         Log.d(NewsFeedAdapter.class.getSimpleName(), "Currently visible views \n");
         for (View v : visibleViews) {
             Integer viewPosition = mViewPositionMap.get(v);
+            if (viewPosition < news_feed_elements.size()) {
+                news_feed_elements.get(viewPosition).incrementDuration();
+                if (news_feed_elements.get(viewPosition).shouldShowComments()) {
+                    v.findViewById(R.id.add_ur_comment).setVisibility(View.VISIBLE);
+                }
+            }
             Log.d("debug_data", "VP " + viewPosition.toString());
         }
     }
@@ -113,7 +119,7 @@ public class NewsFeedAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        public TextView tag;
+        public TextView tag, empty_creator_profile_pic;
         public SquareImageView banngerImage;
         public CircleImageView profilePicURL, creator_profile_pic;
         public ProgressBar uploadingFile;
@@ -144,6 +150,7 @@ public class NewsFeedAdapter extends
             user_name = itemView.findViewById(R.id.user_name);
             user_location = itemView.findViewById(R.id.user_location);
             creator_profile_pic = itemView.findViewById(R.id.comment_creator_profile);
+            empty_creator_profile_pic = itemView.findViewById(R.id.empty_comment_creator_profile);
             post_creator_name = itemView.findViewById(R.id.comment_creator_name);
             put_comment = itemView.findViewById(R.id.put_comment);
             time_ago = itemView.findViewById(R.id.time_ago);
@@ -213,6 +220,9 @@ public class NewsFeedAdapter extends
                                 }
                             }
                     );
+        } else {
+            viewHolder.empty_creator_profile_pic.setText(user.Name.substring(0, 1));
+            viewHolder.empty_creator_profile_pic.setVisibility(View.VISIBLE);
         }
 
 
@@ -354,7 +364,7 @@ public class NewsFeedAdapter extends
 
 
         mViewPositionMap.put(viewHolder.itemView, position);
-        mVisibilityTracker.addView(viewHolder.itemView, 50);
+        mVisibilityTracker.addView(viewHolder.itemView, 80);
         viewHolder.share_button.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
 
@@ -450,7 +460,6 @@ public class NewsFeedAdapter extends
             viewHolder.status_bar.setText(stats_text);
         }
     }
-
 
     // Returns the total count of items in the list
     @Override

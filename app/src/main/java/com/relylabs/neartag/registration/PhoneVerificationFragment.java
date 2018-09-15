@@ -1,5 +1,9 @@
 package com.relylabs.neartag.registration;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -59,6 +63,9 @@ public class PhoneVerificationFragment extends Fragment {
     ProgressBar busy;
     String otp;
 
+    private final BroadcastReceiver mybroadcast = new SmsReceiver();
+    Boolean registered = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,17 +81,6 @@ public class PhoneVerificationFragment extends Fragment {
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         phone_no_label = view.findViewById(R.id.toverify);
         running = true;
-
-        if (shouldRegister(getContext())) {
-            SmsReceiver.bindListener(new SmsListener() {
-                @Override
-                public void messageReceived(String messageText) {
-                    otp = messageText;
-                    otpSendToServer(otp, false);
-                }
-            });
-        }
-
         //phone_no_label.setText("Enter the 4-digit code we sent to\n" + user.getFormattedNo());
         otp1 = view.findViewById(R.id.otp1);
         otp2 = view.findViewById(R.id.otp2);
@@ -185,6 +181,9 @@ public class PhoneVerificationFragment extends Fragment {
                 }
             }
         });
+
+
+        checkPermissionAndGrantPermission(getContext());
     }
 
     private void startTimer(final View fragment_view) {
@@ -283,6 +282,10 @@ public class PhoneVerificationFragment extends Fragment {
         running = false;
         super.onDestroy();
         App.getRefWatcher(getActivity()).watch(this);
+        if (registered) {
+            getActivity().unregisterReceiver(mybroadcast);
+            registered = false;
+        }
     }
 
     public boolean shouldRegister(final Context context) {
@@ -374,5 +377,38 @@ public class PhoneVerificationFragment extends Fragment {
         client.addHeader("Accept", "application/json");
         client.addHeader("Authorization", "Bearer " + user.AccessToken);
         client.post(App.getBaseURL() + "user_register/otp_send", params, jrep);
+    }
+
+
+    public void checkPermissionAndGrantPermission(final Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, android.Manifest.permission.RECEIVE_SMS)) {
+                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_CONTACTS}, 0);
+                } else {
+                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_CONTACTS}, 0);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int RC, String per[], int[] PResult) {
+        super.onRequestPermissionsResult(RC, per, PResult);
+        if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
+            if (shouldRegister(getContext()) && !registered) {
+                IntentFilter filter = new IntentFilter();
+                filter.addAction("android.provider.Telephony.SMS_RECEIVED");
+                getActivity().registerReceiver(mybroadcast, filter);
+                registered = true;
+            }
+        }
     }
 }

@@ -118,8 +118,6 @@ public class LoginFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 final String phone_number = editable.toString();
                 if (phone_number.length() == 10) {
-
-                    checkPermissionAndGrantPermission(getContext());
                     AlertDialog.Builder builder;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
@@ -226,19 +224,5 @@ public class LoginFragment extends Fragment {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_holder, fragment_to_start);
         ft.commit();
-    }
-
-    public void checkPermissionAndGrantPermission(final Context context) {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, android.Manifest.permission.RECEIVE_SMS)) {
-                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_CONTACTS}, 0);
-                } else {
-                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_CONTACTS}, 0);
-                }
-            }
-        }
     }
 }

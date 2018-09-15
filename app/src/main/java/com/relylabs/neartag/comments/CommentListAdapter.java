@@ -15,6 +15,8 @@ import com.relylabs.neartag.models.User;
 import com.relylabs.neartag.models.Comment;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -104,9 +106,11 @@ public class CommentListAdapter  extends
         final Comment current_comment = this.all_comments.get(position);
         viewHolder.comment.setText(current_comment.getCommentText());
         viewHolder.username.setText(current_comment.getUserName());
-        Picasso.with(mContext).load(current_comment.getCommenterProfilePicUrl()).into(
-                viewHolder.profileImage
-        );
+        if (!StringUtils.isEmpty(current_comment.getCommenterProfilePicUrl())) {
+            Picasso.with(mContext).load(current_comment.getCommenterProfilePicUrl()).into(
+                    viewHolder.profileImage
+            );
+        }
     }
 
     /**
