@@ -24,6 +24,7 @@ import com.relylabs.neartag.R;
 import com.relylabs.neartag.Utils.Logger;
 import com.relylabs.neartag.models.User;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,6 +62,11 @@ public class UserLocationAskFragment extends Fragment {
         send_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View buttonView) {
+                if (StringUtils.isEmpty(location_name.getText().toString())) {
+                    Toast.makeText(getContext(), getString(R.string.empty_location_name_msg), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 busy.setVisibility(View.VISIBLE);
                 send_button.setVisibility(View.INVISIBLE);
                 AsyncHttpClient client = new AsyncHttpClient();

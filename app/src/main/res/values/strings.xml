@@ -17,6 +17,7 @@
     <string name="what_s_your_name">अपना नाम बतायें</string>
     <string name="name_add_hint">जैसे: राम कुमार</string>
     <string name="empty_name_msg">नाम देना ज़रूरी है</string>
+    <string name="empty_location_name_msg">यह बताना ज़रूरी है</string>
     <string name="next">आगे बढ़ें</string>
     <string name="user_location_ask_str">आप कहाँ से हैं?</string>
     <string name="location_hint_text">जैसे: गया, बिहार</string>
@@ -35,5 +36,6 @@
     <string name="upload_in_progress">अपलोड हो रहा है</string>
     <string name="sample_name_on_empty_profile">a</string>
     <string name="sample_user_name">Nagendra</string>
+    <string name="adding_empty_comments_toast">पहले कुछ लिखें</string>
 
 </resources>

@@ -41,6 +41,7 @@ import com.bumptech.glide.request.target.Target;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.relylabs.neartag.Utils.Helper;
 import com.relylabs.neartag.Utils.SquareImageView;
 import com.relylabs.neartag.Utils.TimeAgo;
 import com.relylabs.neartag.comments.ViewCommentsFragment;
@@ -244,7 +245,7 @@ public class NewsFeedAdapter extends
 
 
         if (!StringUtils.isEmpty(current_element.getUserPostText())) {
-            setTags(viewHolder.userPostText, current_element.getUserPostText());
+            Helper.setTags(viewHolder.userPostText, current_element.getUserPostText());
            // viewHolder.userPostText.setText(current_element.getUserPostText());
             viewHolder.post_creator_name.setText(current_element.getUserName() + " ");
         } else {
@@ -429,6 +430,10 @@ public class NewsFeedAdapter extends
             public void onClick(View view) {
                 Bundle data_bundle = new Bundle();
                 data_bundle.putInt("post_id", current_element.getPostId());
+                data_bundle.putString("post_creator_profile_image", current_element.getProfileImageURL());
+                data_bundle.putString("post_creator_name", current_element.getUserName());
+                data_bundle.putString("post_message", current_element.getUserPostText());
+
                 Fragment frg = new ViewCommentsFragment();
                 frg.setArguments(data_bundle);
                 loadFragment(frg);
@@ -440,6 +445,9 @@ public class NewsFeedAdapter extends
             public void onClick(View view) {
                 Bundle data_bundle = new Bundle();
                 data_bundle.putInt("post_id", current_element.getPostId());
+                data_bundle.putString("post_creator_profile_image", current_element.getProfileImageURL());
+                data_bundle.putString("post_creator_name", current_element.getUserName());
+                data_bundle.putString("post_message", current_element.getUserPostText());
                 Fragment frg = new ViewCommentsFragment();
                 frg.setArguments(data_bundle);
                 loadFragment(frg);
@@ -515,45 +523,6 @@ public class NewsFeedAdapter extends
         ft.addToBackStack(null);
         ft.commit();
     }
-
-    private void setTags(TextView pTextView, String pTagString) {
-        SpannableString string = new SpannableString(pTagString);
-
-        int start = -1;
-        for (int i = 0; i < pTagString.length(); i++) {
-            if (pTagString.charAt(i) == '#') {
-                start = i;
-            } else if (pTagString.charAt(i) == ' ' || (i == pTagString.length() - 1 && start != -1)) {
-                if (start != -1) {
-                    if (i == pTagString.length() - 1) {
-                        i++; // case for if hash is last word and there is no
-                        // space after word
-                    }
-
-                    final String tag = pTagString.substring(start, i);
-                    string.setSpan(new ClickableSpan() {
-
-                        @Override
-                        public void onClick(View widget) {
-                            Log.d("Hash", String.format("Clicked %s!", tag));
-                        }
-
-                        @Override
-                        public void updateDrawState(TextPaint ds) {
-                            // link color
-                            ds.setColor(Color.parseColor("#003569"));
-                            ds.setUnderlineText(false);
-                        }
-                    }, start, i, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    start = -1;
-                }
-            }
-        }
-
-        pTextView.setMovementMethod(LinkMovementMethod.getInstance());
-        pTextView.setText(string);
-    }
-
 
     private String getStatsString(NewsFeedElement current_element) {
         String status = "";

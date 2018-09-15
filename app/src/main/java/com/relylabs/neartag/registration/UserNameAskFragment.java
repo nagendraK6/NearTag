@@ -26,6 +26,7 @@ import com.relylabs.neartag.Utils.Logger;
 import com.relylabs.neartag.models.User;
 import com.relylabs.neartag.registration.LoginFragment;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,7 +64,7 @@ public class UserNameAskFragment extends Fragment {
         send_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View buttonView) {
-                if (user_name.getText().toString() == "") {
+                if (StringUtils.isEmpty(user_name.getText().toString())) {
                     Toast.makeText(getContext(), getString(R.string.empty_name_msg), Toast.LENGTH_LONG).show();
                     return;
                 }

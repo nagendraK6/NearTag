@@ -198,7 +198,7 @@ public class NewsFeedFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getActivity()));
         news_feed_list.setLayoutManager(layoutManager);
-        getStandardViewList(2);
+        getStandardViewList(1);
         getStandardViewList(50);
 
 
@@ -217,7 +217,7 @@ public class NewsFeedFragment extends Fragment {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.add("limit", limit.toString());
-        busy_show_feed_fetch.setVisibility(View.VISIBLE);
+       // busy_show_feed_fetch.setVisibility(View.VISIBLE);
         User user = User.getLoggedInUser();
         // response
 

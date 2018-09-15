@@ -1,5 +1,7 @@
 package com.relylabs.neartag.comments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,9 +12,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -20,8 +27,10 @@ import com.relylabs.neartag.App;
 import com.relylabs.neartag.DeviceUtils;
 import com.relylabs.neartag.PreCachingLayoutManager;
 import com.relylabs.neartag.R;
+import com.relylabs.neartag.Utils.Helper;
 import com.relylabs.neartag.models.User;
 import com.relylabs.neartag.models.Comment;
+import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -31,6 +40,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by nagendra on 8/28/18.
@@ -41,16 +51,24 @@ import cz.msebera.android.httpclient.Header;
     ArrayList<Comment> all_comments_list;
     CommentListAdapter adapter;
     RecyclerView comment_list_view;
+    View fragment_view;
+    ProgressBar busy;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_view_comments, container, false);
+        fragment_view = inflater.inflate(R.layout.fragment_view_comments, container, false);
+        return fragment_view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        busy = view.findViewById(R.id.busy_fetch);
+        FadingCircle cr = new FadingCircle();
+        cr.setColor(R.color.neartagtextcolor);
+        busy.setIndeterminateDrawable(cr);
+
         ImageView backArrow = view.findViewById(R.id.backArrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +81,25 @@ import cz.msebera.android.httpclient.Header;
         final EditText comment = view.findViewById(R.id.comment);
         comment.requestFocus();
         final Integer post_id = getArguments().getInt("post_id");
+        final String post_creator_profile_image = getArguments().getString("post_creator_profile_image");
+        final String post_creator_name = getArguments().getString("post_creator_name");
+        final String post_message = getArguments().getString("post_message");
+
+        CircleImageView post_creator_image_view = view.findViewById(R.id.post_creator_profile_image);
+        TextView creator_name = view.findViewById(R.id.post_creator_name);
+
+        TextView message = view.findViewById(R.id.post_message);
+
+        if (!StringUtils.isEmpty(post_creator_profile_image)) {
+            Picasso.with(getContext()).load(post_creator_profile_image).into(
+                    post_creator_image_view
+            );
+        }
+
+        creator_name.setText(post_creator_name);
+
+        Helper.setTags(message, post_message);
+
         ImageView ivPostComment = view.findViewById(R.id.ivPostComment);
         ivPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +110,9 @@ import cz.msebera.android.httpclient.Header;
                 if (!StringUtils.isEmpty(comment.getText().toString())) {
                     addCommentsToList(comment.getText().toString(), post_id);
                     saveCommentOnServer(comment.getText().toString(), post_id);
+                    comment.setText("");
+                } else {
+                    Toast.makeText(getContext(), R.string.adding_empty_comments_toast, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -109,6 +149,7 @@ import cz.msebera.android.httpclient.Header;
     }
 
     private void loadFragment() {
+        hideKeyboardFrom(getContext(), fragment_view);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
@@ -193,6 +234,7 @@ import cz.msebera.android.httpclient.Header;
                         comments_list.add(new_comment);
                     }
 
+                    busy.setVisibility(View.GONE);
                     all_comments_list.addAll(comments_list);
                     adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
@@ -212,5 +254,10 @@ import cz.msebera.android.httpclient.Header;
         client.addHeader("Accept", "application/json");
         client.addHeader("Authorization", "Bearer " + user.AccessToken);
         client.get(App.getBaseURL() + "post/getcomments", params, jrep);
+    }
+
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
