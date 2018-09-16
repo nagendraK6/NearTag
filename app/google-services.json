@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "65167327943",
+    "firebase_url": "https://neartag-eb4a9.firebaseio.com",
+    "project_id": "neartag-eb4a9",
+    "storage_bucket": "neartag-eb4a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65167327943:android:8de3e18a6c43efbd",
+        "android_client_info": {
+          "package_name": "com.neartag.in"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "65167327943-qjj8fqkma0aqvp29qvtvqht5rukjj99k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBhfggycu9xtfZHu1DAijl0OWk-HBx7RQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
