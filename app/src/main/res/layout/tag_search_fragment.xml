@@ -11,15 +11,15 @@
         <ImageView
             android:layout_width="80dp"
             android:id="@+id/user_post_image"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" android:contentDescription="@string/todo" />
         <EditText
             android:background="@null"
             android:id="@+id/composer_post_text"
             android:backgroundTint="@color/grey"
-            android:layout_toRightOf="@+id/user_post_image"
-            android:hint="यहाँ  कुछ  लिखे"
+            android:layout_toEndOf="@+id/user_post_image"
+            android:hint="@string/post_message_hint"
             android:focusable="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>
@@ -36,19 +36,33 @@
             android:padding="10dp"
             android:layout_centerHorizontal="true"
             android:background="@color/colorLightGreen"
-            android:text="पोस्ट करें"
+            android:text="@string/create_post_action_title"
             />
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <View
+        android:id="@+id/seperator"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/post_action"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@color/grey" />
+    <TextView
+        android:layout_below="@+id/seperator"
+        android:layout_marginStart="10dp"
+        android:id="@+id/trending_tags_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/recommended_action_title"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_below="@+id/trending_tags_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/all_tags"
-
+        android:id="@+id/recommended_tags_list"
         android:gravity="center"
-        android:background="@color/colorLightGreen"
         android:layout_marginLeft="1dp"
         android:layout_marginRight="1dp"/>
 

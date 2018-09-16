@@ -1,8 +1,8 @@
 package com.relylabs.neartag.composer;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,35 +12,35 @@ import com.relylabs.neartag.R;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nonnull;
+
 /**
- * Created by nagendra on 8/22/18.
+ * Created by nagendra on 9/15/18.
+ *
  */
 
-public class TagsListAdapter extends RecyclerView.Adapter<TagsListAdapter.ViewHolder> {
+public class RecommendedTagsListAdapter extends RecyclerView.Adapter<RecommendedTagsListAdapter.ViewHolder> {
 
     private ArrayList<String> mData;
     private LayoutInflater mInflater;
-    private TagsListAdapter.ItemClickListener mClickListener;
-    private Context context;
+    private RecommendedTagsListAdapter.ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public TagsListAdapter(Context context, ArrayList<String> data) {
+    public RecommendedTagsListAdapter(Context context, ArrayList<String> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
-        this.context = context;
     }
 
     // inflates the cell layout from xml when needed
     @Override
-    public TagsListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.tag_chip_display, parent, false);
-        return new TagsListAdapter.ViewHolder(view);
+    public RecommendedTagsListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.recommended_tag_element, parent, false);
+        return new RecommendedTagsListAdapter.ViewHolder(view);
     }
 
     // binds the data to the textview in each cell
     @Override
-    public void onBindViewHolder(TagsListAdapter.ViewHolder holder, int position) {
-        Log.d ("debug_data", "position  " + position);
+    public void onBindViewHolder(@NonNull RecommendedTagsListAdapter.ViewHolder holder, int position) {
         holder.tagDisplayView.setText(mData.get(position));
     }
 
@@ -57,7 +57,7 @@ public class TagsListAdapter extends RecyclerView.Adapter<TagsListAdapter.ViewHo
 
         ViewHolder(View itemView) {
             super(itemView);
-            tagDisplayView = itemView.findViewById(R.id.tag_one);
+            tagDisplayView = itemView.findViewById(R.id.recommended_tag_value);
             itemView.setOnClickListener(this);
         }
 
@@ -73,7 +73,7 @@ public class TagsListAdapter extends RecyclerView.Adapter<TagsListAdapter.ViewHo
     }
 
     // allows clicks events to be caught
-    void setClickListener(TagsListAdapter.ItemClickListener itemClickListener) {
+    void setClickListener(RecommendedTagsListAdapter.ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }
 
@@ -82,3 +82,4 @@ public class TagsListAdapter extends RecyclerView.Adapter<TagsListAdapter.ViewHo
         void onItemClick(View view, int position);
     }
 }
+

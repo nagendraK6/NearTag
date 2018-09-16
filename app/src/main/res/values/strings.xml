@@ -37,5 +37,10 @@
     <string name="sample_name_on_empty_profile">a</string>
     <string name="sample_user_name">Nagendra</string>
     <string name="adding_empty_comments_toast">पहले कुछ लिखें</string>
+    <string name="create_post_action_title">पोस्ट करें</string>
+    <string name="post_message_hint">यहाँ कुछ लिखे</string>
+    <string name="recommended_action_title">अभी के चर्चित मुद्दे</string>
+    <string name="todo">TODO</string>
+    <string name="recommendation_itme_text">#आरक्षण</string>
 
 </resources>
