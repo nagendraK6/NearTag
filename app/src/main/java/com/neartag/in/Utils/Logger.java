@@ -66,6 +66,11 @@ public class Logger {
     public static final String OTP_TYPING = "OTP_TYPING";
     public static final String OTP_RESEND = "OTP_RESEND";
 
+    public static final String RECOMMENDED_LIST_FETCH_START = "RECOMMENDED_LIST_FETCH_START";
+    public static final String RECOMMENDED_LIST_FETCH_SUCCESS = "RECOMMENDED_LIST_FETCH_SUCCESS";
+    public static final String RECOMMENDED_LIST_FETCH_FAILED = "RECOMMENDED_LIST_FETCH_FAILED";
+
+
     public static void log(String eventName) {
         getInstance().logEvent(eventName);
     }

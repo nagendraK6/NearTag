@@ -70,7 +70,7 @@ public class RecommendedTagsListAdapter extends RecyclerView.Adapter<Recommended
     }
 
     // allows clicks events to be caught
-    void setClickListener(RecommendedTagsListAdapter.ItemClickListener itemClickListener) {
+    public void setClickListener(RecommendedTagsListAdapter.ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }
 
