@@ -5,46 +5,92 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/relLayout1">
+
+        <!-- gallery toolbar -->
+        <include layout="@layout/snippet_top_add_post"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/header_row"
+        android:layout_below="@+id/relLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="35dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_profile_image"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:padding="2dp"
+            android:backgroundTint="@color/colorAccent"
+            android:src="@drawable/ic_user_white"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginStart="10dp"
+
+
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+        <RelativeLayout
+            android:layout_toRightOf="@+id/user_profile_image"
+            android:id="@+id/name_post_status"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/user_name"
+                android:text="@string/sample_user_name"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_below="@+id/user_name"
+                android:textSize="12sp"
+                android:layout_marginEnd="10dp"
+                android:id="@+id/user_location"
+                android:text=""
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@+id/header_row"
         android:id="@+id/post_description"
         android:layout_width="match_parent"
+        android:layout_marginLeft="40dp"
         android:layout_height="100dp">
-        <ImageView
-            android:layout_width="100dp"
-            android:id="@+id/user_post_image"
-            android:layout_height="100dp"
-            android:contentDescription="@string/todo" />
         <com.neartag.in.composer.HashTagAutoCompleteTextView
-            android:background="@null"
+            android:background="@drawable/circular_border_comment"
+            android:layout_margin="5dp"
+            android:padding="5dp"
             android:id="@+id/composer_post_text"
-            android:backgroundTint="@color/grey"
-            android:layout_toEndOf="@+id/user_post_image"
+
             android:hint="@string/post_message_hint"
             android:focusable="true"
+
             android:layout_marginStart="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>
-    <RelativeLayout
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/post_description"
-        android:id="@+id/post_action"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/create_post"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_centerHorizontal="true"
-            android:background="@color/colorLightGreen"
-            android:text="@string/create_post_action_title"
-            />
-    </RelativeLayout>
+
 
     <View
         android:id="@+id/seperator"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/post_action"
+        android:layout_below="@+id/post_description"
         android:layout_width="fill_parent"
         android:layout_height="1dip"
         android:background="@color/grey" />
@@ -66,13 +112,11 @@
         android:gravity="center"
         android:layout_marginLeft="1dp"
         android:layout_marginRight="1dp"/>
-    <AutoCompleteTextView
-        android:id="@+id/auto_comp"
-        android:layout_below="@+id/recommended_tags_list"
+
+    <com.neartag.in.Utils.SquareImageView
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/recommended_tags_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
-
-
-
+        android:id="@+id/user_post_image"/>
 </RelativeLayout>

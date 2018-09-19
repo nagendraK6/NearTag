@@ -22,6 +22,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.neartag.in.Utils.Logger;
+import com.neartag.in.Utils.SquareImageView;
 import com.neartag.in.composer.AutoCompleteAdapter;
 import com.neartag.in.composer.HashTagAutoCompleteTextView;
 import com.neartag.in.composer.RecommendedTagsListAdapter;
@@ -39,6 +40,7 @@ import java.util.Arrays;
 import java.util.WeakHashMap;
 
 import cz.msebera.android.httpclient.Header;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by nagendra on 8/17/18.
@@ -67,13 +69,13 @@ public class TagSearchFragment extends Fragment implements RecommendedTagsListAd
             final String image_file_name =  getArguments()
                     .getString(getString(R.string.user_selected_image));
 
-            final ImageView user_post_image = view.findViewById(R.id.user_post_image);
+            final SquareImageView user_post_image = view.findViewById(R.id.user_post_image);
             if (image_file_name != null) {
                 Picasso.with(getContext()).load(new File(image_file_name))
                         .into(user_post_image);
             }
 
-            TextView post_create_btn = view.findViewById(R.id.create_post);
+            TextView post_create_btn = view.findViewById(R.id.tvNext);
             composer_post_text = view.findViewById(R.id.composer_post_text);
             composer_post_text.requestFocus();
 
@@ -88,21 +90,16 @@ public class TagSearchFragment extends Fragment implements RecommendedTagsListAd
             });
         }
 
+        CircleImageView user_profile_image = view.findViewById(R.id.user_profile_image);
+        User user = User.getLoggedInUser();
+        if (!StringUtils.isEmpty(user.ProfilePicURL)) {
+            Picasso.with(getContext()).load(user.ProfilePicURL).into(user_profile_image);
+        }
+
+        TextView user_name = view.findViewById(R.id.user_name);
+        user_name.setText(user.Name);
+
         recommended_tags_list = view.findViewById(R.id.recommended_tags_list);
-        /*ArrayList<String> all_tags_data = new ArrayList<>();
-
-
-        all_tags_data.add("#गुड मॉर्निंग");
-        all_tags_data.add("#आज का दिन");
-        all_tags_data.add("#सचिन तेंदुलकर");
-        all_tags_data.add("#पॉलिटिक्स");
-        all_tags_data.add("#भारत");
-        all_tags_data.add("#महंगाई");
-        all_tags_data.add("#मोदी");
-        all_tags_data.add("#राहुल गाँधी");
-        all_tags_data.add("#लालू यादव");
-        all_tags_data.add("#आरक्षण");*/
-
 
         PreCachingLayoutManager layoutManager = new PreCachingLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
