@@ -143,11 +143,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
         App.getRefWatcher(getActivity()).watch(this);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
     private void loadFragment() {
         hideKeyboardFrom(getContext(), fragment_view);
         FragmentManager fm = getActivity().getSupportFragmentManager();

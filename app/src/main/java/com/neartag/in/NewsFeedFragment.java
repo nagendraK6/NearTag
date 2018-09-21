@@ -99,7 +99,7 @@ public class NewsFeedFragment extends Fragment {
                         "#ok",
                         "",
                         "",
-                        "",
+                        user.ProfilePicURL,
                         false,
                         false,
                         user_message,
@@ -107,7 +107,7 @@ public class NewsFeedFragment extends Fragment {
                         user.UserID,
                         user.Name,
                         user.Location,
-                        new Long(0),
+                        Long.valueOf(0),
                         "",
                         "",
                         ""

@@ -1,11 +1,13 @@
 package com.neartag.in.composer;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.text.Editable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.AutoCompleteTextView;
 
 import com.neartag.in.R;
@@ -17,7 +19,7 @@ import com.neartag.in.R;
 public class HashTagAutoCompleteTextView extends AppCompatAutoCompleteTextView {
 
     private static final int MESSAGE_TEXT_CHANGED = 100;
-    private static final int DEFAULT_AUTOCOMPLETE_DELAY = 300;
+    private static final int DEFAULT_AUTOCOMPLETE_DELAY = 100;
 
     private int mAutoCompleteDelay = DEFAULT_AUTOCOMPLETE_DELAY;
 
@@ -33,15 +35,11 @@ public class HashTagAutoCompleteTextView extends AppCompatAutoCompleteTextView {
         mAutoCompleteDelay = autoCompleteDelay;
     }
 
+
     @Override
     protected void performFiltering(CharSequence text, int keyCode) {
         mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_TEXT_CHANGED, text), mAutoCompleteDelay);
-    }
-
-    @Override
-    public void onFilterComplete(int count) {
-        super.onFilterComplete(count);
     }
 
     public HashTagAutoCompleteTextView(Context context) {

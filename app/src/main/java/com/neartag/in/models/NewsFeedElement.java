@@ -76,7 +76,7 @@ public class NewsFeedElement  extends Model {
             this.hasLiked = false;
             this.userId = -1;
             this.userName = "";
-            this.timestamp = new Long(0);
+            this.timestamp = Long.valueOf(0);
             this.commentsCount = "";
             this.sharesCount = "";
             this.likesCount = "";

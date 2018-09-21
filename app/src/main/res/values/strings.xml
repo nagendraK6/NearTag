@@ -3,7 +3,6 @@
     <string name="phone_no_ask">अपना फोन नंबर ब्ताएँ</string>
     <string name="phn_msg">आपके फ़ोन पर एक OTP भेजा जायेगा</string>
     <string name="string_next">ठीक है</string>
-    <string name="selected_image">selected_image</string>
     <string name="user_selected_image">user_selected_image</string>
     <string name="verify_no_msg">हम आपके नंबर की जाँच कर रहे है</string>
     <string name="ok">ठीक है</string>
@@ -37,10 +36,8 @@
     <string name="sample_name_on_empty_profile">a</string>
     <string name="sample_user_name">Nagendra</string>
     <string name="adding_empty_comments_toast">पहले कुछ लिखें</string>
-    <string name="create_post_action_title">पोस्ट करें</string>
     <string name="post_message_hint">यहाँ कुछ लिखे</string>
     <string name="recommended_action_title">अभी के चर्चित मुद्दे</string>
-    <string name="todo">TODO</string>
     <string name="recommendation_itme_text">#आरक्षण</string>
 
 </resources>

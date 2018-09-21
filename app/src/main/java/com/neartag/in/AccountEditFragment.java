@@ -237,11 +237,6 @@ public class AccountEditFragment extends Fragment {
         getActivity().unregisterReceiver(broadCastNewMessage);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
     private void loadFragment() {
         getActivity().onBackPressed();
     }

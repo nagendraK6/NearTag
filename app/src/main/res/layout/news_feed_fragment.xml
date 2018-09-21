@@ -26,8 +26,7 @@
             android:layout_centerVertical="true"
             android:visibility="visible"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/busy_upload"/>
+            android:layout_height="wrap_content" />
         <ImageView
             android:id="@+id/upload_image"
             android:layout_width="40dp"

@@ -132,28 +132,12 @@ public class UserProfileFragment extends Fragment {
         return fragmentView;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         App.getRefWatcher(getActivity()).watch(this);
         getActivity().unregisterReceiver(broadCastNewMessage);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
 

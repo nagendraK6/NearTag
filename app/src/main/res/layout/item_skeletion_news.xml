@@ -41,7 +41,6 @@
         android:text="Google正式发布Android8.0" />
 
     <View
-        android:id="@+id/tv_content"
         android:layout_width="0dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_height="14dp"
@@ -52,7 +51,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/img_news"/>
 
     <View
-        android:id="@+id/tv_time"
         android:layout_width="0dp"
         android:layout_height="12dp"
         android:layout_marginRight="50dp"

@@ -70,7 +70,6 @@
 
         <RelativeLayout
             android:layout_toRightOf="@+id/user_profile_image"
-            android:id="@+id/name_post_status"
             android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">

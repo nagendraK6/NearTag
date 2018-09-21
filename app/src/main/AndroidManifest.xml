@@ -42,24 +42,20 @@
 
         <meta-data
             android:name="AA_DB_NAME"
-            android:value="NearTagFB" />
+            android:value="NearTagDB" />
         <meta-data
             android:name="AA_DB_VERSION"
             android:value="1" />
         <meta-data
             android:name="AA_MODELS"
-            android:value="com.neartag.in.models.User, com.neartag.in.models.NewsFeedElement" />
+            android:value="com.neartag.in.models.User, com.neartag.in.models.NewsFeedElement, com.neartag.in.models.Tag" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/notification_icon_small" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/orange" />
-
-
         <activity
             android:screenOrientation="portrait"
             android:name="com.neartag.in.MainActivity">

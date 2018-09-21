@@ -1,19 +1,29 @@
 package com.neartag.in.composer;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
 import android.provider.Contacts;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Filterable;
 import android.widget.Filter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
+import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.google.android.gms.common.api.Api;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.HttpGet;
@@ -23,6 +33,8 @@ import com.loopj.android.http.SyncHttpClient;
 import com.neartag.in.App;
 import com.neartag.in.R;
 import com.neartag.in.Utils.Logger;
+import com.neartag.in.models.NewsFeedElement;
+import com.neartag.in.models.Tag;
 import com.neartag.in.models.User;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +45,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.WeakHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,12 +68,10 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
     Context context;
     private CursorPositionListener listener;
     private HashTagFilter filter;
-
-    public AutoCompleteAdapter(Context context, int textViewResourceId, ArrayList<String> items){
+    public AutoCompleteAdapter(Context context, int textViewResourceId){
         super(context, textViewResourceId);
-        this.items = items;
+        this.items = new ArrayList<>();
         this.context = context;
-
     }
 
     @Override
@@ -108,7 +119,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
 
     public class HashTagFilter extends Filter {
 
-            private final Pattern pattern = Pattern.compile("[#＃]([Ａ-Ｚａ-ｚ\u0900-\u097FA-Za-z一-\u9FC60-9０-９ぁ-ヶｦ-ﾟー])+");
+        private final Pattern pattern = Pattern.compile("[#＃]([Ａ-Ｚａ-ｚ\u0900-\u097FA-Za-z一-\u9FC60-9０-９ぁ-ヶｦ-ﾟー])+");
 
         public int start;
         public int end;
@@ -127,16 +138,24 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
                         end = m.end();
 
                         String keyword = constraint.subSequence(m.start() + 1, m.end()).toString();
-                        if (keyword.length() > 2) {
-                            Log.d("debug_data_start", keyword);
-                            items = fetchRecommendedList(keyword);
-                            Log.d("debug_data_end", keyword);
+                        if (keyword.length() >= 1) {
+                            items = Tag.getTagsString(keyword);
+                            if (items.size() == 0) {
+                                Intent intent=new Intent("on_message");
+                                Bundle bundle = new Bundle();
+                                bundle.putString("enable", "1");
+                                intent.putExtras(bundle);
+                                context.sendBroadcast(intent);
+                                items = fetchRecommendedList(keyword);
+
+                                bundle.putString("enable", "0");
+                                intent.putExtras(bundle);
+                                context.sendBroadcast(intent);
+                            } else {
+                                getTagsAsync(keyword);
+                            }
                         }
                     }
-
-                    // A class that queries a web API, parses the data and returns an ArrayList<Style>
-                    //items =
-                    // Now assign the values and count to the FilterResults object
                 }
             }
 
@@ -190,6 +209,9 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
                 for (int i = 0; i < all_tags_data.length(); i++) {
                     JSONObject obj = all_tags_data.getJSONObject(i);
                     String tag_text = "#" + obj.getString("Name");
+                    Tag tag = new Tag();
+                    tag.Name = obj.getString("Name");
+                    tag.save();
                     all_tags.add(tag_text);
                 }
             }
@@ -200,5 +222,35 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
         }
 
         return all_tags;
+    }
+
+
+    private void getTagsAsync(String keyword) {
+        Logger.log(Logger.NEWS_FEED_FETCH_START);
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("keyword", keyword);
+        User user = User.getLoggedInUser();
+        // response
+
+        JsonHttpResponseHandler response_json = new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("debug_keyword", "fetched");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
+            }
+        };
+        // request
+        client.addHeader("Accept", "application/json");
+        client.addHeader("Authorization", "Bearer " + user.AccessToken);
+        client.get(App.getBaseURL() + "post/getSuggestedTags", params, response_json);
     }
 }

@@ -4,11 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorWhite">#FFFFFF</color>
-    <color name="colorPurple">#551a8b</color>
-    <color name="colorLightPurple">#AA8CC5</color>
-    <color name="colorLightGreen">#98bf7a</color>
-    <color name="lightPink">#7ab3bf</color>
-    <color name="green">#7ABF8C</color>
 
     <color name="grey">#bfbfbf</color>
     <color name="white">#fff</color>
@@ -16,7 +11,6 @@
     <color name="link_blue">#4d94ff</color>
     <color name="darkRed">#cc0000</color>
     <color name="orange">#FF3400</color>
-    <color name="hashtag">#003569</color>
     <color name="colorLine">#dfdfdf</color>
     <color name="neartagtheme">#f7e9e1</color>
     <color name="neartagtextcolor">#4a4a4a</color>

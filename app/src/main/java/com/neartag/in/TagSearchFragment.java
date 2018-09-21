@@ -1,23 +1,33 @@
 package com.neartag.in;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -48,19 +58,34 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class TagSearchFragment extends Fragment implements RecommendedTagsListAdapter.ItemClickListener {
+
+    BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            View busy_fetch = fragment_view.findViewById(R.id.busy_fetch_tag);
+
+            final String enable =  intent
+                    .getStringExtra("enable");
+            if (enable.equals("1")) {
+                busy_fetch.setVisibility(View.VISIBLE);
+            } else {
+                busy_fetch.setVisibility(View.INVISIBLE);
+            }
+
+        }
+    };
+
     RecyclerView recommended_tags_list;
     RecommendedTagsListAdapter recommendedTagsListAdapter;
     ArrayList<String> all_tags_list = new ArrayList<>();
     HashTagAutoCompleteTextView composer_post_text;
-
-    private static final ArrayList<String> COUNTRIES =new ArrayList<String>(
-            Arrays.asList("Belgium", "France", "Italy", "Germany", "Spain")
-    );
+    View fragment_view;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.tag_search_fragment, container, false);
+        fragment_view = inflater.inflate(R.layout.tag_search_fragment, container, false);
+        return fragment_view;
     }
 
     @Override
@@ -76,8 +101,6 @@ public class TagSearchFragment extends Fragment implements RecommendedTagsListAd
             }
 
             TextView post_create_btn = view.findViewById(R.id.tvNext);
-            composer_post_text = view.findViewById(R.id.composer_post_text);
-            composer_post_text.requestFocus();
 
             post_create_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -89,6 +112,9 @@ public class TagSearchFragment extends Fragment implements RecommendedTagsListAd
                 }
             });
         }
+
+        composer_post_text = view.findViewById(R.id.composer_post_text);
+        composer_post_text.requestFocus();
 
         CircleImageView user_profile_image = view.findViewById(R.id.user_profile_image);
         User user = User.getLoggedInUser();
@@ -110,10 +136,7 @@ public class TagSearchFragment extends Fragment implements RecommendedTagsListAd
         recommendedTagsListAdapter.setClickListener(this);
         fetchRecommendedList(1);
 
-        AutoCompleteAdapter adapter = new AutoCompleteAdapter(getContext(), R.layout.custom_row, COUNTRIES);
-
-                //new ArrayAdapter<String>(getContext(),
-                //android.R.layout.simple_dropdown_item_1line, COUNTRIES);
+        AutoCompleteAdapter adapter = new AutoCompleteAdapter(getContext(), R.layout.custom_row);
 
         composer_post_text.setThreshold(1);
         composer_post_text.setAdapter(adapter);
@@ -123,6 +146,9 @@ public class TagSearchFragment extends Fragment implements RecommendedTagsListAd
                 return composer_post_text.getSelectionStart();
             }
         });
+
+        IntentFilter new_text = new IntentFilter("on_message");
+        getActivity().registerReceiver(broadCastNewMessage, new_text);
     }
 
     @Override
@@ -131,7 +157,9 @@ public class TagSearchFragment extends Fragment implements RecommendedTagsListAd
         App.getRefWatcher(getActivity()).watch(this);
         recommended_tags_list.setLayoutManager(null);
         recommended_tags_list.setAdapter(null);
+        composer_post_text.setAdapter(null);
         recommendedTagsListAdapter = null;
+        getActivity().unregisterReceiver(broadCastNewMessage);
     }
 
     private void loadFragment(Bundle bundle) {
@@ -187,7 +215,9 @@ public class TagSearchFragment extends Fragment implements RecommendedTagsListAd
             public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
                 WeakHashMap<String, String> log_data = new WeakHashMap<>();
                 log_data.put(Logger.STATUS, Integer.toString(statusCode));
-                log_data.put(Logger.JSON, obj.toString());
+                if (obj != null) {
+                    log_data.put(Logger.JSON, obj.toString());
+                }
                 log_data.put(Logger.THROWABLE, t.toString());
                 Logger.log(Logger.RECOMMENDED_LIST_FETCH_FAILED, log_data);
             }
