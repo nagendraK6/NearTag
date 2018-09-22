@@ -246,7 +246,6 @@ public class PhoneVerificationFragment extends Fragment {
                     String error_message = (String) response.getString("error_message");
                     if (!error_message.equals("SUCCESS")) {
                         Toast.makeText(getContext(), error_message, Toast.LENGTH_LONG).show();
-                        return;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -269,7 +268,7 @@ public class PhoneVerificationFragment extends Fragment {
     }
 
     private void loadFragment(Fragment fragment_to_start) {
-        if (running) {
+        if (running && getActivity().getSupportFragmentManager() != null) {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_holder, fragment_to_start);
             ft.commitAllowingStateLoss();
@@ -281,7 +280,7 @@ public class PhoneVerificationFragment extends Fragment {
         running = false;
         super.onDestroy();
         App.getRefWatcher(getActivity()).watch(this);
-        if (registered) {
+        if (registered && getActivity() != null) {
             getActivity().unregisterReceiver(mybroadcast);
             registered = false;
         }
@@ -317,7 +316,7 @@ public class PhoneVerificationFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    String error_message = (String) response.getString("error_message");
+                    String error_message = response.getString("error_message");
                     if (!error_message.equals("SUCCESS") && running) {
                         busy.setVisibility(View.INVISIBLE);
                         if (!auto) {
@@ -331,8 +330,7 @@ public class PhoneVerificationFragment extends Fragment {
                         return;
                     }
 
-                    String user_token = (String) response.getString("user_token");
-                    user.AccessToken = user_token;
+                    user.AccessToken = response.getString("user_token");
                     user.IsOTPVerified = true;
                     user.save();
                     if (!auto) {
@@ -382,12 +380,11 @@ public class PhoneVerificationFragment extends Fragment {
     public void checkPermissionAndGrantPermission(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, android.Manifest.permission.RECEIVE_SMS)) {
-                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_CONTACTS}, 0);
+                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS}, 0);
                 } else {
-                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_CONTACTS}, 0);
+                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS}, 0);
                 }
             }
         }

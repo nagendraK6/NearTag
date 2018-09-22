@@ -1,14 +1,20 @@
 package com.neartag.in;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -48,8 +54,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 // Create the basic adapter extending from RecyclerView.Adapter
 // Note that we specify the custom ViewHolder which gives us access to our views
-public class NewsFeedAdapter extends
-        RecyclerView.Adapter<NewsFeedAdapter.ViewHolder> {
+public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHolder> {
 
     private  VisibilityTracker mVisibilityTracker;
     private final WeakHashMap<View, Integer> mViewPositionMap = new WeakHashMap<>();
@@ -274,27 +279,6 @@ public class NewsFeedAdapter extends
                     );
         }
 
-        /*if(!StringUtils.isEmpty(current_element.getBanngerImageURLHigh())) {
-
-            Log.d("debug_data_1", "start " + current_element.getPostId());
-
-            Glide.with(getContext())
-                    .load(current_element.getBanngerImageURLHigh())
-                    .thumbnail( 0.1f )
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            Log.d("debug_data_1", "done " + current_element.getPostId());
-                               return false;
-                        }
-                    })
-                    .into(viewHolder.banngerImage);
-        }*/
 
         if (current_element.getGalleryImageFile() != "") {
             viewHolder.itemView.setVisibility(View.VISIBLE);
@@ -351,59 +335,13 @@ public class NewsFeedAdapter extends
         viewHolder.share_button.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
 
-                viewHolder.shared_content_view.setDrawingCacheEnabled(true);
-
-                viewHolder.shared_content_view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                //viewHolder.shared_content_view.layout(0, 0, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-                viewHolder.shared_content_view.buildDrawingCache(true);
-                Bitmap b = Bitmap.createBitmap(viewHolder.shared_content_view.getDrawingCache());
-                viewHolder.shared_content_view.setDrawingCacheEnabled(false); // clear drawing cache
-
-
-                Bitmap bitmap2 = b.copy(b.getConfig(), false);
-
-                String filename = "bitmap.png";
-
-
-
-                String root = Environment.getExternalStorageDirectory().toString();
-                File myDir = new File(root + "/req_images");
-                myDir.mkdirs();
-                File file = new File(myDir, filename);
-                if (file.exists())
-                    file.delete();
-                try {
-                    FileOutputStream out = new FileOutputStream(file);
-                    bitmap2.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                    out.flush();
-                    out.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (hasPermission(getContext())) {
+                    startSharing(viewHolder, current_element);
+                } else {
+                    if (waListener != null) {
+                        waListener.onClickWA(viewHolder, current_element);
+                    }
                 }
-
-             //   viewHolder.banngerImage.setDrawingCacheEnabled(false);
-                //File f = new File(filename);
-
-                Uri apkURI = FileProvider.getUriForFile(
-                        getContext(),
-                        getContext()
-                                .getPackageName() + ".provider", file);
-
-                Uri imageUri = Uri.fromFile(myDir);
-
-
-                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                shareIntent.setType("image/*");
-                shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, apkURI);
-                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                boolean installed_whatsapp = appInstalledOrNot("com.whatsapp", getContext());
-                if (installed_whatsapp) {
-                    shareIntent.setPackage("com.whatsapp");
-                }
-
-                ((AppCompatActivity)getContext()).startActivityForResult(shareIntent, current_element.getPostId());
             }
         });
 
@@ -560,4 +498,81 @@ public class NewsFeedAdapter extends
         client.addHeader("Authorization", "Bearer " + user.AccessToken);
         client.post(App.getBaseURL() + "post/share", params, response_json);
     }
+
+    public boolean hasPermission(Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    public void startSharing(ViewHolder viewHolder, NewsFeedElement current_element) {
+        viewHolder.shared_content_view.setDrawingCacheEnabled(true);
+
+        viewHolder.shared_content_view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+        viewHolder.shared_content_view.buildDrawingCache(true);
+        Bitmap b = Bitmap.createBitmap(viewHolder.shared_content_view.getDrawingCache());
+        viewHolder.shared_content_view.setDrawingCacheEnabled(false); // clear drawing cache
+
+
+        Bitmap bitmap2 = b.copy(b.getConfig(), false);
+
+        String filename = "bitmap.png";
+
+
+
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/tmp");
+        myDir.mkdirs();
+        File file = new File(myDir, filename);
+        if (file.exists())
+            file.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap2.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Uri apkURI = FileProvider.getUriForFile(
+                getContext(),
+                getContext().getApplicationContext()
+                        .getPackageName() + ".provider", file);
+
+
+        Uri imageUri = Uri.fromFile(file);
+
+
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("image/png");
+        shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, apkURI);
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        boolean installed_whatsapp = appInstalledOrNot("com.whatsapp", getContext());
+        if (installed_whatsapp) {
+            shareIntent.setPackage("com.whatsapp");
+        }
+
+        ((AppCompatActivity)getContext()).startActivityForResult(shareIntent, current_element.getPostId());
+    }
+
+    public interface ClickWhatsApp {
+        void onClickWA(ViewHolder viewHolder, NewsFeedElement current_element);
+    }
+
+    public void setWAListener(ClickWhatsApp listener) {
+        this.waListener = listener;
+    }
+
+    ClickWhatsApp waListener;
 }

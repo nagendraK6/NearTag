@@ -11,11 +11,13 @@ import com.squareup.leakcanary.RefWatcher;
 
 /**
  * Created by nagendra on 7/4/18.
+ * * App
  */
 
 
 public class App extends Application {
 
+    public static int REQUEST_FOR_READ_PHOTO = 1;
     public static RefWatcher getRefWatcher(Context context) {
         App application = (App) context.getApplicationContext();
         return application.refWatcher;

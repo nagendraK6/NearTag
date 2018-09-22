@@ -1,24 +1,33 @@
 package com.neartag.in;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
@@ -52,7 +61,7 @@ import cz.msebera.android.httpclient.Header;
  * Created by nagendra on 8/3/18.
  */
 
-public class NewsFeedFragment extends Fragment {
+public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickWhatsApp {
     ArrayList<NewsFeedElement> all_feeds;
     NewsFeedAdapter adapter;
     RecyclerView news_feed_list;
@@ -60,7 +69,10 @@ public class NewsFeedFragment extends Fragment {
 
     ImageView image_in_progress;
     View view_img_upload;
+
     SkeletonScreen skeletonScreen;
+    NewsFeedAdapter.ViewHolder adapterViewHolder = null;
+    NewsFeedElement current_element = null;
 
     BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
         @Override
@@ -90,8 +102,6 @@ public class NewsFeedFragment extends Fragment {
                                 }
                             }
                     );
-
-
 
                 User user  = User.getLoggedInUser();
                 NewsFeedElement new_post = new NewsFeedElement(
@@ -163,8 +173,6 @@ public class NewsFeedFragment extends Fragment {
         }
         news_feed_list = fragment_view.findViewById(R.id.news_feed_list);
 
-;
-
         busy_show_feed_fetch = fragment_view.findViewById(R.id.busy_show_feed_fetch);
         FadingCircle cr = new FadingCircle();
         cr.setColor(getResources().getColor(R.color.neartagtextcolor));
@@ -173,6 +181,7 @@ public class NewsFeedFragment extends Fragment {
         all_feeds = new ArrayList<NewsFeedElement>();
         // Create adapter passing in the sample user data
         adapter = new NewsFeedAdapter((AppCompatActivity) getActivity(), getActivity(), all_feeds);
+        adapter.setWAListener(this);
 
         // Attach the adapter to the recyclerview to populate items
         news_feed_list.setAdapter(adapter);
@@ -319,7 +328,7 @@ public class NewsFeedFragment extends Fragment {
                 Logger.log(Logger.NEWS_FEED_FETCH_FAILED, log_data);
             }
         };
-        // request
+
         client.addHeader("Accept", "application/json");
         client.addHeader("Authorization", "Bearer " + user.AccessToken);
         client.get(App.getBaseURL() + "newsfeed", params, response_json);
@@ -337,6 +346,8 @@ public class NewsFeedFragment extends Fragment {
         super.onDestroy();
         news_feed_list.setAdapter(null);
         news_feed_list.setLayoutManager(null);
+        adapter.setWAListener(null);
+        adapter = null;
         App.getRefWatcher(getActivity()).watch(this);
         getActivity().unregisterReceiver(broadCastNewMessage);
     }
@@ -395,5 +406,38 @@ public class NewsFeedFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         adapter.OnSharingCallback(requestCode);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int RC, String per[], int[] PResult) {
+        super.onRequestPermissionsResult(RC, per, PResult);
+        if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
+            adapter.startSharing(adapterViewHolder, current_element);
+            adapterViewHolder = null;
+            current_element = null;
+        } else {
+            Toast.makeText(getActivity(), "Permission is needed to capture image for the profile", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onClickWA(NewsFeedAdapter.ViewHolder viewHolder, NewsFeedElement current_element) {
+        this.current_element = current_element;
+        this.adapterViewHolder = viewHolder;
+        checkPermission(getContext());
+    }
+
+    private void checkPermission(final Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    requestPermissions( new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, App.REQUEST_FOR_READ_PHOTO);
+                } else {
+                    requestPermissions( new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},  App.REQUEST_FOR_READ_PHOTO);
+                }
+            }
+        }
     }
 }
