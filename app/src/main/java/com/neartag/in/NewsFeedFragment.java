@@ -120,7 +120,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
                         Long.valueOf(0),
                         "",
                         "",
-                        ""
+                        "",
+                        0,
+                        0
                 );
 
             createAPost(new_post);
@@ -256,6 +258,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
                             String likes_count = obj.getString("likes_count");
                             String shared_count = obj.getString("shared_count");
                             String comments_count = obj.getString("comments_count");
+                            Integer width = obj.getInt("banner_image_width");
+                            Integer height = obj.getInt("banner_image_height");
 
                             NewsFeedElement current_element = new NewsFeedElement(
                                     post_id,
@@ -273,9 +277,11 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
                                     timeStamp,
                                     likes_count,
                                     shared_count,
-                                    comments_count
+                                    comments_count,
+                                    width,
+                                    height
                             );
-
+                            current_element.save();
                             feed_elements.add(current_element);
                         }
 
@@ -357,7 +363,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
         Logger.log(Logger.POST_CREATE_START);
         android.util.Log.d("debug_data", "upload started...");
         User user = User.getLoggedInUser();
-        AsyncHttpClient client = new AsyncHttpClient();
+        final AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         try {
             File imgfile = new File(current_element.getGalleryImageFile());
@@ -371,7 +377,17 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Integer width = 0, height  = 0;
+                try {
+                    JSONObject data = response.getJSONObject("data");
+                    width = data.getInt("banner_image_width");
+                    height = data.getInt("banner_image_height");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 current_element.setHasPublished(true);
+                current_element.setDimensions(width, height);
+                current_element.save();
                 all_feeds.add(0, current_element);
                 adapter.notifyDataSetChanged();
                 view_img_upload.setVisibility(View.GONE);
@@ -439,5 +455,15 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
                 }
             }
         }
+    }
+
+    private void getFromBackup() {
+        List<NewsFeedElement> feed_elements = new Select()
+                .all()
+                .from(NewsFeedElement.class)
+                .execute();
+        all_feeds.addAll(feed_elements);
+        skeletonScreen.hide();
+        adapter.notifyDataSetChanged();
     }
 }

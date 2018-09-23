@@ -120,19 +120,30 @@
         android:layout_below="@+id/header_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.neartag.in.Utils.SquareImageView
-            android:layout_alignParentLeft="true"
-            android:id="@+id/banner_image"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:id="@+id/image_section"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/banner_image_width_gt"
+                android:layout_width="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:layout_height="wrap_content" />
+            <com.neartag.in.Utils.SquareImageView
+                android:layout_alignParentLeft="true"
+                android:id="@+id/banner_image"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
 
         <TextView
             android:layout_marginLeft="11dp"
             android:layout_marginTop="5dp"
             android:id="@+id/status_bar"
-            android:layout_below="@+id/banner_image"
+            android:layout_below="@+id/image_section"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"

@@ -2,11 +2,12 @@ package com.neartag.in.models;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 /**
  * Created by nagendra on 8/7/18.
  */
-
+@Table(name = "NewsFeedElement")
 public class NewsFeedElement  extends Model {
 
         @Column(name = "postId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
@@ -61,6 +62,12 @@ public class NewsFeedElement  extends Model {
         @Column(name = "sharesCount")
         public String sharesCount;
 
+        @Column(name = "Width")
+        public Integer Width;
+
+        @Column(name = "Height")
+        public Integer Height;
+
         public Integer totalDurationCount;
 
         public NewsFeedElement() {
@@ -82,7 +89,8 @@ public class NewsFeedElement  extends Model {
             this.likesCount = "";
             this.userLocation = "";
             this.totalDurationCount = 0;
-            this.save();
+            this.Width = 0;
+            this.Height = 0;
         }
 
         public NewsFeedElement(
@@ -101,7 +109,9 @@ public class NewsFeedElement  extends Model {
                 Long timestamp,
                 String likesCount,
                 String sharesCount,
-                String commentsCount
+                String commentsCount,
+                Integer Width,
+                Integer Height
 
                 ) {
             super();
@@ -122,7 +132,8 @@ public class NewsFeedElement  extends Model {
             this.commentsCount = commentsCount;
             this.userLocation = userLocation;
             this.totalDurationCount = 0;
-            this.save();
+            this.Width = Width;
+            this.Height = Height;
         }
 
         public void incrementDuration() {
@@ -133,11 +144,11 @@ public class NewsFeedElement  extends Model {
             return this.totalDurationCount > 10;
         }
 
-        public String getBanngerImageURLLow() {
+        public String getBannerImageURLLow() {
             return bannerImageURLLow;
         }
 
-        public String getBanngerImageURLHigh() {
+        public String getBannerImageURLHigh() {
         return bannerImageURLHigh;
     }
 
@@ -194,4 +205,17 @@ public class NewsFeedElement  extends Model {
         public  String getSharesCount() { return sharesCount; }
 
         public  String getCommentsCount() { return commentsCount; }
+
+        public  Integer getWidth() { return Width; }
+
+        public  Integer getHeight() { return Height; }
+
+        public  void setDimensions(Integer width, Integer height) {
+            this.Width = width;
+            this.Height = height;
+        }
+
+        public Boolean isWidthGt() {
+            return this.Width > this.Height;
+        }
 }

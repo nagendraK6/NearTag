@@ -1,0 +1,2 @@
+ALTER TABLE NewsFeedElement ADD COLUMN Width INT;
+ALTER TABLE NewsFeedElement ADD COLUMN Height INT;

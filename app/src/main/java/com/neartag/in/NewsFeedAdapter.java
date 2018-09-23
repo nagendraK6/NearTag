@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -108,7 +109,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView tag, empty_creator_profile_pic;
-        public SquareImageView banngerImage;
+        public SquareImageView bannerImage;
+        public ImageView banner_image_width_gt;
         public CircleImageView profilePicURL, creator_profile_pic;
         public ProgressBar uploadingFile;
         public TextView upload_in_progress_text;
@@ -127,7 +129,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-            banngerImage = itemView.findViewById(R.id.banner_image);
+            bannerImage = itemView.findViewById(R.id.banner_image);
+            banner_image_width_gt = itemView.findViewById(R.id.banner_image_width_gt);
             profilePicURL = itemView.findViewById(R.id.user_profile_image);
             uploadingFile = itemView.findViewById(R.id.progress);
             upload_in_progress_text = itemView.findViewById(R.id.upload_in_progress_text);
@@ -241,11 +244,13 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         }
 
 
-       if (!StringUtils.isEmpty(current_element.getBanngerImageURLLow())) {
-            Picasso.with(getContext()).load(current_element.getBanngerImageURLLow())
+       if (!StringUtils.isEmpty(current_element.getBannerImageURLLow())) {
+            Picasso.with(getContext()).load(current_element.getBannerImageURLLow())
                     .placeholder(R.color.light_transparent)
                     .into(
-                            viewHolder.banngerImage,
+                            current_element.isWidthGt() ?
+                                    viewHolder.banner_image_width_gt :
+                                    viewHolder.bannerImage,
                             new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
@@ -258,13 +263,20 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                                 }
                             }
                     );
-        }
+           if (current_element.isWidthGt()) {
+               viewHolder.bannerImage.setVisibility(View.GONE);
+           } else {
+               viewHolder.banner_image_width_gt.setVisibility(View.GONE);
+           }
+       }
 
-        if (!StringUtils.isEmpty(current_element.getBanngerImageURLHigh())) {
-            Picasso.with(getContext()).load(current_element.getBanngerImageURLHigh())
+        if (!StringUtils.isEmpty(current_element.getBannerImageURLHigh())) {
+            Picasso.with(getContext()).load(current_element.getBannerImageURLHigh())
                     .placeholder(R.color.light_transparent)
                     .into(
-                            viewHolder.banngerImage,
+                            current_element.isWidthGt() ?
+                                    viewHolder.banner_image_width_gt :
+                                    viewHolder.bannerImage,
                             new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
@@ -277,15 +289,23 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                                 }
                             }
                     );
+            if (current_element.isWidthGt()) {
+                viewHolder.bannerImage.setVisibility(View.GONE);
+            } else {
+                viewHolder.banner_image_width_gt.setVisibility(View.GONE);
+            }
         }
 
 
-        if (current_element.getGalleryImageFile() != "") {
+        if (!StringUtils.isEmpty(current_element.getGalleryImageFile())) {
             viewHolder.itemView.setVisibility(View.VISIBLE);
             File piccasso_file = new File(current_element.getGalleryImageFile());
+
             Picasso.with(getContext()).load(piccasso_file).
                     into(
-                            viewHolder.banngerImage,
+                            current_element.isWidthGt() ?
+                                    viewHolder.banner_image_width_gt :
+                                    viewHolder.bannerImage,
                             new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
@@ -300,9 +320,15 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                             }
                     );
             if(current_element.getHasPublished()) {
-                viewHolder.banngerImage.setAlpha((float) 1);
+                viewHolder.bannerImage.setAlpha((float) 1);
                 viewHolder.profilePicURL.setAlpha((float) 1);
                 viewHolder.upload_in_progress_text.setVisibility(View.GONE);
+            }
+
+            if (current_element.isWidthGt()) {
+                viewHolder.bannerImage.setVisibility(View.GONE);
+            } else {
+                viewHolder.banner_image_width_gt.setVisibility(View.GONE);
             }
         }
 
@@ -311,7 +337,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         } else {
             viewHolder.itemView.setVisibility(View.VISIBLE);
             viewHolder.upload_in_progress_text.setVisibility(View.VISIBLE);
-            viewHolder.banngerImage.setAlpha((float) 0.5);
+            viewHolder.bannerImage.setAlpha((float) 0.5);
             viewHolder.profilePicURL.setAlpha((float) 0.5);
             viewHolder.uploadingFile.setVisibility(View.VISIBLE);
         }
