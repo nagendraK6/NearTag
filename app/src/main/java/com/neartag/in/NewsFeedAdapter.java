@@ -265,8 +265,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                     );
            if (current_element.isWidthGt()) {
                viewHolder.bannerImage.setVisibility(View.GONE);
-           } else {
-               viewHolder.banner_image_width_gt.setVisibility(View.GONE);
            }
        }
 
@@ -291,8 +289,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                     );
             if (current_element.isWidthGt()) {
                 viewHolder.bannerImage.setVisibility(View.GONE);
-            } else {
-                viewHolder.banner_image_width_gt.setVisibility(View.GONE);
             }
         }
 
@@ -327,8 +323,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
 
             if (current_element.isWidthGt()) {
                 viewHolder.bannerImage.setVisibility(View.GONE);
-            } else {
-                viewHolder.banner_image_width_gt.setVisibility(View.GONE);
             }
         }
 
