@@ -281,7 +281,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
                                     width,
                                     height
                             );
-                            current_element.save();
                             feed_elements.add(current_element);
                         }
 
@@ -387,7 +386,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
                 }
                 current_element.setHasPublished(true);
                 current_element.setDimensions(width, height);
-                current_element.save();
                 all_feeds.add(0, current_element);
                 adapter.notifyDataSetChanged();
                 view_img_upload.setVisibility(View.GONE);
@@ -407,7 +405,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
             public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
                 WeakHashMap<String, String> log_data = new WeakHashMap<>();
                 log_data.put(Logger.STATUS, Integer.toString(statusCode));
-                log_data.put(Logger.JSON, obj.toString());
+                if (obj != null) {
+                    log_data.put(Logger.JSON, obj.toString());
+                }
                 log_data.put(Logger.THROWABLE, t.toString());
                 Logger.log(Logger.POST_CREATE_FAILED, log_data);
             }

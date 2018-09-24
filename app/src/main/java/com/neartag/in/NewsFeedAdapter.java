@@ -245,6 +245,14 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
 
 
        if (!StringUtils.isEmpty(current_element.getBannerImageURLLow())) {
+           if (current_element.isWidthGt()) {
+               viewHolder.bannerImage.setVisibility(View.GONE);
+               viewHolder.banner_image_width_gt.setVisibility(View.VISIBLE);
+           } else {
+               viewHolder.bannerImage.setVisibility(View.VISIBLE);
+               viewHolder.banner_image_width_gt.setVisibility(View.GONE);
+           }
+
             Picasso.with(getContext()).load(current_element.getBannerImageURLLow())
                     .placeholder(R.color.light_transparent)
                     .into(
@@ -263,12 +271,16 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                                 }
                             }
                     );
-           if (current_element.isWidthGt()) {
-               viewHolder.bannerImage.setVisibility(View.GONE);
-           }
        }
 
         if (!StringUtils.isEmpty(current_element.getBannerImageURLHigh())) {
+            if (current_element.isWidthGt()) {
+                viewHolder.bannerImage.setVisibility(View.GONE);
+                viewHolder.banner_image_width_gt.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.bannerImage.setVisibility(View.VISIBLE);
+                viewHolder.banner_image_width_gt.setVisibility(View.GONE);
+            }
             Picasso.with(getContext()).load(current_element.getBannerImageURLHigh())
                     .placeholder(R.color.light_transparent)
                     .into(
@@ -287,16 +299,19 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                                 }
                             }
                     );
-            if (current_element.isWidthGt()) {
-                viewHolder.bannerImage.setVisibility(View.GONE);
-            }
         }
 
 
         if (!StringUtils.isEmpty(current_element.getGalleryImageFile())) {
             viewHolder.itemView.setVisibility(View.VISIBLE);
             File piccasso_file = new File(current_element.getGalleryImageFile());
-
+            if (current_element.isWidthGt()) {
+                viewHolder.bannerImage.setVisibility(View.GONE);
+                viewHolder.banner_image_width_gt.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.bannerImage.setVisibility(View.VISIBLE);
+                viewHolder.banner_image_width_gt.setVisibility(View.GONE);
+            }
             Picasso.with(getContext()).load(piccasso_file).
                     into(
                             current_element.isWidthGt() ?
@@ -319,10 +334,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                 viewHolder.bannerImage.setAlpha((float) 1);
                 viewHolder.profilePicURL.setAlpha((float) 1);
                 viewHolder.upload_in_progress_text.setVisibility(View.GONE);
-            }
-
-            if (current_element.isWidthGt()) {
-                viewHolder.bannerImage.setVisibility(View.GONE);
             }
         }
 
