@@ -118,7 +118,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         public ImageView like_icon;
         public ImageView share_button;
         public ImageView comment_button;
-        public TextView user_name, time_ago, status_bar, user_location;
+        public TextView user_name, time_ago, status_bar, user_location, title;
         public ProgressBar busy;
         public TextView post_creator_name;
         public TextView put_comment;
@@ -130,6 +130,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             // to access the context from any ViewHolder instance.
             super(itemView);
             bannerImage = itemView.findViewById(R.id.banner_image);
+            title = itemView.findViewById(R.id.title);
             banner_image_width_gt = itemView.findViewById(R.id.banner_image_width_gt);
             profilePicURL = itemView.findViewById(R.id.user_profile_image);
             uploadingFile = itemView.findViewById(R.id.progress);
@@ -235,9 +236,17 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
 
 
         if (!StringUtils.isEmpty(current_element.getUserPostText())) {
-            Helper.setTags(viewHolder.userPostText, current_element.getUserPostText());
-           // viewHolder.userPostText.setText(current_element.getUserPostText());
-            viewHolder.post_creator_name.setText(current_element.getUserName() + " ");
+            if (!current_element.getIsSystemUser()) {
+                Helper.setTags(viewHolder.userPostText, current_element.getUserPostText());
+                // viewHolder.userPostText.setText(current_element.getUserPostText());
+                viewHolder.post_creator_name.setText(current_element.getUserName() + " ");
+                viewHolder.title.setVisibility(View.GONE);
+                viewHolder.userPostText.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.title.setText(current_element.getUserPostText());
+                viewHolder.title.setVisibility(View.VISIBLE);
+                viewHolder.userPostText.setVisibility(View.GONE);
+            }
         } else {
             viewHolder.userPostText.setVisibility(View.GONE);
             viewHolder.post_creator_name.setVisibility(View.GONE);

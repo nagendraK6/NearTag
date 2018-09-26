@@ -124,13 +124,26 @@
             android:layout_width="match_parent"
             android:id="@+id/image_section"
             android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:id="@+id/title"
+                android:textSize="18dp"
+                android:paddingLeft="5dp"
+                android:paddingBottom="5dp"
+                android:paddingRight="5dp"
+                android:background="#f4f2e8"
+                android:textColor="@color/neartagtextcolor"
+                android:visibility="invisible"
+                android:layout_height="wrap_content" />
             <ImageView
+                android:layout_below="@+id/title"
                 android:id="@+id/banner_image_width_gt"
                 android:layout_width="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
                 android:layout_height="wrap_content" />
             <com.neartag.in.Utils.SquareImageView
+                android:layout_below="@+id/title"
                 android:layout_alignParentLeft="true"
                 android:id="@+id/banner_image"
                 android:scaleType="centerCrop"

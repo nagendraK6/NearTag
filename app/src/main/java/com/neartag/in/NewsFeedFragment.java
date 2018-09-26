@@ -260,6 +260,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
                             String comments_count = obj.getString("comments_count");
                             Integer width = obj.getInt("banner_image_width");
                             Integer height = obj.getInt("banner_image_height");
+                            Boolean is_system_user = obj.getBoolean("is_system_user");
 
                             NewsFeedElement current_element = new NewsFeedElement(
                                     post_id,
@@ -281,6 +282,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
                                     width,
                                     height
                             );
+                            current_element.setIsSystemUser(is_system_user);
                             feed_elements.add(current_element);
                         }
 
@@ -328,7 +330,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
                 }
                 WeakHashMap<String, String> log_data = new WeakHashMap<>();
                 log_data.put(Logger.STATUS, Integer.toString(statusCode));
-                log_data.put(Logger.JSON, obj.toString());
+                if (obj != null) {
+                    log_data.put(Logger.JSON, obj.toString());
+                }
                 log_data.put(Logger.THROWABLE, t.toString());
                 Logger.log(Logger.NEWS_FEED_FETCH_FAILED, log_data);
             }
@@ -352,7 +356,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
         news_feed_list.setAdapter(null);
         news_feed_list.setLayoutManager(null);
         adapter.setWAListener(null);
-        adapter = null;
         App.getRefWatcher(getActivity()).watch(this);
         getActivity().unregisterReceiver(broadCastNewMessage);
     }

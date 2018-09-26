@@ -70,6 +70,8 @@ public class NewsFeedElement  extends Model {
 
         public Integer totalDurationCount;
 
+        public Boolean isSystemUser;
+
         public NewsFeedElement() {
             super();
             this.postId = -1;
@@ -91,6 +93,7 @@ public class NewsFeedElement  extends Model {
             this.totalDurationCount = 0;
             this.Width = 0;
             this.Height = 0;
+            this.isSystemUser = false;
         }
 
         public NewsFeedElement(
@@ -134,6 +137,7 @@ public class NewsFeedElement  extends Model {
             this.totalDurationCount = 0;
             this.Width = Width;
             this.Height = Height;
+            this.isSystemUser = false;
         }
 
         public void incrementDuration() {
@@ -217,5 +221,13 @@ public class NewsFeedElement  extends Model {
 
         public Boolean isWidthGt() {
             return this.Width > this.Height;
+        }
+
+        public void setIsSystemUser(Boolean isSystemUser) {
+            this.isSystemUser = isSystemUser;
+        }
+
+        public  boolean getIsSystemUser() {
+            return this.isSystemUser;
         }
 }
