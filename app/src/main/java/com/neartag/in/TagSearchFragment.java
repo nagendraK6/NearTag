@@ -80,7 +80,7 @@ public class TagSearchFragment extends Fragment implements RecommendedTagsListAd
     ArrayList<String> all_tags_list = new ArrayList<>();
     HashTagAutoCompleteTextView composer_post_text;
     View fragment_view;
-
+    ImageView ivCloseShare;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -149,6 +149,13 @@ public class TagSearchFragment extends Fragment implements RecommendedTagsListAd
 
         IntentFilter new_text = new IntentFilter("on_message");
         getActivity().registerReceiver(broadCastNewMessage, new_text);
+        ivCloseShare = fragment_view.findViewById(R.id.ivCloseShare);
+        ivCloseShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -194,7 +201,9 @@ public class TagSearchFragment extends Fragment implements RecommendedTagsListAd
 
                         all_tags_list.clear();
                         all_tags_list.addAll(all_tags);
-                        recommendedTagsListAdapter.notifyDataSetChanged();
+                        if (recommendedTagsListAdapter != null) {
+                            recommendedTagsListAdapter.notifyDataSetChanged();
+                        }
                         Logger.log(Logger.RECOMMENDED_LIST_FETCH_FAILED);
                     }
                 } catch (JSONException e) {

@@ -14,6 +14,16 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+     <RelativeLayout
+         android:visibility="gone"
+         android:id="@+id/story_img"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="32dp"
+            android:id="@+id/story_image"
+            android:layout_height="32dp" />
+     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/upload_preview"
         android:visibility="gone"
@@ -63,7 +73,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/news_feed_list"
-        android:layout_below="@+id/upload_preview"
+        android:layout_below="@+id/story_img"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />

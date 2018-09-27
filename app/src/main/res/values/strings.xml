@@ -39,5 +39,6 @@
     <string name="post_message_hint">यहाँ कुछ लिखे</string>
     <string name="recommended_action_title">अभी के चर्चित मुद्दे</string>
     <string name="recommendation_itme_text">#आरक्षण</string>
+    <string name="at_least_one_interest">एक रूचि बताना ज़रूरी है</string>
 
 </resources>

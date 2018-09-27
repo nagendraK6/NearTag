@@ -58,6 +58,7 @@ public class PhoneVerificationFragment extends Fragment {
     private Handler handler = new Handler();
     EditText otp1, otp2, otp3, otp4;
     TextView phone_no_label;
+    TextView phone_no;
     boolean running = false;
     ProgressBar busy;
     String otp;
@@ -79,6 +80,9 @@ public class PhoneVerificationFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         phone_no_label = view.findViewById(R.id.toverify);
+        phone_no = view.findViewById(R.id.phone_no);
+        User user = User.getLoggedInUser();
+        phone_no.setText(user.CountryCode + "-" + user.PhoneNo);
         running = true;
         //phone_no_label.setText("Enter the 4-digit code we sent to\n" + user.getFormattedNo());
         otp1 = view.findViewById(R.id.otp1);

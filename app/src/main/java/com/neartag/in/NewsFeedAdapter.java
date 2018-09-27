@@ -555,8 +555,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
 
     public void startSharing(ViewHolder viewHolder, NewsFeedElement current_element) {
         viewHolder.shared_content_view.setDrawingCacheEnabled(true);
-
-        viewHolder.shared_content_view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+        viewHolder.shared_content_view.measure(View.MeasureSpec.makeMeasureSpec(
+                viewHolder.shared_content_view.getWidth(), View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
 
         viewHolder.shared_content_view.buildDrawingCache(true);

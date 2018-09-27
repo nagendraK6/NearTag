@@ -219,6 +219,28 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
 
         IntentFilter new_post = new IntentFilter("new_post");
         getActivity().registerReceiver(broadCastNewMessage, new_post);
+        /*
+        CircleImageView img = fragment_view.findViewById(R.id.story_image);
+        Picasso.with(getContext()).load(user.ProfilePicURL).into(img);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                ArrayList<String> x = new ArrayList<>();
+                ArrayList<String> y = new ArrayList<>();
+
+                for (int i  = 0 ;i < 5; i++) {
+                    x.add(all_feeds.get(i).bannerImageURLHigh);
+                    y.add(all_feeds.get(i).getUserPostText());
+                }
+                bundle.putStringArrayList("urls", x);
+                bundle.putStringArrayList("texts", y);
+
+                Fragment frg  = new StoryViewFragment();
+                frg.setArguments(bundle);
+                loadFragment(frg);
+            }
+        });*/
     }
 
     private void getStandardViewList(Integer limit) {
@@ -284,6 +306,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
                             );
                             current_element.setIsSystemUser(is_system_user);
                             feed_elements.add(current_element);
+                            if (i < 10) {
+                                Picasso.with(getActivity()).load(current_element.getBannerImageURLHigh()).fetch();
+                            }
                         }
 
                         all_feeds.clear();

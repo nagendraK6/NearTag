@@ -153,6 +153,8 @@ public class LoginFragment extends Fragment {
                                                 if(user == null) {
                                                     //
                                                     user = new User();
+                                                    user.CountryCode = country_code.getText().toString();
+                                                    user.PhoneNo = phone_number;
                                                     user.UserID = user_id;
                                                     user.Name = user_name;
                                                     user.Location = user_location;

@@ -76,13 +76,6 @@ public class UserPreferenceAskFragment extends Fragment implements PreferenceLis
         all_preferences.add(getString(R.string.option_5));
         all_preferences.add(getString(R.string.option_6));
         all_preferences.add(getString(R.string.option_7));
-        all_preferences.add(getString(R.string.option_1));
-        all_preferences.add(getString(R.string.option_2));
-        all_preferences.add(getString(R.string.option_3));
-        all_preferences.add(getString(R.string.option_4));
-        all_preferences.add(getString(R.string.option_5));
-        all_preferences.add(getString(R.string.option_6));
-        all_preferences.add(getString(R.string.option_7));
 
         // Create adapter passing in the sample user data
         adapter = new PreferenceListAdapter((AppCompatActivity) getActivity(),  all_preferences);
@@ -103,6 +96,10 @@ public class UserPreferenceAskFragment extends Fragment implements PreferenceLis
         next_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (current_preference.size() == 0) {
+                    Toast.makeText(getContext(), "एक रूचि बताना ज़रूरी है", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 busy.setVisibility(View.VISIBLE);
                 next_button.setVisibility(View.INVISIBLE);
                 sendPreferences();
