@@ -37,6 +37,7 @@ import com.neartag.in.Utils.TimeAgo;
 import com.neartag.in.comments.ViewCommentsFragment;
 import com.neartag.in.models.NewsFeedElement;
 import com.neartag.in.models.User;
+import com.neartag.in.webview.WebviewFragment;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -121,7 +122,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         private TextView user_name, time_ago, status_bar, user_location, title, post_creator_profile_image_2;
         private ProgressBar busy;
         private TextView post_creator_name;
-        private TextView put_comment;
+        private TextView put_comment, learn_more;
         private View shared_content_view, logo, action_section;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -150,6 +151,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             shared_content_view = itemView.findViewById(R.id.center_content);
             action_section = itemView.findViewById(R.id.action_section);
             logo = itemView.findViewById(R.id.logo);
+            learn_more = itemView.findViewById(R.id.learn_more);
         }
     }
 
@@ -429,6 +431,13 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         } else {
             viewHolder.status_bar.setText(stats_text);
         }
+
+        viewHolder.learn_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new WebviewFragment());
+            }
+        });
     }
 
     // Returns the total count of items in the list
