@@ -45,6 +45,7 @@ import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by nagendra on 7/10/18.
+ *
  */
 
 public class PhoneVerificationFragment extends Fragment {
@@ -187,6 +188,7 @@ public class PhoneVerificationFragment extends Fragment {
 
 
         checkPermissionAndGrantPermission(getContext());
+        startTimer(view);
     }
 
     private void startTimer(final View fragment_view) {
@@ -204,15 +206,14 @@ public class PhoneVerificationFragment extends Fragment {
 
                         @Override
                         public void run() {
-                            resend.setText("Resend SMS in " + (30 - timer) + " seconds");
+                            resend.setText("फिर से भेजें  " + (30 - timer) + " सेकण्ड्स में ");
 
                             // TODO Auto-generated method stub
                             if (timer == 30) {
                                 should_resend_otp = true;
                                 TextView resend = (TextView) fragment_view.findViewById(R.id.re_send);
                                 resend.setBackgroundResource(R.drawable.incorrect_display);
-                                resend.setText("Resend SMS");
-
+                                resend.setText("फिर से भेजें");
                             }
                         }
                     });

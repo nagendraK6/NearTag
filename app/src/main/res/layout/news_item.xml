@@ -164,12 +164,82 @@
             android:text="15 पसंद . 34 शेयर . 4 राय"
             />
 
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:visibility="invisible"
+            android:layout_below="@+id/status_bar"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/post_creator_profile_image_2"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/ic_user_white"
+                    android:backgroundTint="@color/link_blue"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:padding="2dp" />
+                <RelativeLayout
+                    android:layout_toRightOf="@+id/post_creator_profile_image_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/reporter"
+                        android:layout_width="wrap_content"
+                        android:text="रिपोर्टर"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:textSize="18dp"
+                        android:id="@+id/reporter_name"
+                        android:layout_below="@+id/reporter"
+                        android:layout_width="wrap_content"
+                        android:text="नागेंद्र कुमार"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+            </RelativeLayout>
 
-    <RelativeLayout
+            <RelativeLayout
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/download_playstore"
+                    android:layout_width="wrap_content"
+                    android:text="प्ले स्टोर पे डाउनलोड करें"
+                    android:layout_height="wrap_content" />
+                <RelativeLayout
+                    android:layout_below="@+id/download_playstore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/app_icon"
+                        android:backgroundTint="@color/link_blue"
+                        android:src="@mipmap/neartag_launcher_circle"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="2dp" />
+                    <TextView
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/app_icon"
+                        android:textColor="@color/orange"
+                        android:text="#NearTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+
+
+        <RelativeLayout
         android:layout_centerHorizontal="true"
         android:id="@+id/action_section"
-        android:layout_below="@+id/center_content"
+        android:layout_below="@+id/status_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -245,14 +315,17 @@
                 android:text="राय दें"/>
         </RelativeLayout>
     </RelativeLayout>
+</RelativeLayout>
+
+
+
     <RelativeLayout
         android:layout_marginLeft="10dp"
         android:id="@+id/post_tag_and_text"
-        android:layout_below="@+id/action_section"
+        android:layout_below="@+id/center_content"
         android:layout_marginTop="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <TextView
             android:id="@+id/comment_creator_name"
             android:layout_alignParentLeft="true"

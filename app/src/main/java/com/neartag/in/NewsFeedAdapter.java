@@ -108,21 +108,21 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        public TextView tag, empty_creator_profile_pic;
-        public SquareImageView bannerImage;
-        public ImageView banner_image_width_gt;
-        public CircleImageView profilePicURL, creator_profile_pic;
-        public ProgressBar uploadingFile;
-        public TextView upload_in_progress_text;
-        public TextView userPostText;
-        public ImageView like_icon;
-        public ImageView share_button;
-        public ImageView comment_button;
-        public TextView user_name, time_ago, status_bar, user_location, title;
-        public ProgressBar busy;
-        public TextView post_creator_name;
-        public TextView put_comment;
-        public View shared_content_view;
+        private TextView tag, empty_creator_profile_pic;
+        private SquareImageView bannerImage;
+        private ImageView banner_image_width_gt;
+        private CircleImageView profilePicURL, creator_profile_pic;
+        private ProgressBar uploadingFile;
+        private TextView upload_in_progress_text;
+        private TextView userPostText;
+        private ImageView like_icon;
+        private ImageView share_button;
+        private ImageView comment_button;
+        private TextView user_name, time_ago, status_bar, user_location, title, post_creator_profile_image_2;
+        private ProgressBar busy;
+        private TextView post_creator_name;
+        private TextView put_comment;
+        private View shared_content_view, logo, action_section;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView) {
@@ -148,6 +148,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             time_ago = itemView.findViewById(R.id.time_ago);
             status_bar = itemView.findViewById(R.id.status_bar);
             shared_content_view = itemView.findViewById(R.id.center_content);
+            action_section = itemView.findViewById(R.id.action_section);
+            logo = itemView.findViewById(R.id.logo);
         }
     }
 
@@ -554,14 +556,25 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
     }
 
     public void startSharing(ViewHolder viewHolder, NewsFeedElement current_element) {
+        viewHolder.status_bar.setVisibility(View.INVISIBLE);
+        viewHolder.logo.setVisibility(View.VISIBLE);
+        TextView reporter_name = viewHolder.logo.findViewById(R.id.reporter_name);
+        reporter_name.setText(current_element.getUserName());
+        viewHolder.action_section.setVisibility(View.INVISIBLE);
+
+        viewHolder.shared_content_view.invalidate();
         viewHolder.shared_content_view.setDrawingCacheEnabled(true);
         viewHolder.shared_content_view.measure(View.MeasureSpec.makeMeasureSpec(
                 viewHolder.shared_content_view.getWidth(), View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                View.MeasureSpec.makeMeasureSpec(viewHolder.shared_content_view.getHeight(), View.MeasureSpec.EXACTLY));
 
         viewHolder.shared_content_view.buildDrawingCache(true);
         Bitmap b = Bitmap.createBitmap(viewHolder.shared_content_view.getDrawingCache());
         viewHolder.shared_content_view.setDrawingCacheEnabled(false); // clear drawing cache
+
+        viewHolder.status_bar.setVisibility(View.VISIBLE);
+        viewHolder.logo.setVisibility(View.INVISIBLE);
+        viewHolder.action_section.setVisibility(View.VISIBLE);
 
 
         Bitmap bitmap2 = b.copy(b.getConfig(), false);
