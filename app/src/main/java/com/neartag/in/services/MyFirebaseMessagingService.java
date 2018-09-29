@@ -38,6 +38,7 @@ import java.util.Random;
 
 /**
  * Created by nagendra on 9/15/18.
+ * *
  */
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -58,16 +59,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 sendNotification(title, message);
                 //sendNotification(message);
             } catch (Exception e) {
-                Log.d("debug_data", e.getMessage());
-                Log.d("debug_data", "hits exception");
-
+                e.printStackTrace();
             }
-        } else {
-            sendNotification("Phirki", "Join the game and win real money");
         }
-
-
-
     }
 
     private void sendNotification(String title, String message) {
@@ -79,6 +73,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder nb =
                 getIosChannelNotification(title, message);
+        assert mNotificationManager != null;
         mNotificationManager.notify(0, nb.build());
 
     }
@@ -97,13 +92,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentTitle(title)
                 .setContentText(body)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(body))
+                        .bigText(body)
+                        .setBigContentTitle(title)
+                        .setSummaryText("done")
+                )
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000, 1000})
                 .setContentIntent(pendingIntent)
                 .setLargeIcon(resize(this,
                         BitmapFactory.decodeResource(
                                 getResources(),
-                                R.mipmap.neartag_launcher)))
+                                R.mipmap.neartag_launcher_circle)))
                 .setSmallIcon(R.drawable.notification_icon_small)
                 .setColor(getResources().getColor(R.color.orange))
                 .setAutoCancel(true);
@@ -127,10 +125,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationChannel channel = new NotificationChannel(channel_id,
-                "Phirki Notification",
+                "NearTag Notification",
                 NotificationManager.IMPORTANCE_DEFAULT);
-        channel.setDescription("Receive Phirki Notification");
+        channel.setDescription("Receive NearTag Notification");
+        assert notificationManager != null;
         notificationManager.createNotificationChannel(channel);
-
     }
 }
