@@ -4,6 +4,8 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+import java.util.ArrayList;
+
 /**
  * Created by nagendra on 8/7/18.
  */
@@ -74,6 +76,8 @@ public class NewsFeedElement  extends Model {
 
         public Boolean isSystemUser;
 
+        public ArrayList<String> all_tags;
+
         public NewsFeedElement() {
             super();
             this.postId = -1;
@@ -97,6 +101,7 @@ public class NewsFeedElement  extends Model {
             this.Height = 0;
             this.isSystemUser = false;
             this.LearnMoreLink = "";
+            this.all_tags =  new ArrayList<>();
         }
 
         public NewsFeedElement(
@@ -118,8 +123,8 @@ public class NewsFeedElement  extends Model {
                 String commentsCount,
                 Integer Width,
                 Integer Height,
-                String LearnMoreLink
-
+                String LearnMoreLink,
+                ArrayList<String> ar_list
                 ) {
             super();
             this.postId = postId;
@@ -143,6 +148,7 @@ public class NewsFeedElement  extends Model {
             this.Height = Height;
             this.isSystemUser = false;
             this.LearnMoreLink = LearnMoreLink;
+            this.all_tags =  ar_list;
         }
 
         public void incrementDuration() {
@@ -237,4 +243,6 @@ public class NewsFeedElement  extends Model {
         }
 
         public  String getLearnMoreLink() { return this.LearnMoreLink; }
+
+        public  ArrayList<String> getAllTags() { return this.all_tags; }
 }

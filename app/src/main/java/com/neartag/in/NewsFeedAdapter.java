@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,8 +38,10 @@ import com.neartag.in.Utils.Helper;
 import com.neartag.in.Utils.SquareImageView;
 import com.neartag.in.Utils.TimeAgo;
 import com.neartag.in.comments.ViewCommentsFragment;
+import com.neartag.in.composer.RecommendedTagsListAdapter;
 import com.neartag.in.models.NewsFeedElement;
 import com.neartag.in.models.User;
+import com.neartag.in.newsfeed.NewsTagsListAdapter;
 import com.neartag.in.webview.WebviewFragment;
 import com.squareup.picasso.Picasso;
 
@@ -126,6 +129,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         private TextView post_creator_name;
         private TextView put_comment, learn_more;
         private View shared_content_view, logo, action_section, learn_more_view;
+        private  RecyclerView tags_view;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView) {
@@ -154,6 +158,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             action_section = itemView.findViewById(R.id.action_section);
             logo = itemView.findViewById(R.id.logo);
             learn_more_view = itemView.findViewById(R.id.learn_more_view);
+            tags_view = itemView.findViewById(R.id.all_post_tags);
         }
     }
 
@@ -451,6 +456,15 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                 loadFragment(fr);
             }
         });
+
+        if (current_element.getAllTags().size() > 0) {
+            PreCachingLayoutManager layoutManager = new PreCachingLayoutManager(getContext());
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            layoutManager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getContext()));
+            viewHolder.tags_view.setLayoutManager(layoutManager);
+            NewsTagsListAdapter recommendedTagsListAdapter = new NewsTagsListAdapter(getContext(), current_element.getAllTags());
+            viewHolder.tags_view.setAdapter(recommendedTagsListAdapter);
+        }
     }
 
     // Returns the total count of items in the list
