@@ -56,7 +56,7 @@ public class NewsTagsListAdapter extends RecyclerView.Adapter<NewsTagsListAdapte
 
         @Override
         public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            if (mClickListener != null) mClickListener.onTagClick(mData.get(getAdapterPosition()));
         }
     }
 
@@ -72,7 +72,7 @@ public class NewsTagsListAdapter extends RecyclerView.Adapter<NewsTagsListAdapte
 
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onTagClick(String tag);
     }
 }
 

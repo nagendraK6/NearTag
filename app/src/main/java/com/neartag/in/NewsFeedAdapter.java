@@ -61,7 +61,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 // Create the basic adapter extending from RecyclerView.Adapter
 // Note that we specify the custom ViewHolder which gives us access to our views
-public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHolder> {
+public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHolder> implements NewsTagsListAdapter.ItemClickListener {
 
     private  VisibilityTracker mVisibilityTracker;
     private final WeakHashMap<View, Integer> mViewPositionMap = new WeakHashMap<>();
@@ -107,6 +107,14 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
     // Easy access to the context object in the recyclerview
     private Context getContext() {
         return mContext;
+    }
+
+    @Override
+    public void onTagClick(String tag_clicked) {
+         Log.d("debug_click", "I am called");
+         if (this.waListener != null) {
+             this.waListener.onTagTextClick(tag_clicked);
+         }
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -463,6 +471,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             layoutManager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getContext()));
             viewHolder.tags_view.setLayoutManager(layoutManager);
             NewsTagsListAdapter recommendedTagsListAdapter = new NewsTagsListAdapter(getContext(), current_element.getAllTags());
+            recommendedTagsListAdapter.setClickListener(this);
             viewHolder.tags_view.setAdapter(recommendedTagsListAdapter);
         }
     }
@@ -662,6 +671,9 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
 
     public interface ClickWhatsApp {
         void onClickWA(ViewHolder viewHolder, NewsFeedElement current_element);
+
+        void onTagTextClick(String tag_name);
+
     }
 
     public void setWAListener(ClickWhatsApp listener) {

@@ -246,11 +246,148 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
     }
 
     private void getStandardViewList(Integer limit) {
-        Logger.log(Logger.NEWS_FEED_FETCH_START);
-        AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.add("limit", limit.toString());
-       // busy_show_feed_fetch.setVisibility(View.VISIBLE);
+        // busy_show_feed_fetch.setVisibility(View.VISIBLE);
+        getFeedList(params);
+    }
+
+    private void loadFragment(Fragment fragment_to_start) {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.fragment_holder, fragment_to_start);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        news_feed_list.setAdapter(null);
+        news_feed_list.setLayoutManager(null);
+        adapter.setWAListener(null);
+        App.getRefWatcher(getActivity()).watch(this);
+        getActivity().unregisterReceiver(broadCastNewMessage);
+    }
+
+
+    private void createAPost(final NewsFeedElement current_element) {
+        Logger.log(Logger.POST_CREATE_START);
+        android.util.Log.d("debug_data", "upload started...");
+        User user = User.getLoggedInUser();
+        final AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        try {
+            File imgfile = new File(current_element.getGalleryImageFile());
+            params.put("file", imgfile);
+            params.put("tag", current_element.getTag());
+            params.put("post_text", current_element.getUserPostText());
+        } catch(FileNotFoundException fexception) {
+            fexception.printStackTrace();
+        }
+        JsonHttpResponseHandler jrep= new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Integer width = 0, height  = 0;
+                try {
+                    JSONObject data = response.getJSONObject("data");
+                    width = data.getInt("banner_image_width");
+                    height = data.getInt("banner_image_height");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                current_element.setHasPublished(true);
+                current_element.setDimensions(width, height);
+                all_feeds.add(0, current_element);
+                adapter.notifyDataSetChanged();
+                view_img_upload.setVisibility(View.GONE);
+                Logger.log(Logger.POST_CREATE_SUCCESS);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                log_data.put(Logger.RES, res);
+                log_data.put(Logger.THROWABLE, t.toString());
+                Logger.log(Logger.POST_CREATE_FAILED, log_data);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
+                WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                if (obj != null) {
+                    log_data.put(Logger.JSON, obj.toString());
+                }
+                log_data.put(Logger.THROWABLE, t.toString());
+                Logger.log(Logger.POST_CREATE_FAILED, log_data);
+            }
+        };
+
+        client.addHeader("Accept", "application/json");
+        client.addHeader("Authorization", "Bearer " + user.AccessToken);
+        client.post(App.getBaseURL() + "post/create", params, jrep);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        adapter.OnSharingCallback(requestCode);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int RC, String per[], int[] PResult) {
+        super.onRequestPermissionsResult(RC, per, PResult);
+        if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
+            adapter.startSharing(adapterViewHolder, current_element);
+            adapterViewHolder = null;
+            current_element = null;
+        } else {
+            Toast.makeText(getActivity(), "Permission is needed to capture image for the profile", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onClickWA(NewsFeedAdapter.ViewHolder viewHolder, NewsFeedElement current_element) {
+        this.current_element = current_element;
+        this.adapterViewHolder = viewHolder;
+        checkPermission(getContext());
+    }
+
+    @Override
+    public void onTagTextClick(String tag_name) {
+       Log.d("debug_tag", "user clicked ");
+       // removing #tag
+        tag_name = tag_name.substring(1);
+        getStandardViewListFromTag(tag_name);
+    }
+
+    private void checkPermission(final Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    requestPermissions( new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, App.REQUEST_FOR_READ_PHOTO);
+                } else {
+                    requestPermissions( new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},  App.REQUEST_FOR_READ_PHOTO);
+                }
+            }
+        }
+    }
+
+    public void getStandardViewListFromTag(String tag_name) {
+        RequestParams params = new RequestParams();
+        params.add("limit", "50");
+        params.add("tag", tag_name);
+        getFeedList(params);
+        skeletonScreen.show();
+    }
+
+    private void getFeedList(RequestParams params) {
+        Logger.log(Logger.NEWS_FEED_FETCH_START);
+        AsyncHttpClient client = new AsyncHttpClient();
         User user = User.getLoggedInUser();
         // response
 
@@ -377,132 +514,5 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
         client.addHeader("Accept", "application/json");
         client.addHeader("Authorization", "Bearer " + user.AccessToken);
         client.get(App.getBaseURL() + "newsfeed", params, response_json);
-    }
-
-    private void loadFragment(Fragment fragment_to_start) {
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.fragment_holder, fragment_to_start);
-        ft.addToBackStack(null);
-        ft.commit();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        news_feed_list.setAdapter(null);
-        news_feed_list.setLayoutManager(null);
-        adapter.setWAListener(null);
-        App.getRefWatcher(getActivity()).watch(this);
-        getActivity().unregisterReceiver(broadCastNewMessage);
-    }
-
-
-    private void createAPost(final NewsFeedElement current_element) {
-        Logger.log(Logger.POST_CREATE_START);
-        android.util.Log.d("debug_data", "upload started...");
-        User user = User.getLoggedInUser();
-        final AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
-        try {
-            File imgfile = new File(current_element.getGalleryImageFile());
-            params.put("file", imgfile);
-            params.put("tag", current_element.getTag());
-            params.put("post_text", current_element.getUserPostText());
-        } catch(FileNotFoundException fexception) {
-            fexception.printStackTrace();
-        }
-        JsonHttpResponseHandler jrep= new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Integer width = 0, height  = 0;
-                try {
-                    JSONObject data = response.getJSONObject("data");
-                    width = data.getInt("banner_image_width");
-                    height = data.getInt("banner_image_height");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                current_element.setHasPublished(true);
-                current_element.setDimensions(width, height);
-                all_feeds.add(0, current_element);
-                adapter.notifyDataSetChanged();
-                view_img_upload.setVisibility(View.GONE);
-                Logger.log(Logger.POST_CREATE_SUCCESS);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                WeakHashMap<String, String> log_data = new WeakHashMap<>();
-                log_data.put(Logger.STATUS, Integer.toString(statusCode));
-                log_data.put(Logger.RES, res);
-                log_data.put(Logger.THROWABLE, t.toString());
-                Logger.log(Logger.POST_CREATE_FAILED, log_data);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
-                WeakHashMap<String, String> log_data = new WeakHashMap<>();
-                log_data.put(Logger.STATUS, Integer.toString(statusCode));
-                if (obj != null) {
-                    log_data.put(Logger.JSON, obj.toString());
-                }
-                log_data.put(Logger.THROWABLE, t.toString());
-                Logger.log(Logger.POST_CREATE_FAILED, log_data);
-            }
-        };
-
-        client.addHeader("Accept", "application/json");
-        client.addHeader("Authorization", "Bearer " + user.AccessToken);
-        client.post(App.getBaseURL() + "post/create", params, jrep);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        adapter.OnSharingCallback(requestCode);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int RC, String per[], int[] PResult) {
-        super.onRequestPermissionsResult(RC, per, PResult);
-        if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
-            adapter.startSharing(adapterViewHolder, current_element);
-            adapterViewHolder = null;
-            current_element = null;
-        } else {
-            Toast.makeText(getActivity(), "Permission is needed to capture image for the profile", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    public void onClickWA(NewsFeedAdapter.ViewHolder viewHolder, NewsFeedElement current_element) {
-        this.current_element = current_element;
-        this.adapterViewHolder = viewHolder;
-        checkPermission(getContext());
-    }
-
-    private void checkPermission(final Context context) {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    requestPermissions( new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, App.REQUEST_FOR_READ_PHOTO);
-                } else {
-                    requestPermissions( new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},  App.REQUEST_FOR_READ_PHOTO);
-                }
-            }
-        }
-    }
-
-    private void getFromBackup() {
-        List<NewsFeedElement> feed_elements = new Select()
-                .all()
-                .from(NewsFeedElement.class)
-                .execute();
-        all_feeds.addAll(feed_elements);
-        skeletonScreen.hide();
-        adapter.notifyDataSetChanged();
     }
 }
