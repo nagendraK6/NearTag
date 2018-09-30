@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.activeandroid.util.Log;
+import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -45,40 +46,58 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by nagendra on 9/28/18.
+ * webview component
  */
 
 public class WebviewFragment extends Fragment {
 
-    public WebView mWebView;
+    private WebView mWebView;
+    private ProgressBar busy;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mWebView = (WebView) mWebView.findViewById(R.id.webview);
-        mWebView.loadUrl("google.com");
-
-        // Enable Javascript
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-
-        // Force links and redirects to open i  n the WebView instead of in a browser
-        mWebView.setWebViewClient(new WebViewClient());
-
         return inflater.inflate(R.layout.webview_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        String url = getArguments().getString("url");
+        busy = view.findViewById(R.id.busy_load);
+        FadingCircle cr = new FadingCircle();
+        cr.setColor(R.color.neartagtextcolor);
+        busy.setIndeterminateDrawable(cr);
+        busy.setVisibility(View.VISIBLE);
+
+        mWebView = view.findViewById(R.id.webview);
+        mWebView.loadUrl(url);
+
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+
+        mWebView.setWebViewClient(new WebViewClient() {
+            public void onPageFinished(WebView view, String url) {
+                busy.setVisibility(View.INVISIBLE);
+            }
+
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            }
+        });
+
+        ImageView closeButton = view.findViewById(R.id.ivCloseShare);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         App.getRefWatcher(getActivity()).watch(this);
-    }
-
-    private void loadFragment() {
-        getActivity().onBackPressed();
     }
 }

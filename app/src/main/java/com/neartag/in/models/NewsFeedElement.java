@@ -68,6 +68,8 @@ public class NewsFeedElement  extends Model {
         @Column(name = "Height")
         public Integer Height;
 
+        public String LearnMoreLink;
+
         public Integer totalDurationCount;
 
         public Boolean isSystemUser;
@@ -94,6 +96,7 @@ public class NewsFeedElement  extends Model {
             this.Width = 0;
             this.Height = 0;
             this.isSystemUser = false;
+            this.LearnMoreLink = "";
         }
 
         public NewsFeedElement(
@@ -114,7 +117,8 @@ public class NewsFeedElement  extends Model {
                 String sharesCount,
                 String commentsCount,
                 Integer Width,
-                Integer Height
+                Integer Height,
+                String LearnMoreLink
 
                 ) {
             super();
@@ -138,6 +142,7 @@ public class NewsFeedElement  extends Model {
             this.Width = Width;
             this.Height = Height;
             this.isSystemUser = false;
+            this.LearnMoreLink = LearnMoreLink;
         }
 
         public void incrementDuration() {
@@ -230,4 +235,6 @@ public class NewsFeedElement  extends Model {
         public  boolean getIsSystemUser() {
             return this.isSystemUser;
         }
+
+        public  String getLearnMoreLink() { return this.LearnMoreLink; }
 }

@@ -24,7 +24,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -123,7 +125,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         private ProgressBar busy;
         private TextView post_creator_name;
         private TextView put_comment, learn_more;
-        private View shared_content_view, logo, action_section;
+        private View shared_content_view, logo, action_section, learn_more_view;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView) {
@@ -151,7 +153,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             shared_content_view = itemView.findViewById(R.id.center_content);
             action_section = itemView.findViewById(R.id.action_section);
             logo = itemView.findViewById(R.id.logo);
-            learn_more = itemView.findViewById(R.id.learn_more);
+            learn_more_view = itemView.findViewById(R.id.learn_more_view);
         }
     }
 
@@ -432,10 +434,21 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             viewHolder.status_bar.setText(stats_text);
         }
 
-        viewHolder.learn_more.setOnClickListener(new View.OnClickListener() {
+        if (StringUtils.isEmpty(current_element.getLearnMoreLink())) {
+            viewHolder.learn_more_view.setVisibility(View.GONE);
+        } else {
+            viewHolder.learn_more_view.setVisibility(View.VISIBLE);
+        }
+
+        TextView lt =  viewHolder.learn_more_view.findViewById(R.id.learn_more);
+        lt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new WebviewFragment());
+                Bundle bndle = new Bundle();
+                bndle.putString("url", current_element.getLearnMoreLink());
+                Fragment fr = new WebviewFragment();
+                fr.setArguments(bndle);
+                loadFragment(fr);
             }
         });
     }
@@ -570,6 +583,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         TextView reporter_name = viewHolder.logo.findViewById(R.id.reporter_name);
         reporter_name.setText(current_element.getUserName());
         viewHolder.action_section.setVisibility(View.INVISIBLE);
+        viewHolder.learn_more_view.setVisibility(View.GONE);
+
 
         viewHolder.shared_content_view.invalidate();
         viewHolder.shared_content_view.setDrawingCacheEnabled(true);
@@ -584,6 +599,9 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         viewHolder.status_bar.setVisibility(View.VISIBLE);
         viewHolder.logo.setVisibility(View.INVISIBLE);
         viewHolder.action_section.setVisibility(View.VISIBLE);
+        if (!StringUtils.isEmpty(current_element.getLearnMoreLink())) {
+            viewHolder.learn_more_view.setVisibility(View.VISIBLE);
+        }
 
 
         Bitmap bitmap2 = b.copy(b.getConfig(), false);

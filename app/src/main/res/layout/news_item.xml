@@ -152,39 +152,44 @@
                 android:layout_height="wrap_content" />
         </RelativeLayout>
 
-        <TextView
-            android:layout_marginLeft="11dp"
-            android:layout_marginTop="5dp"
-            android:id="@+id/status_bar"
+        <RelativeLayout
             android:layout_below="@+id/image_section"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="#737074"
-            android:text="15 पसंद . 34 शेयर . 4 राय"
-            />
+            android:id="@+id/relLayout1">
 
-        <TextView
-            android:visibility="invisible"
-            android:layout_marginRight="20dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="11dp"
-            android:layout_marginTop="5dp"
-            android:id="@+id/learn_more"
-            android:layout_below="@+id/image_section"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/link_blue"
-            android:text="पूरा पढ़ें"
-            />
+            <TextView
+                android:layout_marginLeft="11dp"
+                android:id="@+id/status_bar"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#737074"
+                android:text="15 पसंद . 34 शेयर . 4 राय"
+                />
+
+            <!-- gallery toolbar -->
+            <LinearLayout
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:id="@+id/learn_more_view"
+                android:layout_toRightOf="@+id/status_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <include layout="@layout/snippet_learn_more"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
 
         <RelativeLayout
             android:id="@+id/logo"
             android:layout_width="match_parent"
             android:visibility="invisible"
-            android:layout_below="@+id/status_bar"
+            android:layout_below="@+id/relLayout1"
             android:layout_height="wrap_content">
             <RelativeLayout
                 android:layout_marginTop="10dp"
@@ -255,7 +260,7 @@
         <RelativeLayout
         android:layout_centerHorizontal="true"
         android:id="@+id/action_section"
-        android:layout_below="@+id/status_bar"
+        android:layout_below="@+id/relLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

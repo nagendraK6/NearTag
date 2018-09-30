@@ -122,7 +122,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
                         "",
                         "",
                         0,
-                        0
+                        0,
+                        ""
                 );
 
             createAPost(new_post);
@@ -283,6 +284,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
                             Integer width = obj.getInt("banner_image_width");
                             Integer height = obj.getInt("banner_image_height");
                             Boolean is_system_user = obj.getBoolean("is_system_user");
+                            String learn_more_url = obj.getString("learn_more_url");
 
                             NewsFeedElement current_element = new NewsFeedElement(
                                     post_id,
@@ -302,7 +304,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
                                     shared_count,
                                     comments_count,
                                     width,
-                                    height
+                                    height,
+                                    learn_more_url
                             );
                             current_element.setIsSystemUser(is_system_user);
                             feed_elements.add(current_element);
