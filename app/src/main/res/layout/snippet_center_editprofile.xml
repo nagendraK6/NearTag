@@ -44,21 +44,22 @@
                 android:background="@drawable/grey_border_bottom"
                 android:id="@+id/relLayout1">
 
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_username"
-                    android:layout_centerVertical="true"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="नाम"
+                    android:layout_marginBottom="5dp"
+                    android:id="@+id/title_name" />
 
                 <EditText
+                    android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/username"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="40dp"
+                    android:layout_below="@+id/title_name"
+                    android:layout_alignParentLeft="true"
                     android:background="@null"
-                    android:inputType="textNoSuggestions"
-                    android:hint="यूजर नाम"/>
+                    android:hint="आपक नाम"
+                    android:inputType="textNoSuggestions" />
 
             </RelativeLayout>
 
@@ -72,54 +73,63 @@
                 android:id="@+id/relLayout2"
                 android:layout_marginTop="15dp">
 
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_display_name"
-                    android:layout_centerVertical="true"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="स्थान"
+                    android:textSize="15sp"
+                    android:textColor="@color/neartagtextcolor"
+                    android:layout_marginBottom="5dp"
+                    android:id="@+id/title_place" />
 
                 <EditText
+                    android:id="@+id/user_place_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/display_name"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="40dp"
+                    android:layout_below="@+id/title_place"
+                    android:layout_alignParentLeft="true"
                     android:background="@null"
-                    android:inputType="textNoSuggestions"
-                    android:hint="आपका नाम"/>
+                    android:hint="आप कहाँ  के रहने वाले हैं?"
+                    android:inputType="textNoSuggestions" />
 
             </RelativeLayout>
 
 
-            <!-- website section -->
+
+
+
+            <!-- display_name section -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_below="@+id/relLayout2"
                 android:background="@drawable/grey_border_bottom"
                 android:id="@+id/relLayout3"
-                android:visibility="gone"
                 android:layout_marginTop="15dp">
 
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_web"
-                    android:layout_centerVertical="true"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="आपके बारे में"
+                    android:textSize="15sp"
+                    android:textColor="@color/neartagtextcolor"
+                    android:layout_marginBottom="5dp"
+                    android:id="@+id/title_description" />
 
                 <EditText
+                    android:id="@+id/user_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="40dp"
+                    android:layout_below="@+id/title_description"
+                    android:layout_alignParentLeft="true"
                     android:background="@null"
-                    android:inputType="textNoSuggestions"
-                    android:hint="Website"/>
+                    android:hint="अपने बारे में कुछ लिखें"
+                    android:inputType="textNoSuggestions" />
 
             </RelativeLayout>
 
 
-            <!-- description section -->
+            <!-- display_name section -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -128,86 +138,22 @@
                 android:id="@+id/relLayout4"
                 android:layout_marginTop="15dp">
 
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_description"
-                    android:layout_centerVertical="true"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="फ़ोन"
+                    android:textSize="15sp"
+                    android:textColor="@color/neartagtextcolor"
+                    android:layout_marginBottom="5dp"
+                    android:id="@+id/title_phone" />
 
-                <EditText
+                <TextView
+                    android:id="@+id/phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/description"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="40dp"
-                    android:background="@null"
-                    android:inputType="textNoSuggestions"
-                    android:hint="अपने बारे में कुछ लिखे जैसे में बहुत सुन्दर हूँ"/>
-
-            </RelativeLayout>
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text="PRIVATE INFORMATION"
-                android:layout_below="@id/relLayout4"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp"
-                android:textColor="@color/black"
-                android:background="@drawable/grey_border_bottom"
-                android:id="@+id/textPrivateInfo"/>
-
-
-            <!-- email section -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@+id/textPrivateInfo"
-                android:background="@drawable/grey_border_bottom"
-                android:id="@+id/relLayout5"
-                android:layout_marginTop="15dp">
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_email"
-                    android:layout_centerVertical="true"/>
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="40dp"
-                    android:background="@null"
-                    android:inputType="textNoSuggestions"
-                    android:hint="Email"/>
-
-            </RelativeLayout>
-
-            <!-- phone number section -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@+id/relLayout5"
-                android:background="@drawable/grey_border_bottom"
-                android:layout_marginTop="15dp">
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_phone"
-                    android:layout_centerVertical="true"/>
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="40dp"
-                    android:background="@null"
-                    android:inputType="textNoSuggestions"
-                    android:hint="Phone Number"/>
+                    android:layout_below="@+id/title_phone"
+                    android:layout_alignParentLeft="true"
+                    android:background="@null" />
 
             </RelativeLayout>
 

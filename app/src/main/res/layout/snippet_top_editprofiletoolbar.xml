@@ -45,15 +45,15 @@
                     android:layout_alignParentRight="true"/>
 
                 <ProgressBar
+                    android:id="@+id/saveChangesBusy"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/saveChangesBusy"
-                    android:visibility="invisible"
                     android:src="@drawable/ic_checkmark"
-                    android:layout_alignParentRight="true"/>
+                    android:visibility="invisible" />
 
             </RelativeLayout>
 

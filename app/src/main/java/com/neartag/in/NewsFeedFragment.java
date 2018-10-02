@@ -73,6 +73,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
     SkeletonScreen skeletonScreen;
     NewsFeedAdapter.ViewHolder adapterViewHolder = null;
     NewsFeedElement current_element = null;
+    View tag_selection_view;
 
     BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
         @Override
@@ -186,7 +187,16 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
         // Create adapter passing in the sample user data
         adapter = new NewsFeedAdapter((AppCompatActivity) getActivity(), getActivity(), all_feeds);
         adapter.setWAListener(this);
-
+        tag_selection_view = fragment_view.findViewById(R.id.tag_selection_view);
+        ImageView tag_cancel = tag_selection_view.findViewById(R.id.tag_cancel);
+        tag_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tag_selection_view.setVisibility(View.GONE);
+                getStandardViewList(50);
+                skeletonScreen.show();
+            }
+        });
         // Attach the adapter to the recyclerview to populate items
         news_feed_list.setAdapter(adapter);
         // Set layout manager to position the items
@@ -359,6 +369,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
     public void onTagTextClick(String tag_name) {
        Log.d("debug_tag", "user clicked ");
        // removing #tag
+        tag_selection_view.setVisibility(View.VISIBLE);
+        TextView tx = tag_selection_view.findViewById(R.id.tag_selection_view_text);
+        tx.setText(tag_name);
         tag_name = tag_name.substring(1);
         getStandardViewListFromTag(tag_name);
     }

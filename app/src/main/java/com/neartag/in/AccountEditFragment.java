@@ -52,9 +52,6 @@ public class AccountEditFragment extends Fragment {
     BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("debug_data", "received data");
-
-
             image_file_name = intent
                     .getStringExtra(getString(R.string.user_selected_image));
 
@@ -135,29 +132,11 @@ public class AccountEditFragment extends Fragment {
         final ImageView saveChange = view.findViewById(R.id.saveChanges);
         final ProgressBar saveChangesBusy = view.findViewById(R.id.saveChangesBusy);
         final EditText user_name = view.findViewById(R.id.username);
-        final  EditText display_name = view.findViewById(R.id.display_name);
         user_name.setText(user.Name);
-        display_name.setText(user.Name);
-        display_name.addTextChangedListener(new TextWatcher() {
-                                                @Override
-                                                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        final EditText user_location = view.findViewById(R.id.user_place_name);
+        user_location.setText(user.Location);
+        final EditText user_description = view.findViewById(R.id.user_description);
 
-                                                }
-
-                                                @Override
-                                                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                                                }
-
-                                                @Override
-                                                public void afterTextChanged(Editable editable) {
-                                                    final String new_display_name = editable.toString();
-                                                    if (!new_display_name.equals(display_name)) {
-                                                        profile_updated = true;
-                                                    }
-                                                }
-                                            }
-        );
 
                 saveChange.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -180,7 +159,7 @@ public class AccountEditFragment extends Fragment {
                                 }
                             }
 
-                            params.put("name", display_name.getText().toString());
+                            params.put("name", user_name.getText().toString());
 
                             JsonHttpResponseHandler jrep = new JsonHttpResponseHandler() {
 
@@ -195,7 +174,7 @@ public class AccountEditFragment extends Fragment {
                                             user.ProfilePicURL = data.getString("profile_image_url");
                                         }
 
-                                        user.Name = display_name.getText().toString();
+                                        user.Name = user_name.getText().toString();
                                         user.save();
                                         Intent intent = new Intent("user_profile_update");
                                         getActivity().sendBroadcast(intent);
@@ -226,6 +205,8 @@ public class AccountEditFragment extends Fragment {
                     }
                 });
 
+        TextView tv = view.findViewById(R.id.phone);
+        tv.setText(user.getFormattedNo());
         IntentFilter profile_update = new IntentFilter("profile_update");
         getActivity().registerReceiver(broadCastNewMessage, profile_update);
     }

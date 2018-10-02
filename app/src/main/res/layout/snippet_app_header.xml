@@ -14,6 +14,30 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+                <RelativeLayout
+                    android:visibility="gone"
+                    android:id="@+id/tag_selection_view"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:padding="5dp"
+                    android:backgroundTint="@color/light_transparent"
+                    android:background="@drawable/layout_bg_circular"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/tag_cancel"
+                        android:layout_width="25dp"
+                        android:src="@drawable/cancel_icon_black"
+                        android:layout_height="25dp" />
+                    <TextView
+                        android:id="@+id/tag_selection_view_text"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toRightOf="@+id/tag_cancel"
+                        android:layout_width="wrap_content"
+                        android:text="#lifeinsurancecorporationofindia"
+                        android:layout_centerVertical="true"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
                 <ImageView
                     android:layout_alignParentRight="true"
                     android:layout_width="40dp"
