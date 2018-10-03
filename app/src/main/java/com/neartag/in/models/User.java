@@ -41,6 +41,8 @@ public class User extends Model {
     @Column(name = "AccessToken")
     public String AccessToken;
 
+    @Column(name = "Description")
+    public String Description;
 
     public User() {
         super();
@@ -49,6 +51,7 @@ public class User extends Model {
         this.Name = "";
         this.Location = "";
         this.ProfilePicURL = "";
+        this.Description = "";
     }
 
 
@@ -70,6 +73,12 @@ public class User extends Model {
                 user.ProfilePicURL = "";
                 updated = true;
             }
+
+            if (user.Description == null) {
+                user.Description = "";
+                updated = true;
+            }
+
 
             if (updated) {
                 user.save();

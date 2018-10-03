@@ -38,7 +38,7 @@ public class UserProfileFragment extends Fragment {
 
     CircleImageView profile_img;
     TextView username;
-    TextView display_name;
+    TextView display_name, description;
     User user;
     TextView unfollow, postsCount, followersCount, followingCount;
     TextView follow;
@@ -47,9 +47,6 @@ public class UserProfileFragment extends Fragment {
     BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            com.activeandroid.util.Log.d("debug_data", "received data");
-
-
             User user = User.getLoggedInUser();
 
             Picasso.with(getContext()).load(user.ProfilePicURL).
@@ -71,6 +68,7 @@ public class UserProfileFragment extends Fragment {
             if (!StringUtils.isEmpty(user.Name)) {
                 username.setText(user.Name);
                 display_name.setText(user.Name);
+                description.setText(user.Description);
             }
         }
     };
@@ -95,6 +93,7 @@ public class UserProfileFragment extends Fragment {
         profile_img = fragmentView.findViewById(R.id.profile_photo);
         unfollow =  fragmentView.findViewById(R.id.unfollow);
         follow = fragmentView.findViewById(R.id.follow);
+        description = fragmentView.findViewById(R.id.description);
 
         postsCount = fragmentView.findViewById(R.id.tvPosts);
         followersCount = fragmentView.findViewById(R.id.tvFollowers);
@@ -127,6 +126,7 @@ public class UserProfileFragment extends Fragment {
                 return fragmentView;
             }
         }
+
 
         setupCurrent(fragmentView, user.UserID);
         return fragmentView;
@@ -246,6 +246,9 @@ public class UserProfileFragment extends Fragment {
                             }
                     );
         }
+
+
+        description.setText(user.Description);
 
         TextView editProfile = view.findViewById(R.id.textEditProfile);
         editProfile.setVisibility(View.VISIBLE);

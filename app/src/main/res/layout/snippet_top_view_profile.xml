@@ -1,4 +1,4 @@
-<merge xmlns:tools="http://schemas.android.com/tools"
+<merge
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -25,7 +25,7 @@
             android:id="@+id/textPosts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Posts"
+            android:text="पोस्ट"
             android:textSize="12sp"
             android:layout_marginTop="-8dp"
             app:layout_constraintTop_toBottomOf="@+id/tvPosts"
@@ -37,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
+            android:visibility="gone"
             android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintTop_toTopOf="parent"
@@ -52,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Followers"
+            android:visibility="gone"
             android:textSize="12sp"
             android:layout_marginTop="-8dp"
             app:layout_constraintTop_toBottomOf="@+id/tvFollowers"
@@ -63,6 +65,7 @@
 
         <TextView
             android:id="@+id/tvFollowing"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
@@ -75,6 +78,7 @@
 
         <TextView
             android:id="@+id/textFollolwing"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Following"
@@ -130,7 +134,7 @@
             android:id="@+id/textEditProfile"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
-            android:text="Edit your profile"
+            android:text="प्रोफाइल बदलें"
             android:textColor="@color/black"
             android:textSize="14sp"
             android:layout_marginTop="8dp"

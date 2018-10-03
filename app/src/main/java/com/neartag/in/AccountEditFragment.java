@@ -40,14 +40,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import org.apache.commons.lang3.StringUtils;
 /**
  * Created by nagendra on 8/30/18.
+ *
  */
 public class AccountEditFragment extends Fragment {
 
     CircleImageView profile;
-    Boolean profile_updated = false;
     Boolean image_updated = false;
     String image_file_name;
-
 
     BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
         @Override
@@ -55,7 +54,6 @@ public class AccountEditFragment extends Fragment {
             image_file_name = intent
                     .getStringExtra(getString(R.string.user_selected_image));
 
-            profile_updated = true;
             image_updated = true;
 
             File f = new File(image_file_name);
@@ -133,20 +131,37 @@ public class AccountEditFragment extends Fragment {
         final ProgressBar saveChangesBusy = view.findViewById(R.id.saveChangesBusy);
         final EditText user_name = view.findViewById(R.id.username);
         user_name.setText(user.Name);
+        user_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(StringUtils.isEmpty(editable.toString())) {
+                    saveChange.setVisibility(View.INVISIBLE);
+                } else {
+                    saveChange.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         final EditText user_location = view.findViewById(R.id.user_place_name);
         user_location.setText(user.Location);
         final EditText user_description = view.findViewById(R.id.user_description);
-
+        user_description.setText(user.Description);
 
                 saveChange.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-                        if (profile_updated) {
-
                             saveChangesBusy.setVisibility(View.VISIBLE);
                             saveChange.setVisibility(View.INVISIBLE);
-                            android.util.Log.d("debug_data", "upload started...");
                             AsyncHttpClient client = new AsyncHttpClient();
                             RequestParams params = new RequestParams();
 
@@ -160,6 +175,8 @@ public class AccountEditFragment extends Fragment {
                             }
 
                             params.put("name", user_name.getText().toString());
+                            params.put("description", user_description.getText().toString());
+                            params.put("location", user_location.getText().toString());
 
                             JsonHttpResponseHandler jrep = new JsonHttpResponseHandler() {
 
@@ -175,6 +192,9 @@ public class AccountEditFragment extends Fragment {
                                         }
 
                                         user.Name = user_name.getText().toString();
+                                        user.Location = user_location.getText().toString();
+                                        user.Description = user_description.getText().toString();
+
                                         user.save();
                                         Intent intent = new Intent("user_profile_update");
                                         getActivity().sendBroadcast(intent);
@@ -183,25 +203,31 @@ public class AccountEditFragment extends Fragment {
                                         e.printStackTrace();
                                     }
 
-
+                                    image_updated = false;
+                                    saveChangesBusy.setVisibility(View.INVISIBLE);
+                                    saveChange.setVisibility(View.VISIBLE);
                                 }
 
                                 @Override
                                 public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
                                     HashMap logData = new HashMap<String, String>();
+                                    image_updated = false;
+                                    saveChangesBusy.setVisibility(View.INVISIBLE);
+                                    saveChange.setVisibility(View.VISIBLE);
                                 }
 
                                 @Override
                                 public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
                                     HashMap logData = new HashMap<String, String>();
+                                    image_updated = false;
+                                    saveChangesBusy.setVisibility(View.INVISIBLE);
+                                    saveChange.setVisibility(View.VISIBLE);
                                 }
                             };
 
                             client.addHeader("Accept", "application/json");
                             client.addHeader("Authorization", "Bearer " + user.AccessToken);
                             client.post(App.getBaseURL() + "profile/update", params, jrep);
-
-                        }
                     }
                 });
 
