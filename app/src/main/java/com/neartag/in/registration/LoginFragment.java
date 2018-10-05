@@ -148,6 +148,8 @@ public class LoginFragment extends Fragment {
                                                 String user_name = (String) response.getString("user_name");
                                                 String user_location = (String) response.getString("user_location");
                                                 String user_token = (String) response.getString("user_token");
+                                                String description = (String) response.getString("description");
+
                                                 User user = User.getLoggedInUser();
 
                                                 if(user == null) {
@@ -160,6 +162,7 @@ public class LoginFragment extends Fragment {
                                                     user.Location = user_location;
                                                     user.IsOTPVerified = false;
                                                     user.AccessToken = user_token;
+                                                    user.Description = description;
 
                                                     if(response.has("profile_image_url")) {
                                                         user.ProfilePicURL = response.getString("profile_image_url");
