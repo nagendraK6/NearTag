@@ -9,6 +9,7 @@ import android.os.Bundle;
 import com.amplitude.api.Amplitude;
 import com.neartag.in.R;
 import com.neartag.in.models.User;
+import com.neartag.in.newsfeed.StoryFeedFragment;
 import com.neartag.in.registration.GetStartedFragment;
 import com.neartag.in.registration.PhoneVerificationFragment;
 
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             return new PhoneVerificationFragment();
         }
 
-        return new NewsFeedFragment();
+        return new StoryFeedFragment();
     }
 
     @Override

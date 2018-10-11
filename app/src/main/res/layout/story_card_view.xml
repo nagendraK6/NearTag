@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:background="#F2F2F2"
+    android:visibility="visible"
+    android:gravity="center_horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress"
+        android:visibility="gone"
+
+        android:max="100"
+        android:progress="45"/>
+    <TextView
+        android:layout_below="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/upload_in_progress_text"
+        android:visibility="gone"
+        android:text="@string/upload_in_progress"
+        />
+
+    <android.support.v7.widget.CardView
+        android:layout_below="@+id/upload_in_progress_text"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardCornerRadius="15dp"
+        card_view:cardElevation="16dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="25dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/center_image"
+                android:adjustViewBounds="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <RelativeLayout
+                android:layout_below="@+id/center_image"
+                android:layout_width="match_parent"
+                android:layout_height="80dp">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/story_creator"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/ic_profile_avatar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                  android:layout_marginLeft="15dp" />
+                <RelativeLayout
+                    android:layout_toEndOf="@+id/story_creator"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_centerVertical="true"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textSize="20dp"
+                        android:textStyle="bold"
+                        android:textColor="#202020"
+                        android:id="@+id/story_creator_name"
+                        android:layout_width="wrap_content"
+                        android:text="Nagendra"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:textSize="13dp"
+                        android:textColor="#202020"
+                        android:layout_below="@+id/story_creator_name"
+                        android:layout_width="wrap_content"
+                        android:text="His Friends"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

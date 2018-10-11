@@ -48,8 +48,8 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         storiesProgressView = (StoriesProgressView) view.findViewById(R.id.stories);
-        storiesProgressView.setStoriesCount(PROGRESS_COUNT); // <- set stories
-        storiesProgressView.setStoryDuration(3000L);
+        storiesProgressView.setStoriesCount(1); // <- set stories
+        storiesProgressView.setStoryDuration(5000L);
         storiesProgressView.setStoriesListener(this); // <- set listener
         storiesProgressView.startStories(); // <- start progress
 

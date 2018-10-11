@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <!-- gallery toolbar -->
+    <include layout="@layout/snippet_app_header"/>
+
+    <RelativeLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/story_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="32dp"
+                android:id="@+id/story_image"
+                android:layout_height="32dp" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/upload_preview"
+            android:visibility="gone"
+            android:background="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ProgressBar
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/upload_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+
+            <ImageView
+                android:layout_toRightOf="@+id/upload_image"
+                android:id="@+id/upload_image_status"
+                android:src="@drawable/ic_checkmark"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+
+            <TextView
+                android:layout_toRightOf="@+id/upload_image_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/upload_in_progress_text"
+                android:visibility="visible"
+                android:text="अपलोड हो रहा है"
+                />
+        </RelativeLayout>
+
+        <ProgressBar
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/busy_show_feed_fetch"/>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/store_feed_list"
+            android:layout_below="@+id/story_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </RelativeLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        app:backgroundTint="@color/orange"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_plus"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp" />
+
+</android.support.design.widget.CoordinatorLayout>
