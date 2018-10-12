@@ -338,65 +338,80 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 ArrayList<NewsFeedElement> feed_elements = new ArrayList<>();
                 try {
-                    JSONArray all_news_items = (JSONArray) response.getJSONArray("data");
-                    if (all_news_items.length() > 0) {
-                        new Delete().from(NewsFeedElement.class).execute();
-                        for (int i =0; i < all_news_items.length(); i++) {
-                            JSONObject obj = all_news_items.getJSONObject(i);
-                            Integer post_id = obj.getInt("post_id");
+                    JSONArray all_buckets = (JSONArray) response.getJSONArray("data");
+                    if (all_buckets.length() > 0) {
+                        for (int i = 0; i < all_buckets.length(); i++) {
+                            JSONArray current_all_stories = all_buckets.getJSONArray(i);
+                            NewsFeedElement current_element = null;
+                            ArrayList<String> all_urls = new ArrayList<>();
+                            ArrayList<String> all_texts = new ArrayList<>();
 
-                            String tag_text = obj.getString("tag_text");
-                            String banner_image_url_low = obj.getString("banner_image_url_low");
-                            String banner_image_url_high = obj.getString("banner_image_url_high");
+                            ArrayList<NewsFeedElement> story_elements = new ArrayList<>();
+                            for (int j = 0; j < current_all_stories.length(); j++) {
+                                JSONObject obj = current_all_stories.getJSONObject(j);
+                                Integer post_id = obj.getInt("post_id");
 
-                            String profile_image_url = obj.getString("profile_image_url");
-                            Integer user_id = obj.getInt("user_id");
-                            String message_text = obj.getString("message_text");
-                            Boolean has_liked = obj.getBoolean("has_liked");
-                            String user_name = obj.getString("user_name");
-                            String user_location = obj.getString("user_location");
-                            Long timeStamp = obj.getLong("timestamp");
+                                String tag_text = obj.getString("tag_text");
+                                String banner_image_url_low = obj.getString("banner_image_url_low");
+                                String banner_image_url_high = obj.getString("banner_image_url_high");
 
-                            String likes_count = obj.getString("likes_count");
-                            String shared_count = obj.getString("shared_count");
-                            String comments_count = obj.getString("comments_count");
-                            Integer width = obj.getInt("banner_image_width");
-                            Integer height = obj.getInt("banner_image_height");
-                            Boolean is_system_user = obj.getBoolean("is_system_user");
-                            String learn_more_url = obj.getString("learn_more_url");
-                            JSONArray tags = obj.getJSONArray("tags");
-                            ArrayList<String> tags_list = new ArrayList<>();
-                            for(int t  = 0; t < tags.length(); t++) {
-                                String tg = tags.getString(t);
-                                tags_list.add(tg);
-                            }
+                                String profile_image_url = obj.getString("profile_image_url");
+                                Integer user_id = obj.getInt("user_id");
+                                String message_text = obj.getString("message_text");
+                                Boolean has_liked = obj.getBoolean("has_liked");
+                                String user_name = obj.getString("user_name");
+                                String user_location = obj.getString("user_location");
+                                Long timeStamp = obj.getLong("timestamp");
 
-                            NewsFeedElement current_element = new NewsFeedElement(
-                                    post_id,
-                                    tag_text,
-                                    banner_image_url_low,
-                                    banner_image_url_high,
-                                    profile_image_url,
-                                    has_liked,
-                                    true,
-                                    message_text,
-                                    "",
-                                    user_id,
-                                    user_name,
-                                    user_location,
-                                    timeStamp,
-                                    likes_count,
-                                    shared_count,
-                                    comments_count,
-                                    width,
-                                    height,
-                                    learn_more_url,
-                                    tags_list
-                            );
-                            current_element.setIsSystemUser(is_system_user);
-                            feed_elements.add(current_element);
-                            if (i < 10) {
-                                Picasso.with(getActivity()).load(current_element.getBannerImageURLHigh()).fetch();
+                                String likes_count = obj.getString("likes_count");
+                                String shared_count = obj.getString("shared_count");
+                                String comments_count = obj.getString("comments_count");
+                                Integer width = obj.getInt("banner_image_width");
+                                Integer height = obj.getInt("banner_image_height");
+                                Boolean is_system_user = obj.getBoolean("is_system_user");
+                                String learn_more_url = obj.getString("learn_more_url");
+                                JSONArray tags = obj.getJSONArray("tags");
+                                ArrayList<String> tags_list = new ArrayList<>();
+
+
+
+                                if (j == 0) {
+                                    current_element = new NewsFeedElement(
+                                            post_id,
+                                            tag_text,
+                                            banner_image_url_low,
+                                            banner_image_url_high,
+                                            profile_image_url,
+                                            has_liked,
+                                            true,
+                                            message_text,
+                                            "",
+                                            user_id,
+                                            user_name,
+                                            user_location,
+                                            timeStamp,
+                                            likes_count,
+                                            shared_count,
+                                            comments_count,
+                                            width,
+                                            height,
+                                            learn_more_url,
+                                            tags_list
+                                    );
+                                    current_element.setIsSystemUser(is_system_user);
+                                    feed_elements.add(current_element);
+                                }
+
+                                all_urls.add(banner_image_url_high);
+                                all_texts.add((message_text));
+
+
+                                if (j == current_all_stories.length() -1) {
+                                    current_element.story_elements_url = all_urls;
+                                    current_element.story_elements_texts = all_texts;
+                                }
+
+                                Picasso.with(getActivity()).load(banner_image_url_high).fetch();
                             }
                         }
 
@@ -462,12 +477,8 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
         // start the story fragment;
         StoryViewFragment sf =new StoryViewFragment();
         Bundle args = new Bundle();
-        ArrayList<String> all = new ArrayList<>();
-        ArrayList<String> texts = new ArrayList<>();
-        all.add(current_element.getBannerImageURLHigh());
-        texts.add(current_element.getUserPostText());
-        args.putStringArrayList("urls", all);
-        args.putStringArrayList("texts", texts);
+        args.putStringArrayList("urls", current_element.story_elements_url);
+        args.putStringArrayList("texts", current_element.story_elements_texts);
         sf.setArguments(args);
         loadFragment(sf);
     }

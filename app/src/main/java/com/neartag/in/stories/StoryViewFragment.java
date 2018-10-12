@@ -48,14 +48,22 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         storiesProgressView = (StoriesProgressView) view.findViewById(R.id.stories);
-        storiesProgressView.setStoriesCount(1); // <- set stories
-        storiesProgressView.setStoryDuration(5000L);
-        storiesProgressView.setStoriesListener(this); // <- set listener
-        storiesProgressView.startStories(); // <- start progress
+
 
 
         all_images = getArguments().getStringArrayList("urls");
         texts = getArguments().getStringArrayList("texts");
+
+       // all_images = new ArrayList<>();
+       // all_images.add("https://firebasestorage.googleapis.com/v0/b/firebase-satya.appspot.com/o/images%2Fi00001.jpg?alt=media&token=460667e4-e084-4dc5-b873-eefa028cec32");
+        storiesProgressView.setStoriesCount(all_images.size()); // <- set stories
+        storiesProgressView.setStoryDuration(5000L);
+        storiesProgressView.setStoriesListener(this); // <- set listener
+        storiesProgressView.startStories(); // <- start progress
+        for (int i  =0; i < all_images.size(); i++) {
+            Picasso.with(getActivity()).load(all_images.get(i)).fetch();
+        }
+
         image = (ImageView) view.findViewById(R.id.image);
         txt = view.findViewById(R.id.story_text);
         Picasso.with(getContext()).load(all_images.get(counter)).into(image);

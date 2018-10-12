@@ -78,6 +78,11 @@ public class NewsFeedElement  extends Model {
 
         public ArrayList<String> all_tags;
 
+        public ArrayList<String> story_elements_url;
+
+        public ArrayList<String> story_elements_texts;
+
+
         public NewsFeedElement() {
             super();
             this.postId = -1;
@@ -245,4 +250,8 @@ public class NewsFeedElement  extends Model {
         public  String getLearnMoreLink() { return this.LearnMoreLink; }
 
         public  ArrayList<String> getAllTags() { return this.all_tags; }
+
+        public ArrayList<String> getStoryElementsUrls() { return this.story_elements_url;}
+
+        public ArrayList<String> getStoryElementsTexts() { return this.story_elements_texts;}
 }
