@@ -194,7 +194,10 @@ public class LoginFragment extends Fragment {
                                         public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
                                             WeakHashMap<String, String> log_data = new WeakHashMap<>();
                                             log_data.put(Logger.STATUS, Integer.toString(statusCode));
-                                            log_data.put(Logger.JSON, obj.toString());
+                                            if (obj != null) {
+                                                log_data.put(Logger.JSON, obj.toString());
+                                            }
+
                                             log_data.put(Logger.THROWABLE, t.toString());
                                             Logger.log(Logger.PHONE_ADD_REQUEST_FAILED, log_data);
                                         }

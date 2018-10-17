@@ -43,6 +43,7 @@ import com.neartag.in.PreCachingLayoutManager;
 import com.neartag.in.R;
 import com.neartag.in.UserProfileFragment;
 import com.neartag.in.Utils.Logger;
+import com.neartag.in.camera.Camera2Fragment;
 import com.neartag.in.composer.RecyclerGalaryFragment;
 import com.neartag.in.models.NewsFeedElement;
 import com.neartag.in.models.User;
@@ -213,7 +214,10 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
                 Bundle bnd = new Bundle();
                 bnd.putString("ref", "composer");
                 frag.setArguments(bnd);
-                loadFragment(frag);
+               // loadFragment(frag);
+
+                Fragment frg1 = Camera2Fragment.newInstance();
+                loadFragment(frg1);
             }
         });
 

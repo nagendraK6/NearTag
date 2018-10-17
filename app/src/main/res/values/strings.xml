@@ -40,5 +40,16 @@
     <string name="recommended_action_title">अभी के चर्चित मुद्दे</string>
     <string name="recommendation_itme_text">#आरक्षण</string>
     <string name="at_least_one_interest">एक रूचि बताना ज़रूरी है</string>
+    <string name="picture">Picture</string>
+    <string name="description_info">Info</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="intro_message">intro message</string>
+
+
+    <!-- fragment tags -->
+    <string name="fragment_camera2">Camera2</string>
+    <string name="fragment_view_stickers">View Stickers</string>
+
 
 </resources>
