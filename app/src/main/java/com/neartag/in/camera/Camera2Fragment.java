@@ -44,6 +44,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -55,6 +56,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -64,6 +66,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.neartag.in.R;
+import com.neartag.in.sharing.FragmentShareView;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -222,7 +226,7 @@ public class Camera2Fragment extends Fragment implements
         view.findViewById(R.id.init_draw_icon).setOnClickListener(this);
         view.findViewById(R.id.save_stillshot).setOnClickListener(this);
         view.findViewById(R.id.init_sticker_icon).setOnClickListener(this);
-
+        view.findViewById(R.id.share).setOnClickListener(this);
         mTrashContainer = view.findViewById(R.id.trash_container);
         mTrashIcon = view.findViewById(R.id.trash);
         mFlashIcon = view.findViewById(R.id.flash_toggle);
@@ -291,6 +295,12 @@ public class Camera2Fragment extends Fragment implements
 
             case R.id.save_stillshot:{
                 saveCapturedStillshotToDisk();
+                break;
+            }
+
+            case R.id.share:{
+                saveCapturedStillshotToDisk();
+                loadFragmentContacts();
                 break;
             }
 
@@ -566,13 +576,16 @@ public class Camera2Fragment extends Fragment implements
             };
 
             //first stop the existing repeating request
-            mCaptureSession.stopRepeating();
+            if (mCaptureSession != null) {
+                mCaptureSession.stopRepeating();
+            }
 
             //cancel any existing AF trigger (repeated touches, etc.)
             mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
             mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
-            mCaptureSession.capture(mPreviewRequestBuilder.build(), captureCallbackHandler, mBackgroundHandler);
-
+            if (mCaptureSession != null) {
+                mCaptureSession.capture(mPreviewRequestBuilder.build(), captureCallbackHandler, mBackgroundHandler);
+            }
             //Now add a new AF trigger with focus region
             if (isMeteringAreaAFSupported()) {
                 mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, new MeteringRectangle[]{focusAreaTouch});
@@ -584,7 +597,9 @@ public class Camera2Fragment extends Fragment implements
             mPreviewRequestBuilder.setTag("FOCUS_TAG"); //we'll capture this later for resuming the preview
 
             //then we ask for a single request (not repeating!)
-            mCaptureSession.capture(mPreviewRequestBuilder.build(), captureCallbackHandler, mBackgroundHandler);
+            if (mCaptureSession != null) {
+                mCaptureSession.capture(mPreviewRequestBuilder.build(), captureCallbackHandler, mBackgroundHandler);
+            }
             mManualFocusEngaged = true;
 
 
@@ -881,7 +896,6 @@ public class Camera2Fragment extends Fragment implements
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-
                             Glide.with(activity)
                                     .load(mCapturedImage)
                                     .into(mStillshotImageView);
@@ -1076,6 +1090,9 @@ public class Camera2Fragment extends Fragment implements
         super.onResume();
 
         startBackgroundThread();
+
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         if(mIsImageAvailable){
             mIMainActivity.hideStatusBar();
@@ -1351,6 +1368,12 @@ public class Camera2Fragment extends Fragment implements
     }
 
 
+    private void loadFragmentContacts() {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.fragment_holder, FragmentShareView.newInstance());
+        ft.addToBackStack(null);
+        ft.commit();
+    }
 
 
     private void requestCameraPermission() {
@@ -1633,9 +1656,7 @@ public class Camera2Fragment extends Fragment implements
                 mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 imageByteArray = stream.toByteArray();
 
-                SimpleDateFormat s = new SimpleDateFormat("ddMMyyyyhhmmss");
-                String format = s.format(new Date());
-                File file = new File(mFile, "image_" + format + ".jpg");
+                File file = new File(mFile, "temp_image.jpg");
 
                 // save the mirrored byte array
                 FileOutputStream output = null;

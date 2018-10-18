@@ -140,7 +140,27 @@ public class StoryFeedAdapter extends RecyclerView.Adapter<StoryFeedAdapter.View
         // Set item views based on your views and data model
         viewHolder.name.setText(current_element.getUserName());
         Picasso.with(getContext()).load(this.user.ProfilePicURL).into(viewHolder.story_creator_profile);
-        Picasso.with(getContext()).load(current_element.bannerImageURLHigh).into(viewHolder.bannerImage);
+        Integer height = current_element.getHeight();
+        if (current_element.getWidth() != 0 && current_element.getHeight() != 0) {
+            if (current_element.getHeight() / current_element.getWidth() > 1.1) {
+                //resuze
+                Double new_ht = current_element.getWidth() * 1.0;
+                height = new_ht.intValue();
+            }
+        }
+
+        if (current_element.getHeight() > current_element.getWidth()) {
+            Picasso.with(getContext())
+                    .load(current_element.bannerImageURLHigh)
+                    .resize(current_element.getWidth(), current_element.getWidth())
+                    .centerCrop()
+                    .into(viewHolder.bannerImage);
+        } else {
+            Picasso.with(getContext())
+                    .load(current_element.bannerImageURLHigh)
+                    .into(viewHolder.bannerImage);
+        }
+
         viewHolder.bannerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

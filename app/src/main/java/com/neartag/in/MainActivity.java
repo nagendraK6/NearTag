@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
     //widgets
 
     //vars
-    private boolean mPermissions;
+    private boolean mPermissions = true;
     public String mCameraOrientation = "none"; // Front-facing or back-facing
 
     @Override
@@ -94,6 +94,79 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
         if (uploadType != null) {
             uploadType.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private void startCamera2(){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_holder, StoryFeedFragment.newInstance(), getString(R.string.fragment_camera2));
+        transaction.commit();
+    }
+
+    private void init(){
+        if(mPermissions){
+            if(checkCameraHardware(this)){
+
+                // Open the Camera
+                startCamera2();
+            }
+            else{
+                showSnackBar("You need a camera to use this application", Snackbar.LENGTH_INDEFINITE);
+            }
+        }
+        else{
+           // verifyPermissions();
+        }
+    }
+
+    /** Check if this device has a camera */
+    private boolean checkCameraHardware(Context context) {
+        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+            // this device has a camera
+            return true;
+        } else {
+            // no camera on this device
+            return false;
+        }
+    }
+
+    /*public void verifyPermissions(){
+        Log.d(TAG, "verifyPermissions: asking user for permissions.");
+        String[] permissions = {
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[0] ) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[1] ) == PackageManager.PERMISSION_GRANTED) {
+            mPermissions = true;
+            init();
+        } else {
+            ActivityCompat.requestPermissions(
+                    MainActivity.this,
+                    permissions,
+                    REQUEST_CODE
+            );
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == REQUEST_CODE){
+            if(mPermissions){
+                init();
+            }
+            else{
+                verifyPermissions();
+            }
+        }
+    }*/
+
+
+    private void showSnackBar(final String text, final int length) {
+        View view = this.findViewById(android.R.id.content).getRootView();
+        Snackbar.make(view, text, length).show();
     }
 
     @Override

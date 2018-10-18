@@ -34,6 +34,10 @@ public class Logger {
     public static final String POST_CREATE_SUCCESS = "POST_CREATE_SUCCESS";
     public static final String POST_CREATE_FAILED = "POST_CREATE_FAILED";
 
+    public static final String STORY_CREATE_START = "STORY_CREATE_START";
+    public static final String STORY_CREATE_SUCCESS = "STORY_CREATE_SUCCESS";
+    public static final String STORY_CREATE_FAILED = "STORY_CREATE_FAILED";
+
     // phone no
     public static final String PHONE_ADD_REQUEST_START = "PHONE_ADD_REQUEST_START";
     public static final String PHONE_ADD_REQUEST_SUCCESS = "PHONE_ADD_REQUEST_SUCCESS";

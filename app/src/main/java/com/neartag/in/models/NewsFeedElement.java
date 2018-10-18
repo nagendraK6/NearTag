@@ -83,6 +83,11 @@ public class NewsFeedElement  extends Model {
         public ArrayList<String> story_elements_texts;
 
 
+        public ArrayList<Integer> story_elements_widths;
+
+        public ArrayList<Integer> story_elements_heights;
+
+
         public NewsFeedElement() {
             super();
             this.postId = -1;
@@ -254,4 +259,8 @@ public class NewsFeedElement  extends Model {
         public ArrayList<String> getStoryElementsUrls() { return this.story_elements_url;}
 
         public ArrayList<String> getStoryElementsTexts() { return this.story_elements_texts;}
+
+        public ArrayList<Integer> getStoryElementsWidths() { return this.story_elements_widths;}
+
+        public ArrayList<Integer> getStoryElementsHeights() { return this.story_elements_heights;}
 }

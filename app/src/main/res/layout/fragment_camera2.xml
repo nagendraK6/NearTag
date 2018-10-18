@@ -124,7 +124,8 @@
 
         <com.neartag.in.camera.DrawableImageView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
             android:id="@+id/stillshot_imageview"/>
 
 
@@ -302,6 +303,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="1dp"
+            android:visibility="invisible"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -352,7 +354,7 @@
                 android:background="@drawable/circle_white">
 
                 <ImageButton
-                    android:id="@+id/image_switch_icon"
+                    android:id="@+id/share"
                     android:layout_width="44dp"
                     android:layout_height="44dp"
                     android:layout_centerInParent="true"

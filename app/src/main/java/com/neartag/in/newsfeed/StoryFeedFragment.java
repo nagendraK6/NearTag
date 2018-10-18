@@ -47,6 +47,7 @@ import com.neartag.in.camera.Camera2Fragment;
 import com.neartag.in.composer.RecyclerGalaryFragment;
 import com.neartag.in.models.NewsFeedElement;
 import com.neartag.in.models.User;
+import com.neartag.in.sharing.FragmentShareView;
 import com.neartag.in.stories.StoryViewFragment;
 import com.squareup.picasso.Picasso;
 
@@ -136,6 +137,9 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
         }
     };
 
+    public static StoryFeedFragment newInstance(){
+        return new StoryFeedFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -214,10 +218,8 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
                 Bundle bnd = new Bundle();
                 bnd.putString("ref", "composer");
                 frag.setArguments(bnd);
-               // loadFragment(frag);
-
-                Fragment frg1 = Camera2Fragment.newInstance();
-                loadFragment(frg1);
+                startCamera2();
+                //loadFragment(Camera2Fragment.newInstance());
             }
         });
 
@@ -349,6 +351,8 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
                             NewsFeedElement current_element = null;
                             ArrayList<String> all_urls = new ArrayList<>();
                             ArrayList<String> all_texts = new ArrayList<>();
+                            ArrayList<Integer> all_widths = new ArrayList<>();
+                            ArrayList<Integer> all_heights = new ArrayList<>();
 
                             ArrayList<NewsFeedElement> story_elements = new ArrayList<>();
                             for (int j = 0; j < current_all_stories.length(); j++) {
@@ -408,11 +412,15 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
 
                                 all_urls.add(banner_image_url_high);
                                 all_texts.add((message_text));
+                                all_widths.add(width);
+                                all_heights.add(height);
 
 
                                 if (j == current_all_stories.length() -1) {
                                     current_element.story_elements_url = all_urls;
                                     current_element.story_elements_texts = all_texts;
+                                    current_element.story_elements_heights = all_heights;
+                                    current_element.story_elements_widths = all_widths;
                                 }
 
                                 Picasso.with(getActivity()).load(banner_image_url_high).fetch();
@@ -483,7 +491,17 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
         Bundle args = new Bundle();
         args.putStringArrayList("urls", current_element.story_elements_url);
         args.putStringArrayList("texts", current_element.story_elements_texts);
+        args.putIntegerArrayList("widths", current_element.story_elements_widths);
+        args.putIntegerArrayList("heights", current_element.story_elements_heights);
+
         sf.setArguments(args);
         loadFragment(sf);
+    }
+
+    private void startCamera2(){
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fragment_holder, Camera2Fragment.newInstance(), getString(R.string.fragment_camera2));
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
