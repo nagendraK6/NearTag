@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,9 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
 import com.github.ybq.android.spinkit.style.FadingCircle;
@@ -46,6 +50,8 @@ import com.neartag.in.Utils.Logger;
 import com.neartag.in.camera.Camera2Fragment;
 import com.neartag.in.composer.RecyclerGalaryFragment;
 import com.neartag.in.models.NewsFeedElement;
+import com.neartag.in.models.StoryBucket;
+import com.neartag.in.models.StoryElement;
 import com.neartag.in.models.User;
 import com.neartag.in.sharing.FragmentShareView;
 import com.neartag.in.stories.StoryViewFragment;
@@ -63,13 +69,14 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 import cz.msebera.android.httpclient.Header;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by nagendra on 8/3/18.
  */
 
 public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.StoryViewListener{
-    ArrayList<NewsFeedElement> all_feeds;
+    ArrayList<StoryBucket> feed_buckets;
     StoryFeedAdapter adapter;
     RecyclerView news_feed_list;
     ProgressBar busy_show_feed_fetch;
@@ -83,57 +90,61 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
     BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            // find the feed_buckets where IsUserStory = true;
+            StoryBucket user_bucket = null;
+            for(int i  = 0; i < feed_buckets.size(); i++) {
+                if (feed_buckets.get(i).getUserStory()) {
+                    user_bucket = feed_buckets.get(i);
+                    break;
+                }
+            }
 
-            final String image_file_name =  intent
-                    .getStringExtra(getString(R.string.user_selected_image));
 
-            final String user_message =  intent
-                    .getStringExtra("user_message");
+            String path = "/storage/emulated/0/Android/data/com.neartag.in/files/";
+            File imgfile = new File(path + "/temp_image.jpg");
+            String uri = imgfile.getAbsolutePath();
 
-            view_img_upload.setVisibility(View.VISIBLE);
-            File f = new File(image_file_name);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(uri, options);
+            int imageHeight = options.outHeight;
+            int imageWidth = options.outWidth;
 
-            Picasso.with(getContext()).load(Uri.fromFile(f)).
-                    resize(40, 40).
-                    into(
-                            image_in_progress,
-                            new com.squareup.picasso.Callback() {
-                                @Override
-                                public void onSuccess() {
-                                }
 
-                                @Override
-                                public void onError() {
-                                    //do smth when there is picture loading error
-                                }
-                            }
-                    );
-
-            User user  = User.getLoggedInUser();
-            NewsFeedElement new_post = new NewsFeedElement(
-                    0,
-                    "#ok",
-                    "",
-                    "",
-                    user.ProfilePicURL,
-                    false,
-                    false,
-                    user_message,
-                    image_file_name,
-                    user.UserID,
+            User user = User.getLoggedInUser();
+            if (user_bucket == null) {
+                // create a new one
+                ArrayList<StoryElement> all_elements = new ArrayList<>();
+                user_bucket = new StoryBucket(
+                    all_elements,
                     user.Name,
-                    user.Location,
-                    Long.valueOf(0),
-                    "",
-                    "",
-                    "",
-                    0,
-                    0,
-                    "",
-                    new ArrayList<String>()
-            );
+                    user.ProfilePicURL,
+                    uri,
+                    imageWidth,
+                    imageHeight
+                );
+                user_bucket.setUserStory(true);
+                user_bucket.setLocalFile(true);
+                feed_buckets.add(0, user_bucket);
+            } else {
+                user_bucket.setUserStory(true);
+                user_bucket.setLocalFile(true);
+                user_bucket.setBucketCenterImageUrl(uri);
+                user_bucket.setCenterImageWidth(imageWidth);
+                user_bucket.setCenterImageHeight(imageHeight);
+            }
 
-            createAPost(new_post);
+            StoryElement se = new StoryElement(
+                0,
+                    uri,
+                    uri,
+                imageWidth,
+                imageHeight, "",
+                        ""
+            );
+            se.setLocalFile(true);
+            user_bucket.addStoryElementFront(se);
+            adapter.notifyDataSetChanged();
         }
     };
 
@@ -152,7 +163,7 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
 
         view_img_upload = fragment_view.findViewById(R.id.upload_preview);
         image_in_progress = fragment_view.findViewById(R.id.upload_image);
-        ImageView user_profile_shortlink = fragment_view.findViewById(R.id.user_profile_shortlink);
+        CircleImageView user_profile_shortlink = fragment_view.findViewById(R.id.user_profile_shortlink);
         user_profile_shortlink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -191,19 +202,11 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
         cr.setColor(getResources().getColor(R.color.neartagtextcolor));
         busy_show_feed_fetch.setIndeterminateDrawable(cr);
         // Initialize cont acts
-        all_feeds = new ArrayList<NewsFeedElement>();
+        feed_buckets = new ArrayList<StoryBucket>();
         // Create adapter passing in the sample user data
-        adapter = new StoryFeedAdapter((AppCompatActivity) getActivity(), getActivity(), all_feeds);
+        adapter = new StoryFeedAdapter((AppCompatActivity) getActivity(), getActivity(), feed_buckets);
         tag_selection_view = fragment_view.findViewById(R.id.tag_selection_view);
         ImageView tag_cancel = tag_selection_view.findViewById(R.id.tag_cancel);
-        tag_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tag_selection_view.setVisibility(View.GONE);
-                getStandardViewList(50);
-                skeletonScreen.show();
-            }
-        });
         adapter.setStoryViewListener(this);
         // Attach the adapter to the recyclerview to populate items
         news_feed_list.setAdapter(adapter);
@@ -265,67 +268,6 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
         getActivity().unregisterReceiver(broadCastNewMessage);
     }
 
-
-    private void createAPost(final NewsFeedElement current_element) {
-        Logger.log(Logger.POST_CREATE_START);
-        android.util.Log.d("debug_data", "upload started...");
-        User user = User.getLoggedInUser();
-        final AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
-        try {
-            File imgfile = new File(current_element.getGalleryImageFile());
-            params.put("file", imgfile);
-            params.put("tag", current_element.getTag());
-            params.put("post_text", current_element.getUserPostText());
-        } catch(FileNotFoundException fexception) {
-            fexception.printStackTrace();
-        }
-        JsonHttpResponseHandler jrep= new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Integer width = 0, height  = 0;
-                try {
-                    JSONObject data = response.getJSONObject("data");
-                    width = data.getInt("banner_image_width");
-                    height = data.getInt("banner_image_height");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                current_element.setHasPublished(true);
-                current_element.setDimensions(width, height);
-                all_feeds.add(0, current_element);
-                adapter.notifyDataSetChanged();
-                view_img_upload.setVisibility(View.GONE);
-                Logger.log(Logger.POST_CREATE_SUCCESS);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                WeakHashMap<String, String> log_data = new WeakHashMap<>();
-                log_data.put(Logger.STATUS, Integer.toString(statusCode));
-                log_data.put(Logger.RES, res);
-                log_data.put(Logger.THROWABLE, t.toString());
-                Logger.log(Logger.POST_CREATE_FAILED, log_data);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
-                WeakHashMap<String, String> log_data = new WeakHashMap<>();
-                log_data.put(Logger.STATUS, Integer.toString(statusCode));
-                if (obj != null) {
-                    log_data.put(Logger.JSON, obj.toString());
-                }
-                log_data.put(Logger.THROWABLE, t.toString());
-                Logger.log(Logger.POST_CREATE_FAILED, log_data);
-            }
-        };
-
-        client.addHeader("Accept", "application/json");
-        client.addHeader("Authorization", "Bearer " + user.AccessToken);
-        client.post(App.getBaseURL() + "post/create", params, jrep);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -342,19 +284,14 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                ArrayList<NewsFeedElement> feed_elements = new ArrayList<>();
+                ArrayList<StoryBucket> t_feed_buckets = new ArrayList<>();
                 try {
-                    JSONArray all_buckets = (JSONArray) response.getJSONArray("data");
-                    if (all_buckets.length() > 0) {
-                        for (int i = 0; i < all_buckets.length(); i++) {
-                            JSONArray current_all_stories = all_buckets.getJSONArray(i);
-                            NewsFeedElement current_element = null;
-                            ArrayList<String> all_urls = new ArrayList<>();
-                            ArrayList<String> all_texts = new ArrayList<>();
-                            ArrayList<Integer> all_widths = new ArrayList<>();
-                            ArrayList<Integer> all_heights = new ArrayList<>();
-
-                            ArrayList<NewsFeedElement> story_elements = new ArrayList<>();
+                    JSONArray all_buckets_data = (JSONArray) response.getJSONArray("data");
+                    if (all_buckets_data.length() > 0) {
+                        for (int i = 0; i < all_buckets_data.length(); i++) {
+                            JSONArray current_all_stories = all_buckets_data.getJSONArray(i);
+                            StoryBucket current_element = null;
+                            ArrayList<StoryElement> story_elements = new ArrayList<>();
                             for (int j = 0; j < current_all_stories.length(); j++) {
                                 JSONObject obj = current_all_stories.getJSONObject(j);
                                 Integer post_id = obj.getInt("post_id");
@@ -379,56 +316,50 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
                                 Boolean is_system_user = obj.getBoolean("is_system_user");
                                 String learn_more_url = obj.getString("learn_more_url");
                                 JSONArray tags = obj.getJSONArray("tags");
+                                Boolean is_user_story = obj.getBoolean("is_user_story");
+
                                 ArrayList<String> tags_list = new ArrayList<>();
 
 
 
+                                RequestOptions options = new RequestOptions()
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .centerCrop();
+
                                 if (j == 0) {
-                                    current_element = new NewsFeedElement(
-                                            post_id,
-                                            tag_text,
-                                            banner_image_url_low,
-                                            banner_image_url_high,
-                                            profile_image_url,
-                                            has_liked,
-                                            true,
-                                            message_text,
-                                            "",
-                                            user_id,
+                                    ArrayList<StoryElement> current_bucket_elements  = new ArrayList<>();
+                                    current_element = new StoryBucket(
+                                            current_bucket_elements,
                                             user_name,
-                                            user_location,
-                                            timeStamp,
-                                            likes_count,
-                                            shared_count,
-                                            comments_count,
+                                            profile_image_url,
+                                            banner_image_url_high,
                                             width,
-                                            height,
-                                            learn_more_url,
-                                            tags_list
+                                            height
                                     );
-                                    current_element.setIsSystemUser(is_system_user);
-                                    feed_elements.add(current_element);
-                                }
+                                    current_element.setUserStory(is_user_story);
+                                    t_feed_buckets.add(current_element);
+                                        Glide.with(getContext())
+                                                .load(banner_image_url_high)
+                                                .apply(options)
+                                                .preload();
+                                        }
 
-                                all_urls.add(banner_image_url_high);
-                                all_texts.add((message_text));
-                                all_widths.add(width);
-                                all_heights.add(height);
+                                StoryElement new_current_element = new StoryElement(
+                                        post_id,
+                                        banner_image_url_low,
+                                        banner_image_url_high,
+                                        width,
+                                        height,
+                                        message_text,
+                                        learn_more_url
+                                );
 
-
-                                if (j == current_all_stories.length() -1) {
-                                    current_element.story_elements_url = all_urls;
-                                    current_element.story_elements_texts = all_texts;
-                                    current_element.story_elements_heights = all_heights;
-                                    current_element.story_elements_widths = all_widths;
-                                }
-
-                                Picasso.with(getActivity()).load(banner_image_url_high).fetch();
+                                current_element.addStoryElement(new_current_element);
                             }
                         }
 
-                        all_feeds.clear();
-                        all_feeds.addAll(feed_elements);
+                        feed_buckets.clear();
+                        feed_buckets.addAll(t_feed_buckets);
                         skeletonScreen.hide();
                         adapter.notifyDataSetChanged();
                         Logger.log(Logger.NEWS_FEED_FETCH_SUCCESS);
@@ -440,16 +371,6 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                if(all_feeds.size() == 0) {
-                    // read from local storage
-                    List<NewsFeedElement> feed_elements = new Select()
-                            .all()
-                            .from(NewsFeedElement.class)
-                            .execute();
-                    all_feeds.addAll(feed_elements);
-                    skeletonScreen.hide();
-                    adapter.notifyDataSetChanged();
-                }
                 WeakHashMap<String, String> log_data = new WeakHashMap<>();
                 log_data.put(Logger.STATUS, Integer.toString(statusCode));
                 log_data.put(Logger.RES, res);
@@ -459,16 +380,6 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
-                if(all_feeds.size() == 0) {
-                    // read from local storage
-                    List<NewsFeedElement> feed_elements = new Select()
-                            .all()
-                            .from(NewsFeedElement.class)
-                            .execute();
-                    all_feeds.addAll(feed_elements);
-                    skeletonScreen.hide();
-                    adapter.notifyDataSetChanged();
-                }
                 WeakHashMap<String, String> log_data = new WeakHashMap<>();
                 log_data.put(Logger.STATUS, Integer.toString(statusCode));
                 if (obj != null) {
@@ -485,15 +396,11 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
     }
 
     @Override
-    public void onClickStoryView(NewsFeedElement current_element) {
+    public void onClickStoryView(StoryBucket current_element) {
         // start the story fragment;
         StoryViewFragment sf =new StoryViewFragment();
         Bundle args = new Bundle();
-        args.putStringArrayList("urls", current_element.story_elements_url);
-        args.putStringArrayList("texts", current_element.story_elements_texts);
-        args.putIntegerArrayList("widths", current_element.story_elements_widths);
-        args.putIntegerArrayList("heights", current_element.story_elements_heights);
-
+        args.putParcelableArrayList("stories", current_element.getStoryElements());
         sf.setArguments(args);
         loadFragment(sf);
     }
@@ -503,5 +410,57 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
         transaction.add(R.id.fragment_holder, Camera2Fragment.newInstance(), getString(R.string.fragment_camera2));
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    private void createStory() {
+        Logger.log(Logger.STORY_CREATE_START);
+        android.util.Log.d("debug_data", "upload started...");
+        User user = User.getLoggedInUser();
+        final AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        try {
+            String path = "/storage/emulated/0/Android/data/com.neartag.in/files/";
+            File imgfile = new File(path + "/temp_image.jpg");
+            params.put("file", imgfile);
+        } catch(FileNotFoundException fexception) {
+            fexception.printStackTrace();
+        }
+        JsonHttpResponseHandler jrep= new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Integer width = 0, height  = 0;
+                try {
+                    JSONObject data = response.getJSONObject("data");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Logger.log(Logger.STORY_CREATE_SUCCESS);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                log_data.put(Logger.RES, res);
+                log_data.put(Logger.THROWABLE, t.toString());
+                Logger.log(Logger.STORY_CREATE_FAILED, log_data);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
+                WeakHashMap<String, String> log_data = new WeakHashMap<>();
+                log_data.put(Logger.STATUS, Integer.toString(statusCode));
+                if (obj != null) {
+                    log_data.put(Logger.JSON, obj.toString());
+                }
+                log_data.put(Logger.THROWABLE, t.toString());
+                Logger.log(Logger.STORY_CREATE_FAILED, log_data);
+            }
+        };
+
+        client.addHeader("Accept", "application/json");
+        client.addHeader("Authorization", "Bearer " + user.AccessToken);
+        client.post(App.getBaseURL() + "story/create", params, jrep);
     }
 }

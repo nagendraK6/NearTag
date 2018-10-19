@@ -1136,6 +1136,12 @@ public class Camera2Fragment extends Fragment implements
                 findCameraIds();
             }
 
+
+            if (mCameraId == null) {
+                findCameraIds();
+            }
+
+
             CameraCharacteristics characteristics
                     = manager.getCameraCharacteristics(mCameraId);
 
@@ -1632,6 +1638,10 @@ public class Camera2Fragment extends Fragment implements
                 FileOutputStream output = null;
                 try {
                     File file = new File(mFile, "temp_image.jpg");
+                    if (file.exists()) {
+                        file.delete();
+                    }
+
                     output = new FileOutputStream(file);
                     output.write(bytes);
                 } catch (IOException e) {
@@ -1657,6 +1667,10 @@ public class Camera2Fragment extends Fragment implements
                 imageByteArray = stream.toByteArray();
 
                 File file = new File(mFile, "temp_image.jpg");
+                if (file.exists()) {
+                    file.delete();
+                }
+
 
                 // save the mirrored byte array
                 FileOutputStream output = null;

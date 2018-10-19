@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,7 +69,7 @@ public class FragmentShareView extends Fragment implements  ContactsListAdapter.
     ArrayList<Contact> all_contacts;
     WeakHashMap<Integer, Contact> selected_list = new WeakHashMap<>();
     TextView start_sharing;
-
+    ProgressBar bus_load;
 
     public static FragmentShareView newInstance(){
         return new FragmentShareView();
@@ -97,9 +99,11 @@ public class FragmentShareView extends Fragment implements  ContactsListAdapter.
         start_sharing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createStory();
+               broadcastLocalUpdate();
+                //createStory();
             }
         });
+        bus_load = view.findViewById(R.id.busy_load);
     }
 
     @Override
@@ -204,55 +208,15 @@ public class FragmentShareView extends Fragment implements  ContactsListAdapter.
         }
     }
 
-    private void createStory() {
-        Logger.log(Logger.STORY_CREATE_START);
-        android.util.Log.d("debug_data", "upload started...");
-        User user = User.getLoggedInUser();
-        final AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
-        try {
-            String path = "/storage/emulated/0/Android/data/com.neartag.in/files/";
-            File imgfile = new File(path + "/temp_image.jpg");
-            params.put("file", imgfile);
-        } catch(FileNotFoundException fexception) {
-            fexception.printStackTrace();
-        }
-        JsonHttpResponseHandler jrep= new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Integer width = 0, height  = 0;
-                try {
-                    JSONObject data = response.getJSONObject("data");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Logger.log(Logger.STORY_CREATE_SUCCESS);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                WeakHashMap<String, String> log_data = new WeakHashMap<>();
-                log_data.put(Logger.STATUS, Integer.toString(statusCode));
-                log_data.put(Logger.RES, res);
-                log_data.put(Logger.THROWABLE, t.toString());
-                Logger.log(Logger.STORY_CREATE_FAILED, log_data);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
-                WeakHashMap<String, String> log_data = new WeakHashMap<>();
-                log_data.put(Logger.STATUS, Integer.toString(statusCode));
-                if (obj != null) {
-                    log_data.put(Logger.JSON, obj.toString());
-                }
-                log_data.put(Logger.THROWABLE, t.toString());
-                Logger.log(Logger.STORY_CREATE_FAILED, log_data);
-            }
-        };
-
-        client.addHeader("Accept", "application/json");
-        client.addHeader("Authorization", "Bearer " + user.AccessToken);
-        client.post(App.getBaseURL() + "story/create", params, jrep);
+    private void broadcastLocalUpdate() {
+        bus_load.setVisibility(View.VISIBLE);
+        Bundle data_bundle = new Bundle();
+        data_bundle.putString(getString(R.string.user_selected_image), "temp_image.jpg");
+        data_bundle.putString("user_message", "hello");
+        Intent intent = new Intent("new_post");
+        intent.putExtras(data_bundle);
+        getActivity().sendBroadcast(intent);
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 }

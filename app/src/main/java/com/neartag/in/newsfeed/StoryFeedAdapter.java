@@ -30,6 +30,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -46,6 +47,7 @@ import com.neartag.in.VisibilityTracker;
 import com.neartag.in.comments.ViewCommentsFragment;
 import com.neartag.in.composer.RecommendedTagsListAdapter;
 import com.neartag.in.models.NewsFeedElement;
+import com.neartag.in.models.StoryBucket;
 import com.neartag.in.models.User;
 import com.neartag.in.newsfeed.NewsTagsListAdapter;
 import com.neartag.in.webview.WebviewFragment;
@@ -70,7 +72,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class StoryFeedAdapter extends RecyclerView.Adapter<StoryFeedAdapter.ViewHolder> {
 
     // Store a member variable for the contacts
-    private List<NewsFeedElement> news_feed_elements;
+    private List<StoryBucket> story_buckets;
     // Store the context for easy access
     private Context mContext;
 
@@ -78,8 +80,8 @@ public class StoryFeedAdapter extends RecyclerView.Adapter<StoryFeedAdapter.View
     View feed_view;
     User user;
     // Pass in the contact array into the constructor
-    public StoryFeedAdapter(AppCompatActivity activity, Context context, List<NewsFeedElement> all_feed_elements) {
-        news_feed_elements = all_feed_elements;
+    public StoryFeedAdapter(AppCompatActivity activity, Context context, List<StoryBucket> all_feed_elements) {
+        story_buckets = all_feed_elements;
         mContext = context;
         this.activity = activity;
         this.user = User.getLoggedInUser();
@@ -133,31 +135,27 @@ public class StoryFeedAdapter extends RecyclerView.Adapter<StoryFeedAdapter.View
     @Override
     public void onBindViewHolder(final StoryFeedAdapter.ViewHolder viewHolder, final int position) {
         // Get the data model based on position
-        final NewsFeedElement current_element = news_feed_elements.get(position);
-        // Set item views based on your views and data model
-        // final TextView tag = viewHolder.tag;
-        // tag.setText(current_element.getTag());
-        // Set item views based on your views and data model
-        viewHolder.name.setText(current_element.getUserName());
-        Picasso.with(getContext()).load(this.user.ProfilePicURL).into(viewHolder.story_creator_profile);
-        Integer height = current_element.getHeight();
-        if (current_element.getWidth() != 0 && current_element.getHeight() != 0) {
-            if (current_element.getHeight() / current_element.getWidth() > 1.1) {
-                //resuze
-                Double new_ht = current_element.getWidth() * 1.0;
-                height = new_ht.intValue();
-            }
-        }
+        final StoryBucket current_element = story_buckets.get(position);
+        viewHolder.name.setText(current_element.getCreatorName());
+        Glide.with(getContext()).load(this.user.ProfilePicURL).into(viewHolder.story_creator_profile);
 
-        if (current_element.getHeight() > current_element.getWidth()) {
-            Picasso.with(getContext())
-                    .load(current_element.bannerImageURLHigh)
-                    .resize(current_element.getWidth(), current_element.getWidth())
-                    .centerCrop()
-                    .into(viewHolder.bannerImage);
+        if (current_element.getCenterImageHeight() > current_element.getCenterImageWidth()) {
+            if (current_element.getLocalFile()) {
+                Picasso.with(getContext())
+                        .load(new File(current_element.getBucketCenterImageUrl()))
+                        .resize(current_element.getCenterImageWidth(), current_element.getCenterImageWidth())
+                        .centerCrop()
+                        .into(viewHolder.bannerImage);
+            } else {
+                Picasso.with(getContext())
+                        .load(current_element.getBucketCenterImageUrl())
+                        .resize(current_element.getCenterImageWidth(), current_element.getCenterImageWidth())
+                        .centerCrop()
+                        .into(viewHolder.bannerImage);
+            }
         } else {
             Picasso.with(getContext())
-                    .load(current_element.bannerImageURLHigh)
+                    .load(current_element.getBucketCenterImageUrl())
                     .into(viewHolder.bannerImage);
         }
 
@@ -174,7 +172,7 @@ public class StoryFeedAdapter extends RecyclerView.Adapter<StoryFeedAdapter.View
     // Returns the total count of items in the list
     @Override
     public int getItemCount() {
-        return news_feed_elements.size();
+        return story_buckets.size();
     }
 
 
@@ -186,7 +184,7 @@ public class StoryFeedAdapter extends RecyclerView.Adapter<StoryFeedAdapter.View
     }
 
     public interface StoryViewListener {
-        void onClickStoryView( NewsFeedElement current_element);
+        void onClickStoryView(StoryBucket current_element);
     }
 
     public void setStoryViewListener(StoryFeedAdapter.StoryViewListener listener) {

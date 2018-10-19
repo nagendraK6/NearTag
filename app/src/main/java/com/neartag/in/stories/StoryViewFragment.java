@@ -15,11 +15,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.neartag.in.R;
+import com.neartag.in.models.StoryElement;
 import com.squareup.picasso.Picasso;
 import android.view.MotionEvent;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import jp.shts.android.storiesprogressview.StoriesProgressView;
@@ -31,22 +33,14 @@ import jp.shts.android.storiesprogressview.StoriesProgressView;
 public class StoryViewFragment extends Fragment implements StoriesProgressView.StoriesListener  {
 
     private StoriesProgressView storiesProgressView;
-    private static final int PROGRESS_COUNT = 5;
     private ImageView image;
     private TextView txt;
 
     private int counter = 0;
-
-    private final long[] durations = new long[]{
-            500L, 1000L, 1500L, 4000L, 5000L, 1000,
-    };
-
+    ArrayList<StoryElement> all_stories;
     long pressTime = 0L;
     long limit = 500L;
-    ArrayList<String> all_images = new ArrayList<>();
-    ArrayList<String> texts = new ArrayList<>();
-    ArrayList<Integer> widths = new ArrayList<>();
-    ArrayList<Integer> heights = new ArrayList<>();
+
 
     @Nullable
     @Override
@@ -58,41 +52,23 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         storiesProgressView = (StoriesProgressView) view.findViewById(R.id.stories);
 
+        all_stories =  getArguments().getParcelableArrayList("stories");
 
-
-        all_images = getArguments().getStringArrayList("urls");
-        texts = getArguments().getStringArrayList("texts");
-
-        widths = getArguments().getIntegerArrayList("widths");
-        heights = getArguments().getIntegerArrayList("heights");
-
-        // all_images = new ArrayList<>();
-       // all_images.add("https://firebasestorage.googleapis.com/v0/b/firebase-satya.appspot.com/o/images%2Fi00001.jpg?alt=media&token=460667e4-e084-4dc5-b873-eefa028cec32");
-        storiesProgressView.setStoriesCount(all_images.size()); // <- set stories
+        storiesProgressView.setStoriesCount(all_stories.size()); // <- set stories
         storiesProgressView.setStoryDuration(5000L);
         storiesProgressView.setStoriesListener(this); // <- set listener
         storiesProgressView.startStories(); // <- start progress
-        RequestOptions options = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop();
-        for (int i  =0; i < all_images.size(); i++) {
-   //         Picasso.with(getActivity()).load(all_images.get(i)).fetch();
-            Glide.with(this)
-                    .load(all_images.get(i))
-                    .apply(options)
-            .preload();
-        }
 
-        image = (ImageView) view.findViewById(R.id.image);
+        image = view.findViewById(R.id.image);
         txt = view.findViewById(R.id.story_text);
-        Glide.with(getActivity()).load(all_images.get(counter)).into(image);
-                //Picasso.with(getContext()).load(all_images.get(counter)).into(image);
-        if (!StringUtils.isEmpty(texts.get(counter))) {
-            txt.setText(texts.get(counter));
+        preLoading();
+        loadImage(counter);
+
+        if (!StringUtils.isEmpty(all_stories.get(counter).getText())) {
+            txt.setText(all_stories.get(counter).getText());
         }  else {
             txt.setVisibility(View.GONE);
         }
-  //      image.setImageResource(resources[counter]);
 
         // bind reverse view
         View reverse = view.findViewById(R.id.reverse);
@@ -113,29 +89,26 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
             }
         });
         skip.setOnTouchListener(onTouchListener);
-
     }
 
     @Override
     public void onNext() {
-        Glide.with(getActivity()).load(all_images.get(++counter)).into(image);
-
-        //Picasso.with(getContext()).load(all_images.get(++counter)).into(image);
-        if (!StringUtils.isEmpty(texts.get(counter))) {
-            txt.setText(texts.get(counter));
+        counter++;
+        loadImage(counter);
+        if (!StringUtils.isEmpty(all_stories.get(counter).getText())) {
+            txt.setText(all_stories.get(counter).getText());
         }  else {
             txt.setVisibility(View.GONE);
         }
-        Log.d("story_debug", "ht " + heights.get(counter).toString() + " widths " + widths.get(counter).toString());
     }
 
     @Override
     public void onPrev() {
         if ((counter - 1) < 0) return;
-        Glide.with(getActivity()).load(all_images.get(--counter)).into(image);
-        //Picasso.with(getContext()).load(all_images.get(--counter)).into(image);
-        if (!StringUtils.isEmpty(texts.get(counter))) {
-            txt.setText(texts.get(counter));
+        --counter;
+        loadImage(counter);
+        if (!StringUtils.isEmpty(all_stories.get(counter).getText())) {
+            txt.setText(all_stories.get(counter).getText());
         }  else {
             txt.setVisibility(View.GONE);
         }
@@ -173,4 +146,35 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
             return false;
         }
     };
+
+    private void loadImage(int counter) {
+        if (all_stories.get(counter).getLocalFile()) {
+            RequestOptions options_2 = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .centerCrop();
+
+            Glide.with(getContext()).load(
+                    new File(all_stories.get(counter).getBannerImageURLHigh())).apply(options_2).into(image);
+        } else {
+            Glide.with(getContext()).load(
+                    all_stories.get(counter).getBannerImageURLHigh()
+
+            ).into(image);
+        }
+    }
+
+    private void preLoading() {
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .skipMemoryCache(false)
+                .centerCrop();
+
+
+        for (int i  =0; i < all_stories.size(); i++) {
+            if (!all_stories.get(i).getLocalFile()) {
+                Glide.with(this).load(all_stories.get(i).getBannerImageURLHigh()).apply(options).preload();
+            }
+        }
+    }
 }
