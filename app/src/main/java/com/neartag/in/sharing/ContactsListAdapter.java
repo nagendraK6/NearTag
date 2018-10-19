@@ -41,7 +41,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
 
     // binds the data to the textview in each cell
     @Override
-    public void onBindViewHolder(final ContactsListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final ContactsListAdapter.ViewHolder holder, final int position) {
         final Contact c = mData.get(position);
         holder.name.setText(c.getName());
         holder.is_selected = false;
@@ -55,6 +55,8 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                     holder.is_selected = false;
                     holder.contact_selected.setImageResource(R.drawable.select_contact_clear);
                 }
+
+                if (mClickListener != null) mClickListener.onItemClick(position);
             }
         });
 
@@ -68,6 +70,8 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                     holder.is_selected = false;
                     holder.contact_selected.setImageResource(R.drawable.select_contact_clear);
                 }
+                if (mClickListener != null) mClickListener.onItemClick(position);
+
             }
         });
 
@@ -81,6 +85,9 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                     holder.is_selected = false;
                     holder.contact_selected.setImageResource(R.drawable.select_contact_clear);
                 }
+
+                if (mClickListener != null) mClickListener.onItemClick(position);
+
             }
         });
     }
@@ -109,7 +116,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
 
         @Override
         public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            if (mClickListener != null) mClickListener.onItemClick(getAdapterPosition());
         }
     }
 
@@ -125,7 +132,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
 
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(int position);
     }
 
     @Override

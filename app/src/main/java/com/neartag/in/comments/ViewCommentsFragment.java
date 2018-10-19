@@ -118,7 +118,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
         });
 
 
-        comment_list_view = (RecyclerView) view.findViewById(R.id.listView);
+        comment_list_view = view.findViewById(R.id.listView);
         // Initialize cont acts
         all_comments_list = new ArrayList<Comment>();
         // Create adapter passing in the sample user data
@@ -176,7 +176,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // update user profile and broadcast the update
                 try {
-                    JSONObject data = (JSONObject) response.getJSONObject("data");
+                    JSONObject data = response.getJSONObject("data");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -164,7 +164,7 @@ public class DrawableImageView extends android.support.v7.widget.AppCompatImageV
             int bottomMargin = (int)mHostActivity.getResources().getDimension(R.dimen.cam_widget_margin_bottom);
 
             int left = (mScreenWidth / 2) - (int) ( (TRASH_ICON_NORMAL_SIZE ) * density + 0.5f);
-            int top = screenHeight - (int) ( (bottomMargin + TRASH_ICON_NORMAL_SIZE ) * density + 0.5f);;
+            int top = screenHeight - (int) ( (bottomMargin + TRASH_ICON_NORMAL_SIZE ) * density + 0.5f);
             int right = (mScreenWidth / 2) + (int) ( (TRASH_ICON_NORMAL_SIZE ) * density + 0.5f);
             int bottom = screenHeight;
 

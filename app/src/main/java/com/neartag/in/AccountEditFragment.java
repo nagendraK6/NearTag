@@ -186,7 +186,7 @@ public class AccountEditFragment extends Fragment {
 
                                     // update user profile and broadcast the update
                                     try {
-                                        JSONObject data = (JSONObject) response.getJSONObject("data");
+                                        JSONObject data = response.getJSONObject("data");
                                         if(data.has("profile_image_url")) {
                                             user.ProfilePicURL = data.getString("profile_image_url");
                                         }

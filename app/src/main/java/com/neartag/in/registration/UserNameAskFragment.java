@@ -77,7 +77,7 @@ public class UserNameAskFragment extends Fragment {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         try {
-                            String error_message = (String) response.getString("error_message");
+                            String error_message = response.getString("error_message");
                             if (!error_message.equals("SUCCESS")) {
                                 Toast.makeText(getContext(), error_message, Toast.LENGTH_LONG).show();
 

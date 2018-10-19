@@ -134,7 +134,7 @@ public class LoginFragment extends Fragment {
                                         @Override
                                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                             try {
-                                                String error_message = (String) response.getString("error_message");
+                                                String error_message = response.getString("error_message");
                                                 if (!error_message.equals("SUCCESS")) {
                                                     Toast.makeText(getContext(), error_message, Toast.LENGTH_LONG).show();
                                                     phone_no.setText("");
@@ -145,10 +145,10 @@ public class LoginFragment extends Fragment {
                                                 busy.setVisibility(View.INVISIBLE);
 
                                                 Integer user_id =  response.getInt("user_id");
-                                                String user_name = (String) response.getString("user_name");
-                                                String user_location = (String) response.getString("user_location");
-                                                String user_token = (String) response.getString("user_token");
-                                                String description = (String) response.getString("description");
+                                                String user_name = response.getString("user_name");
+                                                String user_location = response.getString("user_location");
+                                                String user_token = response.getString("user_token");
+                                                String description = response.getString("description");
 
                                                 User user = User.getLoggedInUser();
 

@@ -61,7 +61,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         ViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.gridImageView);
+            imageView = itemView.findViewById(R.id.gridImageView);
             itemView.setOnClickListener(this);
         }
 

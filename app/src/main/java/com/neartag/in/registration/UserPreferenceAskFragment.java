@@ -26,6 +26,7 @@ import com.neartag.in.PreCachingLayoutManager;
 import com.neartag.in.R;
 import com.neartag.in.Utils.Logger;
 import com.neartag.in.models.User;
+import com.neartag.in.newsfeed.StoryFeedFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,7 +79,7 @@ public class UserPreferenceAskFragment extends Fragment implements PreferenceLis
         all_preferences.add(getString(R.string.option_7));
 
         // Create adapter passing in the sample user data
-        adapter = new PreferenceListAdapter((AppCompatActivity) getActivity(),  all_preferences);
+        adapter = new PreferenceListAdapter(getActivity(),  all_preferences);
         adapter.setClickListener(this);
 
         // Attach the adapter to the recyclerview to populate items
@@ -144,9 +145,7 @@ public class UserPreferenceAskFragment extends Fragment implements PreferenceLis
                 current_preference.add(preference);
             }
         } else {
-            if (current_preference.contains(preference)) {
-                current_preference.remove(preference);
-            }
+            current_preference.remove(preference);
         }
     }
 
@@ -160,7 +159,7 @@ public class UserPreferenceAskFragment extends Fragment implements PreferenceLis
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    String error_message = (String) response.getString("error_message");
+                    String error_message = response.getString("error_message");
                     if (!error_message.equals("SUCCESS")) {
                         Toast.makeText(getContext(), error_message, Toast.LENGTH_LONG).show();
                         busy.setVisibility(View.INVISIBLE);
@@ -168,7 +167,7 @@ public class UserPreferenceAskFragment extends Fragment implements PreferenceLis
                     }
 
                     Logger.log(Logger.USER_PREFERENCE_SEND_REQUEST_SUCCESS);
-                    loadFragment(new NewsFeedFragment());
+                    loadFragment(new StoryFeedFragment());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

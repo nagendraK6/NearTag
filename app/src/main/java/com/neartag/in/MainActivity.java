@@ -120,13 +120,9 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
 
     /** Check if this device has a camera */
     private boolean checkCameraHardware(Context context) {
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
-            // this device has a camera
-            return true;
-        } else {
-            // no camera on this device
-            return false;
-        }
+        // this device has a camera
+// no camera on this device
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
     /*public void verifyPermissions(){
@@ -194,18 +190,12 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
 
     @Override
     public boolean isCameraFrontFacing() {
-        if(mCameraOrientation.equals(CAMERA_POSITION_FRONT)){
-            return true;
-        }
-        return false;
+        return mCameraOrientation.equals(CAMERA_POSITION_FRONT);
     }
 
     @Override
     public boolean isCameraBackFacing() {
-        if(mCameraOrientation.equals(CAMERA_POSITION_BACK)){
-            return true;
-        }
-        return false;
+        return mCameraOrientation.equals(CAMERA_POSITION_BACK);
     }
 
     @Override

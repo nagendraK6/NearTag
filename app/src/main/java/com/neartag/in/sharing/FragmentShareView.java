@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,7 @@ import com.neartag.in.newsfeed.StoryFeedAdapter;
 import com.squareup.picasso.Picasso;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -96,11 +98,21 @@ public class FragmentShareView extends Fragment implements  ContactsListAdapter.
         contacts_list.setAdapter(adapter);
         findAndReadContacts();
         start_sharing = view.findViewById(R.id.start_sharing);
+        final EditText txt = view.findViewById(R.id.channel_name);
         start_sharing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (selected_list.size() == 0) {
+                    Toast.makeText(getContext(), "Please must select a contact", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (StringUtils.isEmpty(txt.getText().toString())) {
+                    Toast.makeText(getContext(), "Please choose a channel name", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                broadcastLocalUpdate();
-                //createStory();
             }
         });
         bus_load = view.findViewById(R.id.busy_load);
@@ -118,7 +130,6 @@ public class FragmentShareView extends Fragment implements  ContactsListAdapter.
             fetchContacts();
         }
     }
-
 
     public boolean checkPermission(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
@@ -149,23 +160,11 @@ public class FragmentShareView extends Fragment implements  ContactsListAdapter.
         }
     }
 
-
-    private void loadFragment() {
-        getActivity().onBackPressed();
-    }
-
     private void fetchContacts() {
         ArrayList<Contact> contacts = readContacts();
         all_contacts.addAll(contacts);
         adapter.notifyDataSetChanged();
 
-    }
-
-    private void setUpFragment(Fragment fragment_to_start) {
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.fragment_holder, fragment_to_start);
-        ft.addToBackStack(null);
-        ft.commit();
     }
 
     public ArrayList<Contact> readContacts(){
@@ -200,7 +199,7 @@ public class FragmentShareView extends Fragment implements  ContactsListAdapter.
     }
 
     @Override
-    public void onItemClick(View view, int position) {
+    public void onItemClick(int position) {
         if (selected_list.containsKey(position)) {
             selected_list.remove(position);
         } else {

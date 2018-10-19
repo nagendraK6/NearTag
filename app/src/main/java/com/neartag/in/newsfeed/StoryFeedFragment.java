@@ -64,6 +64,7 @@ import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,6 +72,7 @@ import java.util.WeakHashMap;
 
 import cz.msebera.android.httpclient.Header;
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 /**
  * Created by nagendra on 8/3/18.
@@ -233,7 +235,7 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 ArrayList<StoryBucket> t_feed_buckets = new ArrayList<>();
                 try {
-                    JSONArray all_buckets_data = (JSONArray) response.getJSONArray("data");
+                    JSONArray all_buckets_data = response.getJSONArray("data");
                     if (all_buckets_data.length() > 0) {
                         for (int i = 0; i < all_buckets_data.length(); i++) {
                             JSONArray current_all_stories = all_buckets_data.getJSONArray(i);
@@ -365,21 +367,28 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
         User user = User.getLoggedInUser();
         final AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
+        final long startTime = System.currentTimeMillis();
         try {
             String path = "/storage/emulated/0/Android/data/com.neartag.in/files/";
             File imgfile = new File(path + "/temp_image.jpg");
-            params.put("file", imgfile);
+            File compressedImageFile = new Compressor(getContext()).compressToFile(imgfile);
+            params.put("file", compressedImageFile);
             params.put("story_id", story_id);
 
         } catch(FileNotFoundException fexception) {
             fexception.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         JsonHttpResponseHandler jrep= new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Integer width = 0, height  = 0;
                 try {
+                    long elapsedTime = System.currentTimeMillis() - startTime;
+                    Log.d("debug_data", "response time is " + elapsedTime);
                     JSONObject data = response.getJSONObject("data");
                     String banner_image_url_low = data.getString("banner_image_url_low");
                     String banner_image_url_high = data.getString("banner_image_url_high");
@@ -445,6 +454,7 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
         };
 
         client.addHeader("Accept", "application/json");
+        client.setTimeout(30000);
         client.addHeader("Authorization", "Bearer " + user.AccessToken);
         client.post(App.getBaseURL() + "story/create", params, jrep);
     }

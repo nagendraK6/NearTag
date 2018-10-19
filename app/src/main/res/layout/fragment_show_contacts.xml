@@ -8,7 +8,30 @@
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
     android:background="@drawable/circular_border_comment">
+
     <RelativeLayout
+        android:id="@+id/channel_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+
+            android:id="@+id/channel_name"
+            android:background="@drawable/layout_bg_circular"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:hint="Channel Name e.g. Friends "
+            android:layout_height="wrap_content" />
+        <View
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/channel_name"
+            android:layout_width="match_parent"
+            android:background="@color/grey"
+            android:layout_height="1dp"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_below="@+id/channel_info"
         android:id="@+id/title"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"

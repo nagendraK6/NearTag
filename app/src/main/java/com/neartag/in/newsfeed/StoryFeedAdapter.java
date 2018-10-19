@@ -122,7 +122,6 @@ public class StoryFeedAdapter extends RecyclerView.Adapter<StoryFeedAdapter.View
 
         // Inflate the custom layout
         feed_view = inflater.inflate(R.layout.story_card_view, parent, false);
-        //feed_view.setBackgroundColor(Color.RED);
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(feed_view);
@@ -141,12 +140,14 @@ public class StoryFeedAdapter extends RecyclerView.Adapter<StoryFeedAdapter.View
 
         if (current_element.getCenterImageHeight() > current_element.getCenterImageWidth()) {
             if (current_element.getLocalFile()) {
+                viewHolder.bannerImage.setAlpha(0.4f);
                 Picasso.with(getContext())
                         .load(new File(current_element.getBucketCenterImageUrl()))
                         .resize(current_element.getCenterImageWidth(), current_element.getCenterImageWidth())
                         .centerCrop()
                         .into(viewHolder.bannerImage);
             } else {
+                viewHolder.bannerImage.setAlpha(1.0f);
                 Picasso.with(getContext())
                         .load(current_element.getBucketCenterImageUrl())
                         .resize(current_element.getCenterImageWidth(), current_element.getCenterImageWidth())

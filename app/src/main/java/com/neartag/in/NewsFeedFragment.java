@@ -410,7 +410,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 ArrayList<NewsFeedElement> feed_elements = new ArrayList<>();
                 try {
-                    JSONArray all_news_items = (JSONArray) response.getJSONArray("data");
+                    JSONArray all_news_items = response.getJSONArray("data");
                     if (all_news_items.length() > 0) {
                         new Delete().from(NewsFeedElement.class).execute();
                         for (int i =0; i < all_news_items.length(); i++) {

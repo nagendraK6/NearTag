@@ -64,13 +64,13 @@ public class CommentListAdapter  extends
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-            comment = (TextView) itemView.findViewById(R.id.comment);
-            username = (TextView) itemView.findViewById(R.id.comment_username);
-            timestamp = (TextView) itemView.findViewById(R.id.comment_time_posted);
-            reply = (TextView) itemView.findViewById(R.id.comment_reply);
-            like = (ImageView) itemView.findViewById(R.id.comment_like);
-            likes = (TextView) itemView.findViewById(R.id.comment_likes);
-            profileImage = (CircleImageView) itemView.findViewById(R.id.comment_profile_image);
+            comment = itemView.findViewById(R.id.comment);
+            username = itemView.findViewById(R.id.comment_username);
+            timestamp = itemView.findViewById(R.id.comment_time_posted);
+            reply = itemView.findViewById(R.id.comment_reply);
+            like = itemView.findViewById(R.id.comment_like);
+            likes = itemView.findViewById(R.id.comment_likes);
+            profileImage = itemView.findViewById(R.id.comment_profile_image);
         }
     }
 

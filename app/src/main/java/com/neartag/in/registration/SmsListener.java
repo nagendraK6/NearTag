@@ -5,5 +5,5 @@ package com.neartag.in.registration;
  */
 
 public interface SmsListener {
-    public void messageReceived(String messageText);
+    void messageReceived(String messageText);
 }

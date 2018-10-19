@@ -50,7 +50,7 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        storiesProgressView = (StoriesProgressView) view.findViewById(R.id.stories);
+        storiesProgressView = view.findViewById(R.id.stories);
 
         all_stories =  getArguments().getParcelableArrayList("stories");
 
@@ -171,7 +171,7 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
                 .centerCrop();
 
 
-        for (int i  =0; i < all_stories.size(); i++) {
+        for (int i  = 0; i < all_stories.size(); i++) {
             if (!all_stories.get(i).getLocalFile()) {
                 Glide.with(this).load(all_stories.get(i).getBannerImageURLHigh()).apply(options).preload();
             }

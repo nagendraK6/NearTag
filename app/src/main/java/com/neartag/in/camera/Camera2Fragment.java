@@ -321,7 +321,7 @@ public class Camera2Fragment extends Fragment implements
         final float scale = getContext().getResources().getDisplayMetrics().density;
 
         params.height = (int) (width * scale + 0.5f);
-        params.width = (int) (height * scale + 0.5f);;
+        params.width = (int) (height * scale + 0.5f);
         mTrashIcon.setLayoutParams(params);
     }
 
@@ -1154,7 +1154,7 @@ public class Camera2Fragment extends Fragment implements
             Size largest = null;
             float screenAspectRatio = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
             List<Size> sizes = new ArrayList<>();
-            for( Size size : Arrays.asList(map.getOutputSizes(ImageFormat.JPEG))){
+            for( Size size : map.getOutputSizes(ImageFormat.JPEG)){
 
                 float temp = (float)size.getWidth() / (float)size.getHeight();
 

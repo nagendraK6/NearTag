@@ -192,7 +192,7 @@ public class PhoneVerificationFragment extends Fragment {
     }
 
     private void startTimer(final View fragment_view) {
-        final TextView resend = (TextView) fragment_view.findViewById(R.id.re_send);
+        final TextView resend = fragment_view.findViewById(R.id.re_send);
         resend.setBackgroundResource(R.drawable.disabled_text);
         should_resend_otp = false;
         new Thread(new Runnable() {
@@ -211,7 +211,7 @@ public class PhoneVerificationFragment extends Fragment {
                             // TODO Auto-generated method stub
                             if (timer == 30) {
                                 should_resend_otp = true;
-                                TextView resend = (TextView) fragment_view.findViewById(R.id.re_send);
+                                TextView resend = fragment_view.findViewById(R.id.re_send);
                                 resend.setBackgroundResource(R.drawable.incorrect_display);
                                 resend.setText("फिर से भेजें");
                             }
@@ -248,7 +248,7 @@ public class PhoneVerificationFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    String error_message = (String) response.getString("error_message");
+                    String error_message = response.getString("error_message");
                     if (!error_message.equals("SUCCESS")) {
                         Toast.makeText(getContext(), error_message, Toast.LENGTH_LONG).show();
                     }
