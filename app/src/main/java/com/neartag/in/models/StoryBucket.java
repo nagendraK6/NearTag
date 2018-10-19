@@ -21,6 +21,16 @@ public class StoryBucket {
 
     Boolean IsLocalFile;
 
+    Long StoryBucketId;
+
+    public Long getStoryBucketId() {
+        return StoryBucketId;
+    }
+
+    public void setStoryBucketId(Long storyBucketId) {
+        StoryBucketId = storyBucketId;
+    }
+
     public Boolean getLocalFile() {
         return IsLocalFile;
     }

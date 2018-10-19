@@ -73,6 +73,16 @@ public class StoryElement implements Parcelable {
 
     private String text;
 
+    private Long StoryElementId;
+
+    public Long getStoryElementId() {
+        return StoryElementId;
+    }
+
+    public void setStoryElementId(Long storyElementId) {
+        StoryElementId = storyElementId;
+    }
+
     public String getText() {
         return text;
     }

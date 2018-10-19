@@ -65,6 +65,7 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -90,61 +91,7 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
     BroadcastReceiver broadCastNewMessage = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // find the feed_buckets where IsUserStory = true;
-            StoryBucket user_bucket = null;
-            for(int i  = 0; i < feed_buckets.size(); i++) {
-                if (feed_buckets.get(i).getUserStory()) {
-                    user_bucket = feed_buckets.get(i);
-                    break;
-                }
-            }
-
-
-            String path = "/storage/emulated/0/Android/data/com.neartag.in/files/";
-            File imgfile = new File(path + "/temp_image.jpg");
-            String uri = imgfile.getAbsolutePath();
-
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(uri, options);
-            int imageHeight = options.outHeight;
-            int imageWidth = options.outWidth;
-
-
-            User user = User.getLoggedInUser();
-            if (user_bucket == null) {
-                // create a new one
-                ArrayList<StoryElement> all_elements = new ArrayList<>();
-                user_bucket = new StoryBucket(
-                    all_elements,
-                    user.Name,
-                    user.ProfilePicURL,
-                    uri,
-                    imageWidth,
-                    imageHeight
-                );
-                user_bucket.setUserStory(true);
-                user_bucket.setLocalFile(true);
-                feed_buckets.add(0, user_bucket);
-            } else {
-                user_bucket.setUserStory(true);
-                user_bucket.setLocalFile(true);
-                user_bucket.setBucketCenterImageUrl(uri);
-                user_bucket.setCenterImageWidth(imageWidth);
-                user_bucket.setCenterImageHeight(imageHeight);
-            }
-
-            StoryElement se = new StoryElement(
-                0,
-                    uri,
-                    uri,
-                imageWidth,
-                imageHeight, "",
-                        ""
-            );
-            se.setLocalFile(true);
-            user_bucket.addStoryElementFront(se);
-            adapter.notifyDataSetChanged();
+            appendNewStory();
         }
     };
 
@@ -412,7 +359,7 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
         transaction.commit();
     }
 
-    private void createStory() {
+    private void createStory(Long story_id) {
         Logger.log(Logger.STORY_CREATE_START);
         android.util.Log.d("debug_data", "upload started...");
         User user = User.getLoggedInUser();
@@ -422,6 +369,8 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
             String path = "/storage/emulated/0/Android/data/com.neartag.in/files/";
             File imgfile = new File(path + "/temp_image.jpg");
             params.put("file", imgfile);
+            params.put("story_id", story_id);
+
         } catch(FileNotFoundException fexception) {
             fexception.printStackTrace();
         }
@@ -432,6 +381,42 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
                 Integer width = 0, height  = 0;
                 try {
                     JSONObject data = response.getJSONObject("data");
+                    String banner_image_url_low = data.getString("banner_image_url_low");
+                    String banner_image_url_high = data.getString("banner_image_url_high");
+                    Integer banner_image_width = data.getInt("banner_image_width");
+                    Integer banner_image_height = data.getInt("banner_image_height");
+                    Long story_id_from_serv = data.getLong("story_id");
+
+                    // find the story and update the url and
+                    Integer user_bucket_index = null;
+                    for(int i  = 0; i < feed_buckets.size(); i++) {
+                        if (feed_buckets.get(i).getUserStory()) {
+                            user_bucket_index = i;
+                            break;
+                        }
+                    }
+
+                    if (user_bucket_index != null) {
+                        feed_buckets.get(user_bucket_index).setBucketCenterImageUrl(banner_image_url_high);
+                        feed_buckets.get(user_bucket_index).setCenterImageWidth(banner_image_width);
+                        feed_buckets.get(user_bucket_index).setCenterImageHeight(banner_image_height);
+                        feed_buckets.get(user_bucket_index).setLocalFile(false);
+
+
+                        // find the index of story and update the content
+
+                        Integer story_index = null;
+                        for(int i = 0 ; i < feed_buckets.get(user_bucket_index).getStoryElements().size(); i++) {
+                            if (feed_buckets.get(user_bucket_index).getStoryElements().get(i).getStoryElementId() == story_id_from_serv) {
+                                feed_buckets.get(user_bucket_index).getStoryElements().get(i).setBannerImageURLHigh(banner_image_url_high);
+                                feed_buckets.get(user_bucket_index).getStoryElements().get(i).setBannerImageURLLow(banner_image_url_low);
+                                feed_buckets.get(user_bucket_index).getStoryElements().get(i).setHeight(banner_image_height);
+                                feed_buckets.get(user_bucket_index).getStoryElements().get(i).setWidth(banner_image_width);
+                            }
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -462,5 +447,72 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
         client.addHeader("Accept", "application/json");
         client.addHeader("Authorization", "Bearer " + user.AccessToken);
         client.post(App.getBaseURL() + "story/create", params, jrep);
+    }
+
+    private void appendNewStory() {
+        Date date= new Date();
+        long time = date.getTime();
+
+        // find the feed_buckets where IsUserStory = true;
+        Integer user_bucket_index = null;
+        for(int i  = 0; i < feed_buckets.size(); i++) {
+            if (feed_buckets.get(i).getUserStory()) {
+                user_bucket_index = i;
+                break;
+            }
+        }
+
+
+        String path = "/storage/emulated/0/Android/data/com.neartag.in/files/";
+        File imgfile = new File(path + "/temp_image.jpg");
+        String uri = imgfile.getAbsolutePath();
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(uri, options);
+        int imageHeight = options.outHeight;
+        int imageWidth = options.outWidth;
+
+
+        User user = User.getLoggedInUser();
+        if (user_bucket_index == null) {
+            // create a new one
+            ArrayList<StoryElement> all_elements = new ArrayList<>();
+            StoryBucket user_bucket = new StoryBucket(
+                    all_elements,
+                    user.Name,
+                    user.ProfilePicURL,
+                    uri,
+                    imageWidth,
+                    imageHeight
+            );
+            user_bucket.setUserStory(true);
+            user_bucket.setLocalFile(true);
+            user_bucket.setStoryBucketId(time);
+            feed_buckets.add(0, user_bucket);
+            user_bucket_index = 0;
+        } else {
+            feed_buckets.get(user_bucket_index).setUserStory(true);
+            feed_buckets.get(user_bucket_index).setLocalFile(true);
+            feed_buckets.get(user_bucket_index).setBucketCenterImageUrl(uri);
+            feed_buckets.get(user_bucket_index).setCenterImageWidth(imageWidth);
+            feed_buckets.get(user_bucket_index).setCenterImageHeight(imageHeight);
+            feed_buckets.get(user_bucket_index).setStoryBucketId(time);
+        }
+
+        StoryElement se = new StoryElement(
+                0,
+                uri,
+                uri,
+                imageWidth,
+                imageHeight, "",
+                ""
+        );
+        se.setLocalFile(true);
+        se.setStoryElementId(time);
+        feed_buckets.get(user_bucket_index).addStoryElementFront(se);
+
+        adapter.notifyDataSetChanged();
+        createStory(time);
     }
 }
