@@ -1,5 +1,7 @@
 package com.neartag.in.stories;
 
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,11 +13,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
+import com.bumptech.glide.request.transition.Transition;
 import com.neartag.in.R;
 import com.neartag.in.models.StoryElement;
+import com.neartag.in.models.User;
 import com.squareup.picasso.Picasso;
 import android.view.MotionEvent;
 
@@ -24,6 +36,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import jp.shts.android.storiesprogressview.StoriesProgressView;
 
 /**
@@ -34,7 +47,8 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
 
     private StoriesProgressView storiesProgressView;
     private ImageView image;
-    private TextView txt;
+    private CircleImageView profile_image;
+    private TextView txt, name, time;
 
     private int counter = 0;
     ArrayList<StoryElement> all_stories;
@@ -53,7 +67,10 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
         storiesProgressView = view.findViewById(R.id.stories);
 
         all_stories =  getArguments().getParcelableArrayList("stories");
-
+        profile_image = view.findViewById(R.id.creator_profile);
+        name = view.findViewById(R.id.creator_name);
+        time = view.findViewById(R.id.creation_time);
+        User user = User.getLoggedInUser();
         storiesProgressView.setStoriesCount(all_stories.size()); // <- set stories
         storiesProgressView.setStoryDuration(5000L);
         storiesProgressView.setStoriesListener(this); // <- set listener
@@ -94,7 +111,8 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
     @Override
     public void onNext() {
         counter++;
-        loadImage(counter);
+    //    loadImage(counter);
+        load(counter);
         if (!StringUtils.isEmpty(all_stories.get(counter).getText())) {
             txt.setText(all_stories.get(counter).getText());
         }  else {
@@ -154,9 +172,11 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
                     .skipMemoryCache(true)
                     .centerCrop();
 
+            //Picasso.with(getActivity()).load(new File(all_stories.get(counter).getBannerImageURLHigh())).into(image);
             Glide.with(getContext()).load(
                     new File(all_stories.get(counter).getBannerImageURLHigh())).apply(options_2).into(image);
         } else {
+            //Picasso.with(getActivity()).load(all_stories.get(counter).getBannerImageURLHigh()).into(image);
             Glide.with(getContext()).load(
                     all_stories.get(counter).getBannerImageURLHigh()
 
@@ -173,8 +193,26 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
 
         for (int i  = 0; i < all_stories.size(); i++) {
             if (!all_stories.get(i).getLocalFile()) {
+                //Picasso.with(getActivity()).load(all_stories.get(i).getBannerImageURLHigh()).fetch();
                 Glide.with(this).load(all_stories.get(i).getBannerImageURLHigh()).apply(options).preload();
             }
         }
+    }
+
+    private void load(int i) {
+        RequestOptions op = new RequestOptions().fitCenter();
+        Glide
+                .with(getContext())
+                .load(all_stories.get(i).getBannerImageURLHigh())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(image);
+
+
+        Glide.with(getContext()).load(all_stories.get(i).storyCreatorProfileUrl)
+                .transition(GenericTransitionOptions
+                        .with(R.anim.image_glide_animation))
+                .into(profile_image);
+        name.setText(all_stories.get(i).storyCreatorName);
+        time.setText(all_stories.get(i).storyCreatorTime);
     }
 }

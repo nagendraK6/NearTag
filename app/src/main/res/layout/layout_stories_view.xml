@@ -62,4 +62,38 @@
         android:layout_gravity="top"
         android:layout_marginTop="8dp" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="40dp"
+            android:id="@+id/creator_profile"
+            android:src="@drawable/find_icon"
+            android:layout_height="40dp" />
+        <RelativeLayout
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@+id/creator_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:text="Nagendra"
+                android:textStyle="bold"
+                android:id="@+id/creator_name"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:text="9:00 AM"
+                android:id="@+id/creation_time"
+                android:layout_below="@+id/creator_name"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </RelativeLayout>
+
 </RelativeLayout>

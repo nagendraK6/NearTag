@@ -300,7 +300,10 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
                                         width,
                                         height,
                                         message_text,
-                                        learn_more_url
+                                        learn_more_url,
+                                        user_name,
+                                        "Time",
+                                        profile_image_url
                                 );
 
                                 current_element.addStoryElement(new_current_element);
@@ -516,7 +519,10 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
                 uri,
                 imageWidth,
                 imageHeight, "",
-                ""
+                "",
+                user.Name,
+                "Now",
+                user.ProfilePicURL
         );
         se.setLocalFile(true);
         se.setStoryElementId(time);

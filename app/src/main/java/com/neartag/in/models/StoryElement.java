@@ -103,6 +103,36 @@ public class StoryElement implements Parcelable {
         IsLocalFile = localFile;
     }
 
+    public String storyCreatorName;
+
+    public String storyCreatorTime;
+
+    public String storyCreatorProfileUrl;
+
+    public String getStoryCreatorName() {
+        return storyCreatorName;
+    }
+
+    public void setStoryCreatorName(String storyCreatorName) {
+        this.storyCreatorName = storyCreatorName;
+    }
+
+    public String getStoryCreatorTime() {
+        return storyCreatorTime;
+    }
+
+    public void setStoryCreatorTime(String storyCreatorTime) {
+        this.storyCreatorTime = storyCreatorTime;
+    }
+
+    public String getStoryCreatorProfileUrl() {
+        return storyCreatorProfileUrl;
+    }
+
+    public void setStoryCreatorProfileUrl(String storyCreatorProfileUrl) {
+        this.storyCreatorProfileUrl = storyCreatorProfileUrl;
+    }
+
     public StoryElement(
             Integer storyId,
             String bannerImageURLLow,
@@ -110,7 +140,10 @@ public class StoryElement implements Parcelable {
             Integer width,
             Integer height,
             String text,
-            String learnMoreLink) {
+            String learnMoreLink,
+            String storyCreatorName,
+            String storyCreatorTime,
+            String storyCreatorProfileUrl) {
         this.storyId = storyId;
         this.bannerImageURLLow = bannerImageURLLow;
         this.bannerImageURLHigh = bannerImageURLHigh;
@@ -119,6 +152,9 @@ public class StoryElement implements Parcelable {
         this.text = text;
         this.LearnMoreLink = learnMoreLink;
         this.IsLocalFile = false;
+        this.storyCreatorName  = storyCreatorName;
+        this.storyCreatorTime = storyCreatorTime;
+        this.storyCreatorProfileUrl = storyCreatorProfileUrl;
     }
 
     protected StoryElement(Parcel in) {
@@ -130,6 +166,9 @@ public class StoryElement implements Parcelable {
         text = in.readString();
         LearnMoreLink = in.readString();
         IsLocalFile = in.readByte() == 1;
+        storyCreatorName = in.readString();
+        storyCreatorTime = in.readString();
+        storyCreatorProfileUrl = in.readString();
     }
 
     @Override
@@ -142,6 +181,10 @@ public class StoryElement implements Parcelable {
         dest.writeString(text);
         dest.writeString(LearnMoreLink);
         dest.writeByte((byte) (this.IsLocalFile ? 1 : 0));
+        dest.writeString(storyCreatorName);
+        dest.writeString(storyCreatorTime);
+        dest.writeString(storyCreatorProfileUrl);
+
     }
 
     @Override
