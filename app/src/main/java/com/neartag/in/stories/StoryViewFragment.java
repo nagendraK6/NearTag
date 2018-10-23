@@ -28,6 +28,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.neartag.in.R;
 import com.neartag.in.models.StoryElement;
 import com.neartag.in.models.User;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import android.view.MotionEvent;
 
@@ -79,7 +80,7 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
         image = view.findViewById(R.id.image);
         txt = view.findViewById(R.id.story_text);
         preLoading();
-        loadImage(counter);
+        load(counter);
 
         if (!StringUtils.isEmpty(all_stories.get(counter).getText())) {
             txt.setText(all_stories.get(counter).getText());
@@ -201,16 +202,14 @@ public class StoryViewFragment extends Fragment implements StoriesProgressView.S
 
     private void load(int i) {
         RequestOptions op = new RequestOptions().fitCenter();
-        Glide
-                .with(getContext())
-                .load(all_stories.get(i).getBannerImageURLHigh())
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(image);
+            Glide
+                    .with(getContext())
+                    .load(all_stories.get(i).getBannerImageURLHigh())
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(image);
 
 
         Glide.with(getContext()).load(all_stories.get(i).storyCreatorProfileUrl)
-                .transition(GenericTransitionOptions
-                        .with(R.anim.image_glide_animation))
                 .into(profile_image);
         name.setText(all_stories.get(i).storyCreatorName);
         time.setText(all_stories.get(i).storyCreatorTime);

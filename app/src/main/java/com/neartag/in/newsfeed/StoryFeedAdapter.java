@@ -51,6 +51,7 @@ import com.neartag.in.models.StoryBucket;
 import com.neartag.in.models.User;
 import com.neartag.in.newsfeed.NewsTagsListAdapter;
 import com.neartag.in.webview.WebviewFragment;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -145,19 +146,50 @@ public class StoryFeedAdapter extends RecyclerView.Adapter<StoryFeedAdapter.View
                         .load(new File(current_element.getBucketCenterImageUrl()))
                         .resize(current_element.getCenterImageWidth(), current_element.getCenterImageWidth())
                         .centerCrop()
-                        .into(viewHolder.bannerImage);
+
+                        .into(viewHolder.bannerImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                viewHolder.itemView.setVisibility(View.VISIBLE);
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
             } else {
                 viewHolder.bannerImage.setAlpha(1.0f);
                 Picasso.with(getContext())
                         .load(current_element.getBucketCenterImageUrl())
                         .resize(current_element.getCenterImageWidth(), current_element.getCenterImageWidth())
                         .centerCrop()
-                        .into(viewHolder.bannerImage);
+                        .into(viewHolder.bannerImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                viewHolder.itemView.setVisibility(View.VISIBLE);
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
             }
         } else {
             Picasso.with(getContext())
                     .load(current_element.getBucketCenterImageUrl())
-                    .into(viewHolder.bannerImage);
+                    .into(viewHolder.bannerImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            viewHolder.itemView.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
         }
 
         viewHolder.bannerImage.setOnClickListener(new View.OnClickListener() {

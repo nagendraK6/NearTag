@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ import android.widget.Toast;
 import com.neartag.in.App;
 import com.neartag.in.R;
 import com.neartag.in.TagSearchFragment;
+import com.neartag.in.Utils.Helper;
+import com.neartag.in.sharing.ImageSharingView;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
@@ -103,55 +106,8 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
         }
     }
 
-    private ArrayList<String> getAllShownImagesPath(String directoryName) {
-        Uri uri;
-        Cursor cursor;
-        Context context = getContext();
-
-        int column_index_data, column_index_folder_name;
-
-        ArrayList<String> listOfAllImages = new ArrayList<String>();
-        String absolutePathOfImage = null;
-        uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
-        String[] projection = { MediaStore.MediaColumns.DATA,
-                MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
-
-        String orderBy = MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC";
-
-        cursor = context.getContentResolver().query(uri, projection, null,
-                null, orderBy);
-
-        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        if (StringUtils.isEmpty(directoryName)) {
-            while (cursor.moveToNext()) {
-                absolutePathOfImage = cursor.getString(column_index_data);
-                listOfAllImages.add(absolutePathOfImage);
-            }
-        } else {
-            while (cursor.moveToNext()) {
-                absolutePathOfImage = cursor.getString(column_index_data);
-                File f = new File((absolutePathOfImage));
-                String dirName =f.getParentFile().getName();
-                if (dirName.equals(directoryName)) {
-                    listOfAllImages.add(absolutePathOfImage);
-                }
-            }
-        }
-
-        return listOfAllImages;
-    }
-
     private void setAlbumNames() {
-        ArrayList<String> names = new ArrayList<>();
-        String[] projection = new String[] {"DISTINCT " + MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME};
-        Cursor cur = getContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
-        StringBuffer list = new StringBuffer();
-        while (cur.moveToNext()) {
-            names.add(cur.getString((cur.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME))));
-        }
-
-        directoryNames = names;
+        directoryNames = Helper.getDirectoryNames(getContext());
         Integer wIndex = directoryNames.indexOf("WhatsApp Images");
         if (wIndex >= 0 && wIndex < directoryNames.size()) {
             Collections.swap(directoryNames, 0, wIndex);
@@ -234,7 +190,7 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
     }
 
     private void galleryIntent(String directoName) {
-        all_images =  getAllShownImagesPath(directoName);
+        all_images = Helper.getAllShownImagesPath(directoName, getContext());
 
         // set up the RecyclerView
         recyclerView = fragment_view.findViewById(R.id.all_images);
@@ -255,10 +211,11 @@ public class RecyclerGalaryFragment extends Fragment  implements MyRecyclerViewA
                     loadFragment(frg);
                 } else {
                     // close current fragment and pass data to previous fragment
-                    Intent intent=new Intent("profile_update");
+                    Intent intent=new Intent("new_image");
                     intent.putExtras(data_bundle);
-                    getActivity().sendBroadcast(intent);
-                    getActivity().onBackPressed();
+                    Fragment frg = new ImageSharingView();
+                    frg.setArguments(data_bundle);
+                    loadFragment(frg);
                 }
             }
         });

@@ -359,7 +359,7 @@ public class StoryFeedFragment extends Fragment  implements  StoryFeedAdapter.St
 
     private void startCamera2(){
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.fragment_holder, Camera2Fragment.newInstance(), getString(R.string.fragment_camera2));
+        transaction.add(R.id.fragment_holder, new Camera2Fragment(), getString(R.string.fragment_camera2));
         transaction.addToBackStack(null);
         transaction.commit();
     }

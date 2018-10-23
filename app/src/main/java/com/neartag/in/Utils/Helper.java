@@ -1,6 +1,10 @@
 package com.neartag.in.Utils;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -9,6 +13,11 @@ import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by nagendra on 9/14/18.
@@ -51,5 +60,55 @@ public class Helper {
 
         pTextView.setMovementMethod(LinkMovementMethod.getInstance());
         pTextView.setText(string);
+    }
+
+    public static ArrayList<String> getAllShownImagesPath(String directoryName, Context context) {
+        Uri uri;
+        Cursor cursor;
+
+        int column_index_data, column_index_folder_name;
+
+        ArrayList<String> listOfAllImages = new ArrayList<String>();
+        String absolutePathOfImage = null;
+        uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+        String[] projection = { MediaStore.MediaColumns.DATA,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
+
+        String orderBy = MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC";
+
+        cursor = context.getContentResolver().query(uri, projection, null,
+                null, orderBy);
+
+        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        if (StringUtils.isEmpty(directoryName)) {
+            while (cursor.moveToNext()) {
+                absolutePathOfImage = cursor.getString(column_index_data);
+                listOfAllImages.add(absolutePathOfImage);
+            }
+        } else {
+            while (cursor.moveToNext()) {
+                absolutePathOfImage = cursor.getString(column_index_data);
+                File f = new File((absolutePathOfImage));
+                String dirName =f.getParentFile().getName();
+                if (dirName.equals(directoryName)) {
+                    listOfAllImages.add(absolutePathOfImage);
+                }
+            }
+        }
+
+        return listOfAllImages;
+    }
+
+    public static  ArrayList<String> getDirectoryNames(Context context) {
+        ArrayList<String> names = new ArrayList<>();
+        String[] projection = new String[] {"DISTINCT " + MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME};
+        Cursor cur = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
+        StringBuffer list = new StringBuffer();
+        while (cur.moveToNext()) {
+            names.add(cur.getString((cur.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME))));
+        }
+
+        return names;
     }
 }

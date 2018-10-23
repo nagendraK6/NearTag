@@ -35,6 +35,7 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -42,6 +43,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -58,14 +60,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.neartag.in.App;
 import com.neartag.in.R;
+import com.neartag.in.Utils.Helper;
+import com.neartag.in.composer.RecyclerGalaryFragment;
 import com.neartag.in.sharing.FragmentShareView;
 import com.squareup.picasso.Picasso;
 
@@ -95,9 +99,9 @@ public class Camera2Fragment extends Fragment implements
 {
 
     private static final String TAG = "Camera2Fragment";
-    private static final int REQUEST_CAMERA_PERMISSION = 1;
+    private static final int REQUEST_CAMERA_PERMISSION = 1, REQUEST_FOR_TAKE_PHOTO =9;
     private static final String FRAGMENT_DIALOG = "dialog";
-
+    private View camera_view;
     /** Time it takes for icons to fade (in milliseconds) */
     private static final int ICON_FADE_DURATION  = 400;
 
@@ -212,7 +216,7 @@ public class Camera2Fragment extends Fragment implements
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_camera2, container, false);
-
+        camera_view = view;
 
         return view;
     }
@@ -257,6 +261,7 @@ public class Camera2Fragment extends Fragment implements
 
         setMaxSizes();
         resetIconVisibilities();
+        checkPermission(getContext());
     }
 
 
@@ -714,9 +719,10 @@ public class Camera2Fragment extends Fragment implements
 
     }
 
+
+
     private void openCamera(int width, int height) {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ) {
             requestCameraPermission();
             return;
         }
@@ -1375,18 +1381,22 @@ public class Camera2Fragment extends Fragment implements
 
 
     private void loadFragmentContacts() {
+        loadFragment(FragmentShareView.newInstance());
+    }
+
+    private void loadFragment(Fragment frg) {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.fragment_holder, FragmentShareView.newInstance());
+        ft.add(R.id.fragment_holder, frg);
         ft.addToBackStack(null);
         ft.commit();
     }
 
 
     private void requestCameraPermission() {
-        if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+        if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) || shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             new ConfirmationDialog().show(getChildFragmentManager(), FRAGMENT_DIALOG);
         } else {
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
         }
     }
 
@@ -1785,5 +1795,57 @@ public class Camera2Fragment extends Fragment implements
                             })
                     .create();
         }
+    }
+
+    private  void setupImageFragment(View view) {
+
+        ImageButton btn = view.findViewById(R.id.image_selection);
+        ArrayList<String> all_names = Helper.getDirectoryNames(getContext());
+        ArrayList<String> all_img = Helper.getAllShownImagesPath(all_names.get(0), getContext());
+        Picasso.with(getContext()).load(new File(all_img.get(0))).into(btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new RecyclerGalaryFragment());
+            }
+        });
+    }
+
+    public boolean checkPermission(final Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_FOR_TAKE_PHOTO);
+                } else {
+                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_FOR_TAKE_PHOTO);
+                }
+                return false;
+            } else {
+                setupImageFragment(camera_view);
+                return true;
+            }
+        } else {
+            setupImageFragment(camera_view);
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int RC, String per[], int[] PResult) {
+        super.onRequestPermissionsResult(RC, per, PResult);
+        if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
+            setupImageFragment(camera_view);
+
+        } else {
+            Toast.makeText(getActivity(), "Permission is needed to capture image for the profile", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        App.getRefWatcher(getActivity()).watch(this);
     }
 }
