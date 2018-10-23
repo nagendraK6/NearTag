@@ -6,7 +6,7 @@ android {
         applicationId "com.neartag.in"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 17
+        versionCode 18
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
