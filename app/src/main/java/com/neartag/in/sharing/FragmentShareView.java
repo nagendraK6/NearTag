@@ -98,7 +98,6 @@ public class FragmentShareView extends Fragment implements  ContactsListAdapter.
         contacts_list.setAdapter(adapter);
         findAndReadContacts();
         start_sharing = view.findViewById(R.id.start_sharing);
-        final EditText txt = view.findViewById(R.id.channel_name);
         start_sharing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,12 +106,7 @@ public class FragmentShareView extends Fragment implements  ContactsListAdapter.
                     return;
                 }
 
-                if (StringUtils.isEmpty(txt.getText().toString())) {
-                    Toast.makeText(getContext(), "Please choose a channel name", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-               broadcastLocalUpdate();
+                loadFragment();
             }
         });
         bus_load = view.findViewById(R.id.busy_load);
@@ -207,15 +201,23 @@ public class FragmentShareView extends Fragment implements  ContactsListAdapter.
         }
     }
 
-    private void broadcastLocalUpdate() {
-        bus_load.setVisibility(View.VISIBLE);
-        Bundle data_bundle = new Bundle();
-        data_bundle.putString(getString(R.string.user_selected_image), "temp_image.jpg");
-        data_bundle.putString("user_message", "hello");
-        Intent intent = new Intent("new_post");
-        intent.putExtras(data_bundle);
-        getActivity().sendBroadcast(intent);
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    private void loadFragment() {
+        Fragment frg = new FragmentSelectChannel();
+        Bundle data = new Bundle();
+        ArrayList<Contact> selected_contacts = new ArrayList<>();
+        for(Contact c: selected_list.values() ) {
+            selected_contacts.add(c);
+        }
+
+        data.putParcelableArrayList("contacts", selected_contacts);
+        frg.setArguments(data);
+        loadFragment(frg);
+    }
+
+    private void loadFragment(Fragment frg) {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.fragment_holder, frg);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 }

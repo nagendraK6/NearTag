@@ -203,5 +203,4 @@ public class StoryElement implements Parcelable {
             return new StoryElement[size];
         }
     };
-
 }
