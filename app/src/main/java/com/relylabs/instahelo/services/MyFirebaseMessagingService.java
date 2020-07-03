@@ -88,7 +88,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setLargeIcon(resize(this,
                         BitmapFactory.decodeResource(
                                 getResources(),
-                                R.mipmap.neartag_launcher_circle)))
+                                R.drawable.logo_circle)))
                 .setSmallIcon(R.drawable.notification_icon_small)
                 .setColor(getResources().getColor(R.color.orange))
                 .setAutoCancel(true);

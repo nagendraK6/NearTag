@@ -248,7 +248,7 @@
                     <ImageView
                         android:id="@+id/app_icon"
                         android:backgroundTint="@color/link_blue"
-                        android:src="@mipmap/neartag_launcher_circle"
+                        android:src="@drawable/logo_circle"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:padding="2dp" />
