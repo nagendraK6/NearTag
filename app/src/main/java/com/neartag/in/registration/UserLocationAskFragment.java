@@ -117,8 +117,8 @@ public class UserLocationAskFragment extends Fragment {
                 };
 
                 client.addHeader("Accept", "application/json");
-                client.addHeader("Authorization", "Bearer " + user.AccessToken);
-                client.post( App.getBaseURL() + "user_register/user_location_send", params, jrep);
+                client.addHeader("Authorization", "Token " + user.AccessToken);
+                client.post( App.getBaseURL() + "registration/user_location_send", params, jrep);
             }
         });
 

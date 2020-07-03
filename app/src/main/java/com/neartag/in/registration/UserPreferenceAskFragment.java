@@ -167,7 +167,7 @@ public class UserPreferenceAskFragment extends Fragment implements PreferenceLis
                     }
 
                     Logger.log(Logger.USER_PREFERENCE_SEND_REQUEST_SUCCESS);
-                    loadFragment(new StoryFeedFragment());
+                    loadFragment(new NewsFeedFragment());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -197,7 +197,7 @@ public class UserPreferenceAskFragment extends Fragment implements PreferenceLis
         };
 
         client.addHeader("Accept", "application/json");
-        client.addHeader("Authorization", "Bearer " + user.AccessToken);
-        client.post( App.getBaseURL() + "user_register/preference_send", params, jrep);
+        client.addHeader("Authorization", "Token " + user.AccessToken);
+        client.post( App.getBaseURL() + "registration/preference_send", params, jrep);
     }
 }

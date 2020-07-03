@@ -324,6 +324,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                                 @Override
                                 public void onError() {
                                     //do smth when there is picture loading error
+                                    Log.d("debug_data", current_element.getBannerImageURLHigh());
+                                    Log.d("debug_data", "error in image fetch");
                                 }
                             }
                     );

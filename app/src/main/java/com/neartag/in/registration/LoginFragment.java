@@ -163,10 +163,7 @@ public class LoginFragment extends Fragment {
                                                     user.IsOTPVerified = false;
                                                     user.AccessToken = user_token;
                                                     user.Description = description;
-
-                                                    if(response.has("profile_image_url")) {
-                                                        user.ProfilePicURL = response.getString("profile_image_url");
-                                                    }
+                                                    user.ProfilePicURL = response.getString("profile_image_url");
                                                 } else {
                                                     user.UserID = user_id;
                                                     user.AccessToken = user_token;
@@ -204,7 +201,7 @@ public class LoginFragment extends Fragment {
                                     };
 
                                     busy.setVisibility(View.VISIBLE);
-                                    client.post( App.getBaseURL() + "user_register/phone_add", params, jrep);
+                                    client.post( App.getBaseURL() + "registration/phone_add", params, jrep);
 
                                 }
                             })

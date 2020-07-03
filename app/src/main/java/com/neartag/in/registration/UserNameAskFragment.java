@@ -118,8 +118,8 @@ public class UserNameAskFragment extends Fragment {
                 };
 
                 client.addHeader("Accept", "application/json");
-                client.addHeader("Authorization", "Bearer " + user.AccessToken);
-                client.post( App.getBaseURL() + "user_register/user_name_send", params, jrep);
+                client.addHeader("Authorization", "Token " + user.AccessToken);
+                client.post( App.getBaseURL() + "registration/user_name_send", params, jrep);
             }
         });
 

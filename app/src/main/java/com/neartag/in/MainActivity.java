@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
             return new PhoneVerificationFragment();
         }
 
-        return new StoryFeedFragment();
+        return new NewsFeedFragment();
     }
 
     @Override

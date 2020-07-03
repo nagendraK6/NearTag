@@ -64,7 +64,6 @@ public class PhoneVerificationFragment extends Fragment {
     ProgressBar busy;
     String otp;
 
-    private final BroadcastReceiver mybroadcast = new SmsReceiver();
     Boolean registered = false;
 
     @Nullable
@@ -186,8 +185,6 @@ public class PhoneVerificationFragment extends Fragment {
             }
         });
 
-
-        checkPermissionAndGrantPermission(getContext());
         startTimer(view);
     }
 
@@ -269,7 +266,7 @@ public class PhoneVerificationFragment extends Fragment {
 
         client.addHeader("Accept", "application/json");
         client.addHeader("Authorization", "Bearer " + user.AccessToken);
-        client.post(App.getBaseURL() + "user_register/otp_resend", params, jrep);
+        client.post(App.getBaseURL() + "registration/otp_resend", params, jrep);
     }
 
     private void loadFragment(Fragment fragment_to_start) {
@@ -286,18 +283,8 @@ public class PhoneVerificationFragment extends Fragment {
         super.onDestroy();
         App.getRefWatcher(getActivity()).watch(this);
         if (registered && getActivity() != null) {
-            getActivity().unregisterReceiver(mybroadcast);
-            registered = false;
+           registered = false;
         }
-    }
-
-    public boolean shouldRegister(final Context context) {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            return ContextCompat.checkSelfPermission(context, android.Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
-        }
-
-        return true;
     }
 
     private void otpSendToServer(String otp, final Boolean auto) {
@@ -377,34 +364,7 @@ public class PhoneVerificationFragment extends Fragment {
         };
 
         client.addHeader("Accept", "application/json");
-        client.addHeader("Authorization", "Bearer " + user.AccessToken);
-        client.post(App.getBaseURL() + "user_register/otp_send", params, jrep);
-    }
-
-
-    public void checkPermissionAndGrantPermission(final Context context) {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, android.Manifest.permission.RECEIVE_SMS)) {
-                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS}, 0);
-                } else {
-                    requestPermissions(new String[]{android.Manifest.permission.RECEIVE_SMS}, 0);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int RC, String per[], int[] PResult) {
-        super.onRequestPermissionsResult(RC, per, PResult);
-        if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
-            if (shouldRegister(getContext()) && !registered) {
-                IntentFilter filter = new IntentFilter();
-                filter.addAction("android.provider.Telephony.SMS_RECEIVED");
-                getActivity().registerReceiver(mybroadcast, filter);
-                registered = true;
-            }
-        }
+        client.addHeader("Authorization", "Token " + user.AccessToken);
+        client.post(App.getBaseURL() + "registration/otp_send", params, jrep);
     }
 }

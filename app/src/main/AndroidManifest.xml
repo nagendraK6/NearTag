@@ -9,7 +9,6 @@
     <uses-feature android:name="android.hardware.camera" android:required="true"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.VIBRATE"
         android:maxSdkVersion="18" />
 
@@ -44,8 +43,7 @@
             android:name="AA_DB_NAME"
             android:value="NearTagDB" />
         <meta-data
-            android:name="AA_DB_VERSION"
-            android:value="3" />
+            android:name="AA_DB_VERSION"  android:value="1" />
         <meta-data
             android:name="AA_MODELS"
             android:value="com.neartag.in.models.User, com.neartag.in.models.NewsFeedElement, com.neartag.in.models.Tag" />
@@ -65,12 +63,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver android:name="com.neartag.in.registration.SmsReceiver">
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
-            </intent-filter>
-        </receiver>
 
         <service android:name=".services.MyFirebaseMessagingService">
             <intent-filter>

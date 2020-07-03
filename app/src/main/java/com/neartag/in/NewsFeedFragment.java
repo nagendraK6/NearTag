@@ -288,7 +288,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
         RequestParams params = new RequestParams();
         try {
             File imgfile = new File(current_element.getGalleryImageFile());
-            params.put("file", imgfile);
+            params.put("image_file", imgfile);
             params.put("tag", current_element.getTag());
             params.put("post_text", current_element.getUserPostText());
         } catch(FileNotFoundException fexception) {
@@ -316,6 +316,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                Log.d("debug_data", "inside failure");
                 WeakHashMap<String, String> log_data = new WeakHashMap<>();
                 log_data.put(Logger.STATUS, Integer.toString(statusCode));
                 log_data.put(Logger.RES, res);
@@ -325,6 +326,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject obj) {
+                Log.d("debug_data", "inside failure");
                 WeakHashMap<String, String> log_data = new WeakHashMap<>();
                 log_data.put(Logger.STATUS, Integer.toString(statusCode));
                 if (obj != null) {
@@ -336,8 +338,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
         };
 
         client.addHeader("Accept", "application/json");
-        client.addHeader("Authorization", "Bearer " + user.AccessToken);
-        client.post(App.getBaseURL() + "post/create", params, jrep);
+        client.addHeader("Authorization", "Token " + user.AccessToken);
+        client.post(App.getBaseURL() + "registration/post_create", params, jrep);
     }
 
     @Override
@@ -525,7 +527,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
         };
 
         client.addHeader("Accept", "application/json");
-        client.addHeader("Authorization", "Bearer " + user.AccessToken);
-        client.get(App.getBaseURL() + "newsfeed", params, response_json);
+        client.addHeader("Authorization", "Token " + user.AccessToken);
+        client.post(App.getBaseURL() + "registration/newsfeed", params, response_json);
     }
 }
