@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidStudioProjects-NearTag.iml" filepath="$PROJECT_DIR$/AndroidStudioProjects-NearTag.iml" group="NearTag" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GitHub-NearTag.iml" filepath="$PROJECT_DIR$/.idea/modules/GitHub-NearTag.iml" group="NearTag" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/GitHub-NearTag-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/GitHub-NearTag-app.iml" group="NearTag/app" />
       <module fileurl="file://$PROJECT_DIR$/NearTag.iml" filepath="$PROJECT_DIR$/NearTag.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/NearTag-app.iml" filepath="$PROJECT_DIR$/app/NearTag-app.iml" group="NearTag/app" />
       <module fileurl="file://$PROJECT_DIR$/greenDaoGenerator/NearTag-greenDaoGenerator.iml" filepath="$PROJECT_DIR$/greenDaoGenerator/NearTag-greenDaoGenerator.iml" group="NearTag/greenDaoGenerator" />
