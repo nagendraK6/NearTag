@@ -142,7 +142,7 @@
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
                 android:layout_height="wrap_content" />
-            <com.neartag.in.Utils.SquareImageView
+            <com.relylabs.instahelo.Utils.SquareImageView
                 android:layout_below="@+id/title"
                 android:layout_alignParentLeft="true"
                 android:id="@+id/banner_image"

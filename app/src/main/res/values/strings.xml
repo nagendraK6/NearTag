@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NearTag</string>
+    <string name="app_name">InstaHelo</string>
     <string name="phone_no_ask">अपना फोन नंबर ब्ताएँ</string>
     <string name="phn_msg">आपके फ़ोन पर एक OTP भेजा जायेगा</string>
     <string name="string_next">ठीक है</string>

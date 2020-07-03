@@ -1,39 +1,37 @@
 {
   "project_info": {
-    "project_number": "65167327943",
-    "firebase_url": "https://neartag-eb4a9.firebaseio.com",
-    "project_id": "neartag-eb4a9",
-    "storage_bucket": "neartag-eb4a9.appspot.com"
+    "project_number": "423395495299",
+    "firebase_url": "https://instahelo-541f1.firebaseio.com",
+    "project_id": "instahelo-541f1",
+    "storage_bucket": "instahelo-541f1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:65167327943:android:8de3e18a6c43efbd",
+        "mobilesdk_app_id": "1:423395495299:android:c0abdb751a416bc328bab6",
         "android_client_info": {
-          "package_name": "com.neartag.in"
+          "package_name": "com.relylabs.instahelo"
         }
       },
       "oauth_client": [
         {
-          "client_id": "65167327943-qjj8fqkma0aqvp29qvtvqht5rukjj99k.apps.googleusercontent.com",
+          "client_id": "423395495299-qbg3bdj7p0gf2621r0bnk7b7iong909j.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBBhfggycu9xtfZHu1DAijl0OWk-HBx7RQ"
+          "current_key": "AIzaSyCt89Jk5Q_n-5SOGNmSuc4iu1sBsz7oHb8"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "423395495299-qbg3bdj7p0gf2621r0bnk7b7iong909j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

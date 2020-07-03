@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/neartagtheme"
     android:theme="@style/DialogTheme"
-    tools:context="com.neartag.in.MainActivity">
+    tools:context="com.relylabs.instahelo.com.relylabs.instahelo.MainActivity">
 
   <TextView
       android:layout_centerHorizontal="true"

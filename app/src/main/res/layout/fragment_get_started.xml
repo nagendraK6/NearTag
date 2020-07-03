@@ -13,7 +13,7 @@
         android:textSize="48sp"
         android:textColor="@color/next_button_bg"
         android:gravity="center_horizontal"
-        android:text="#NearTag"
+        android:text="#InstaHelo"
         />
     <TextView
         android:layout_below="@+id/title"

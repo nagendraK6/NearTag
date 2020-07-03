@@ -71,7 +71,7 @@
         android:layout_width="match_parent"
         android:layout_marginLeft="40dp"
         android:layout_height="wrap_content">
-        <com.neartag.in.composer.HashTagAutoCompleteTextView
+        <com.relylabs.instahelo.composer.HashTagAutoCompleteTextView
             android:background="@drawable/circular_border_comment"
             android:layout_margin="5dp"
             android:padding="5dp"
@@ -129,7 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
-    <com.neartag.in.Utils.SquareImageView
+    <com.relylabs.instahelo.Utils.SquareImageView
         android:layout_marginTop="10dp"
         android:layout_below="@id/recommended_tags_list"
         android:layout_width="match_parent"
