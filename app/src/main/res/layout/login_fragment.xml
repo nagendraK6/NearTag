@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/neartagtheme"
     android:theme="@style/DialogTheme"
-    tools:context="com.relylabs.instahelo.com.relylabs.instahelo.MainActivity">
+    tools:context="com.relylabs.instahelo.MainActivity">
 
   <TextView
       android:layout_centerHorizontal="true"
@@ -45,7 +45,7 @@
           android:id="@+id/country_code"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="+1"
+          android:text="+91"
           android:textSize="18sp"
           android:textColor="@color/neartagtextcolor"
           android:gravity="center_horizontal"
