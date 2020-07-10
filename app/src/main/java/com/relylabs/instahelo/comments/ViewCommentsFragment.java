@@ -194,8 +194,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
         };
 
         client.addHeader("Accept", "application/json");
-        client.addHeader("Authorization", "Bearer " + user.AccessToken);
-        client.post(App.getBaseURL() + "post/addcomment", params, jrep);
+        client.addHeader("Authorization", "Token " + user.AccessToken);
+        client.post(App.getBaseURL() + "posts/addcomment", params, jrep);
     }
 
     private  void readComments(Integer post_id) {
@@ -247,8 +247,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
         };
 
         client.addHeader("Accept", "application/json");
-        client.addHeader("Authorization", "Bearer " + user.AccessToken);
-        client.get(App.getBaseURL() + "post/getcomments", params, jrep);
+        client.addHeader("Authorization", "Token " + user.AccessToken);
+        client.post(App.getBaseURL() + "posts/getcomments", params, jrep);
     }
 
     public static void hideKeyboardFrom(Context context, View view) {
