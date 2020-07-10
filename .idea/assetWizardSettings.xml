@@ -67,7 +67,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="imagePath" value="$USER_HOME$/Downloads/Background/drawable-xxxhdpi/ic_launcher_background.png" />
+                                                <entry key="imagePath" value="$USER_HOME$/Downloads/Pwbuz.png" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -90,8 +90,8 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="$USER_HOME$/Downloads/assets_square/drawable-xxxhdpi/logo.png" />
-                                                <entry key="scalingPercent" value="98" />
+                                                <entry key="imagePath" value="$USER_HOME$/Downloads/InstaHelo/Group 1@2x.png" />
+                                                <entry key="scalingPercent" value="75" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -119,6 +119,12 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                    </map>
+                                  </option>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="backgroundColor" value="dcd5dc" />
+                                      <entry key="showGrid" value="true" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -282,6 +288,11 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                    </map>
+                                  </option>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="showGrid" value="true" />
                                     </map>
                                   </option>
                                 </PersistentState>
