@@ -2,7 +2,6 @@ package com.relylabs.instahelo.registration;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,10 @@ import android.widget.TextView;
 import com.relylabs.instahelo.R;
 
 import java.util.ArrayList;
+
+
+import androidx.recyclerview.widget.RecyclerView;
+
 
 /**
  * Created by nagendra on 9/12/18.

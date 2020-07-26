@@ -10,15 +10,15 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +33,7 @@ import com.activeandroid.query.Select;
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
 import com.github.ybq.android.spinkit.style.FadingCircle;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -41,6 +42,7 @@ import com.relylabs.instahelo.Utils.Logger;
 import com.relylabs.instahelo.composer.RecyclerGalaryFragment;
 import com.relylabs.instahelo.models.NewsFeedElement;
 import com.relylabs.instahelo.models.User;
+import com.relylabs.instahelo.videobroadcast.VideoBroadcastFragment;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
@@ -205,7 +207,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.ClickW
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment frag = new RecyclerGalaryFragment();
+                Fragment frag = new VideoBroadcastFragment();
                 Bundle bnd = new Bundle();
                 bnd.putString("ref", "composer");
                 frag.setArguments(bnd);

@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidStudioProjects-NearTag.iml" filepath="$PROJECT_DIR$/AndroidStudioProjects-NearTag.iml" group="NearTag" />
       <module fileurl="file://$PROJECT_DIR$/app/NearTag-app.iml" filepath="$PROJECT_DIR$/app/NearTag-app.iml" group="NearTag/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/webrtc-android-framework/webrtc-android-framework.iml" filepath="$PROJECT_DIR$/.idea/modules/webrtc-android-framework/webrtc-android-framework.iml" group="NearTag/webrtc-android-framework" />
     </modules>
   </component>
 </project>

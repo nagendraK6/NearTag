@@ -3,7 +3,13 @@ package com.relylabs.instahelo.composer;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.AppCompatAutoCompleteTextView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.util.AttributeSet;
 

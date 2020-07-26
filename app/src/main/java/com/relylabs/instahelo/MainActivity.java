@@ -4,15 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import com.amplitude.api.Amplitude;
+import com.google.android.material.snackbar.Snackbar;
 import com.relylabs.instahelo.R;
 import com.relylabs.instahelo.camera.Camera2Fragment;
 import com.relylabs.instahelo.camera.IMainActivity;

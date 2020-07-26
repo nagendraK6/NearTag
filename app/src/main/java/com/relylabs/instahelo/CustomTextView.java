@@ -1,7 +1,14 @@
 package com.relylabs.instahelo;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatEditText;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;

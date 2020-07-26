@@ -1,1 +1,2 @@
+include ':webrtc-android-framework'
 include ':app'

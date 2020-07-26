@@ -17,6 +17,8 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
+import androidx.appcompat.widget.AppCompatImageView;
+
 import com.relylabs.instahelo.MainActivity;
 import com.relylabs.instahelo.R;
 
@@ -27,7 +29,8 @@ import java.util.List;
  * Created by User on 5/23/2018.
  */
 
-public class DrawableImageView extends android.support.v7.widget.AppCompatImageView
+public class DrawableImageView extends AppCompatImageView
+
 {
 
     private static final String TAG = "DrawableImageView";

@@ -2,7 +2,6 @@ package com.relylabs.instahelo.services;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -13,6 +12,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+
+import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;

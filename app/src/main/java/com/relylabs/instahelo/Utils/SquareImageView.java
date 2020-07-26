@@ -1,8 +1,9 @@
 package com.relylabs.instahelo.Utils;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatImageView;
 
 /**
  * Created by nagendra on 9/8/18.
